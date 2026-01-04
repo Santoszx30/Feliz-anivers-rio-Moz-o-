@@ -36,6 +36,7 @@ window.onload = function() {
 
     let currentPhoto2 = -1;
 
+    // ----------------- Explodir corações -----------------
     function explodeHearts(qtd){
         for(let i=0;i<qtd;i++){
             const h=document.createElement("div");
@@ -53,16 +54,18 @@ window.onload = function() {
         }
     }
 
+    // ----------------- Mostrar foto com fade -----------------
     function showPhoto(index){
         if(index<0 || index>=photos.length) return;
-        photoEl.style.opacity=0;
+        photoEl.style.opacity=0; // reseta fade
         setTimeout(()=>{
             photoEl.src=photos[index];
-            photoElogio.innerText=elogiosFotos[index];
+            photoElogio.innerText=elogiosFotos[index] || "";
             photoEl.onload=()=>{ photoEl.style.opacity=1; };
-        }, 100);
+        }, 100); // pequeno delay para transição
     }
 
+    // ----------------- Clicar no coração gigante -----------------
     giantHeart.addEventListener("click",()=>{
         explodeHearts(30);
         if(currentPhoto2===-1){
@@ -71,6 +74,7 @@ window.onload = function() {
         }
     });
 
+    // ----------------- Botão próxima foto -----------------
     nextBtn.addEventListener("click",()=>{
         if(currentPhoto2>=0 && currentPhoto2<photos.length-1){
             currentPhoto2++;
@@ -79,6 +83,7 @@ window.onload = function() {
         }
     });
 
+    // ----------------- Botão texto final -----------------
     finalBtn.addEventListener("click",()=>{
         finalText.style.display="block";
         finalText.innerHTML = `
@@ -115,5 +120,35 @@ Hoje celebramos você, minha rainha.
 Feliz aniversário, minha Pretinha, te amo infinito!
         `;
     });
+
+    // ----------------- Criar corações e elogios voando na página 2 -----------------
+    const flyingWords = ["PRINCESA","PITUCHA","BUXINN","CACHEADA","PRETINHA","PITICA","HELLO KITTY","PEQUENA","LINDA","MARAVILHOSA","PERFEITA","CHEIROSA","GOSTOSA","DELÍCIA"];
+
+    function createFlyingText(){
+        const text = document.createElement("div");
+        text.className = "flyingText";
+        text.innerText = flyingWords[Math.floor(Math.random()*flyingWords.length)];
+        text.style.left = Math.random()*85 + "%";
+        text.style.color = ["#8a2be2","#00f","#fff","#f0f","#ff69b4"][Math.floor(Math.random()*5)];
+        text.style.fontSize = (16+Math.random()*12) + "px";
+        text.style.bottom = "0px";
+        body.appendChild(text);
+        setTimeout(()=>text.remove(),8000);
+    }
+
+    function createFlyingHearts(){
+        const heart = document.createElement("div");
+        heart.className="flyingHeart";
+        heart.innerText="💜";
+        heart.style.left = Math.random()*95 + "%";
+        heart.style.bottom = "0px";
+        heart.style.animationDuration = (3 + Math.random()*3)+"s";
+        body.appendChild(heart);
+        setTimeout(()=>heart.remove(),6000);
+    }
+
+    // Criar emojis e corações infinitos
+    setInterval(createFlyingText, 500);
+    setInterval(createFlyingHearts, 700);
 
 };
