@@ -1,4 +1,4 @@
-/* ----------------- Estilos Gerais ----------------- */
+/* ----------------- ESTILOS GERAIS ----------------- */
 body {
   margin: 0;
   padding: 0;
@@ -6,7 +6,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ----------------- Página 1 - Loading ----------------- */
+/* ----------------- PÁGINA 1 - LOADING ----------------- */
 .loading-body {
   background: linear-gradient(135deg, #2b1055, #3b82f6);
   height: 100vh;
@@ -20,7 +20,6 @@ body {
   overflow: hidden;
 }
 
-/* Celular de carregamento e animações internas */
 #cell-phone {
   width: 300px;
   height: 500px;
@@ -29,6 +28,17 @@ body {
   position: relative;
   overflow: hidden;
   box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+#cell-phone img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 1s;
 }
 
 .loading-text {
@@ -59,8 +69,7 @@ body {
   100% { width: 100%; }
 }
 
-/* Corações flutuantes da página 1 */
-.flying-heart {
+.loading-body .flying-heart {
   position: absolute;
   font-size: 15px;
   color: #a855f7;
@@ -69,14 +78,7 @@ body {
   opacity: 0.7;
 }
 
-@keyframes float {
-  0% { transform: translateY(100vh) scale(1); opacity: 0.7; }
-  50% { opacity: 1; }
-  100% { transform: translateY(-50px) scale(1.2); opacity: 0; }
-}
-
-/* Elogios flutuantes da página 1 */
-.flying-elogio {
+.loading-body .flying-elogio {
   position: absolute;
   font-size: 14px;
   color: #c9a3ff;
@@ -86,15 +88,9 @@ body {
   opacity: 0.8;
 }
 
-@keyframes moveElogio {
-  0% { transform: translateX(100vw) translateY(0); opacity: 0.8; }
-  50% { opacity: 1; }
-  100% { transform: translateX(-100vw) translateY(-20px); opacity: 0; }
-}
-
-/* ----------------- Página 2 - Surpresa ----------------- */
+/* ----------------- PÁGINA 2 - SURPRESA ----------------- */
 .surpresa-body {
-  background: linear-gradient(135deg, #1a001a, #4b0082, #2b1055); /* roxo + preto + azul leve */
+  background: linear-gradient(135deg, #1a001a, #4b0082, #2b1055);
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -107,7 +103,6 @@ body {
   position: relative;
 }
 
-/* Botão de tocar música */
 .top-button {
   background: #6f42c1;
   color: white;
@@ -119,11 +114,8 @@ body {
   margin-bottom: 20px;
   transition: transform 0.2s;
 }
-.top-button:hover {
-  transform: scale(1.05);
-}
+.top-button:hover { transform: scale(1.05); }
 
-/* Coração gigante central */
 .giant-heart {
   font-size: 100px;
   cursor: pointer;
@@ -131,7 +123,6 @@ body {
   margin-bottom: 30px;
 }
 
-/* Container da galeria de fotos */
 .photo-container {
   position: relative;
   width: 60%;
@@ -155,7 +146,6 @@ body {
   position: relative;
 }
 
-/* Botão próxima foto */
 .next-button {
   background: #3b82f6;
   color: white;
@@ -166,11 +156,8 @@ body {
   margin-top: 10px;
   transition: transform 0.2s;
 }
-.next-button:hover {
-  transform: scale(1.05);
-}
+.next-button:hover { transform: scale(1.05); }
 
-/* Botão final “Clique aqui” estilizado */
 .final-button {
   background: linear-gradient(135deg, #a855f7, #6f42c1);
   color: white;
@@ -190,7 +177,6 @@ body {
   background: linear-gradient(135deg, #c084fc, #7c3aed);
 }
 
-/* Texto final */
 .final-text {
   display: none;
   margin-top: 20px;
@@ -202,7 +188,6 @@ body {
   line-height: 1.6em;
 }
 
-/* Corações da explosão */
 .explosion-heart {
   position: absolute;
   font-size: 20px;
@@ -215,7 +200,6 @@ body {
   100% { transform: translate(var(--x), var(--y)) scale(1.5); opacity:0; }
 }
 
-/* Corações voando infinitamente - Página 2 */
 .surpresa-body .flying-heart {
   position: absolute;
   font-size: 15px;
@@ -225,7 +209,6 @@ body {
   opacity: 0.7;
 }
 
-/* Elogios flutuantes - Página 2 */
 .surpresa-body .flying-elogio {
   position: absolute;
   font-size: 14px;
@@ -234,4 +217,16 @@ body {
   white-space: nowrap;
   pointer-events: none;
   opacity: 0.8;
+}
+
+@keyframes float {
+  0% { transform: translateY(100vh) scale(1); opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-50px) scale(1.2); opacity: 0; }
+}
+
+@keyframes moveElogio {
+  0% { transform: translateX(100vw) translateY(0); opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { transform: translateX(-100vw) translateY(-20px); opacity: 0; }
   }
