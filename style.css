@@ -1,150 +1,100 @@
-* {
+/* ----------------- Estilos Gerais ----------------- */
+body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
   font-family: Arial, sans-serif;
+  overflow-x: hidden;
 }
 
-body.loading-body {
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: white;
+/* ----------------- Página 1 - Loading ----------------- */
+.loading-body {
   background: linear-gradient(135deg, #2b1055, #3b82f6);
-  animation: gradientBG 10s ease infinite alternate;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: white;
+  text-align: center;
+  overflow: hidden;
 }
 
-/* Gradiente animado */
-@keyframes gradientBG {
-  0% { background: linear-gradient(135deg, #2b1055, #3b82f6); }
-  50% { background: linear-gradient(135deg, #3b82f6, #6f42c1); }
-  100% { background: linear-gradient(135deg, #2b1055, #3b82f6); }
-}
-
-/* Wrapper */
-.loading-wrapper { z-index: 2; text-align: center; }
-
-/* Celular (NÃO ALTERAR) */
-.phone {
-  width: 220px;
-  height: 420px;
-  border: 4px solid #6f42c1;
+/* Celular de carregamento e animações internas */
+#cell-phone {
+  width: 300px;
+  height: 500px;
+  background: #000;
   border-radius: 30px;
-  padding: 10px;
-  margin: 0 auto 20px;
-  background: black;
-}
-.phone-screen {
-  width: 100%;
-  height: 100%;
-  border-radius: 20px;
-  background: linear-gradient(135deg,#1f1f3a,#000);
-  overflow: hidden;
   position: relative;
-}
-.phone-screen img {
-  position: absolute;
-  width: 60%;
-  left: 20%;
-  top: 100%;
-  border-radius: 12px;
-  animation: enterPhone 3s ease forwards;
-}
-@keyframes enterPhone {
-  to { top: 20%; }
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
-/* Texto digitação */
 .loading-text {
-  margin-bottom: 10px;
-  font-size: 1.5em;
+  margin-top: 20px;
+  font-size: 1.2em;
   color: #c9a3ff;
-  min-height: 1.5em;
 }
 
-/* Barra de loading */
 .loading-bar {
-  width: 220px;
-  height: 8px;
-  background: #222;
-  border-radius: 10px;
+  width: 300px;
+  height: 10px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 5px;
+  margin-top: 10px;
   overflow: hidden;
-  position: relative;
 }
 
 .loading-progress {
-  height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #6f42c1, #3b82f6);
-  position: relative;
+  height: 100%;
+  background: #a855f7;
+  border-radius: 5px;
+  animation: load 10s linear forwards;
 }
 
-/* Pequenos corações saindo da barra */
-.loading-progress::after {
-  content: "💜";
+@keyframes load {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+/* Corações flutuantes da página 1 */
+.flying-heart {
   position: absolute;
-  top: -15px;
-  left: 50%;
-  animation: heartFromBar 1s linear infinite;
-  font-size: 16px;
-}
-
-@keyframes heartFromBar {
-  0% { transform: translateY(0) scale(1); opacity:1; }
-  100% { transform: translateY(-30px) scale(1.2); opacity:0; }
-}
-
-/* Corações flutuantes */
-.heart {
-  position: fixed;
-  bottom: -20px;
-  font-size: 18px;
+  font-size: 15px;
   color: #a855f7;
-  animation: floatUp 6s linear infinite;
-}
-@keyframes floatUp {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(-110vh); opacity: 0; }
+  animation: float 6s linear infinite;
+  pointer-events: none;
+  opacity: 0.7;
 }
 
-/* Elogios flutuantes */
-.word {
-  position: fixed;
-  font-size: 18px;
-  font-weight: bold;
-  animation: moveWord 10s linear infinite;
-  opacity: 0;
-  transform: rotate(-10deg);
-}
-@keyframes moveWord {
-  from { transform: translateX(-20vw) rotate(-10deg); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  to { transform: translateX(120vw) rotate(10deg); opacity: 0; }
+@keyframes float {
+  0% { transform: translateY(100vh) scale(1); opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-50px) scale(1.2); opacity: 0; }
 }
 
-/* Estrelas */
-.star {
-  position: fixed;
-  width: 2px;
-  height: 2px;
-  background: white;
-  border-radius: 50%;
+/* Elogios flutuantes da página 1 */
+.flying-elogio {
+  position: absolute;
+  font-size: 14px;
+  color: #c9a3ff;
+  animation: moveElogio 8s linear infinite;
+  white-space: nowrap;
+  pointer-events: none;
   opacity: 0.8;
-  animation: twinkle 2s infinite alternate;
 }
 
-@keyframes twinkle {
-  from { opacity: 0.3; }
-  to { opacity: 1; }
-  }
-/* Página Surpresa */
+@keyframes moveElogio {
+  0% { transform: translateX(100vw) translateY(0); opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { transform: translateX(-100vw) translateY(-20px); opacity: 0; }
+}
 
+/* ----------------- Página 2 - Surpresa ----------------- */
 .surpresa-body {
-  background: linear-gradient(135deg, #2b1055, #3b82f6);
+  background: linear-gradient(135deg, #1a001a, #4b0082, #2b1055); /* roxo + preto + azul leve */
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -152,11 +102,12 @@ body.loading-body {
   justify-content: flex-start;
   padding-top: 20px;
   color: white;
-  font-family: Arial, sans-serif;
   text-align: center;
   overflow-x: hidden;
+  position: relative;
 }
 
+/* Botão de tocar música */
 .top-button {
   background: #6f42c1;
   color: white;
@@ -166,8 +117,13 @@ body.loading-body {
   font-size: 1em;
   cursor: pointer;
   margin-bottom: 20px;
+  transition: transform 0.2s;
+}
+.top-button:hover {
+  transform: scale(1.05);
 }
 
+/* Coração gigante central */
 .giant-heart {
   font-size: 100px;
   cursor: pointer;
@@ -175,6 +131,7 @@ body.loading-body {
   margin-bottom: 30px;
 }
 
+/* Container da galeria de fotos */
 .photo-container {
   position: relative;
   width: 60%;
@@ -195,8 +152,10 @@ body.loading-body {
   font-size: 1.2em;
   color: #c9a3ff;
   min-height: 2em;
+  position: relative;
 }
 
+/* Botão próxima foto */
 .next-button {
   background: #3b82f6;
   color: white;
@@ -204,4 +163,75 @@ body.loading-body {
   padding: 8px 16px;
   border-radius: 15px;
   cursor: pointer;
-  margin-top
+  margin-top: 10px;
+  transition: transform 0.2s;
+}
+.next-button:hover {
+  transform: scale(1.05);
+}
+
+/* Botão final “Clique aqui” estilizado */
+.final-button {
+  background: linear-gradient(135deg, #a855f7, #6f42c1);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 30px;
+  box-shadow: 0 5px 15px rgba(168,85,247,0.5);
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+}
+.final-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(168,85,247,0.7);
+  background: linear-gradient(135deg, #c084fc, #7c3aed);
+}
+
+/* Texto final */
+.final-text {
+  display: none;
+  margin-top: 20px;
+  background: rgba(0,0,0,0.5);
+  padding: 20px;
+  border-radius: 20px;
+  max-width: 80%;
+  text-align: left;
+  line-height: 1.6em;
+}
+
+/* Corações da explosão */
+.explosion-heart {
+  position: absolute;
+  font-size: 20px;
+  color: #a855f7;
+  animation: explode 1s forwards;
+}
+
+@keyframes explode {
+  0% { transform: translate(0,0) scale(1); opacity:1; }
+  100% { transform: translate(var(--x), var(--y)) scale(1.5); opacity:0; }
+}
+
+/* Corações voando infinitamente - Página 2 */
+.surpresa-body .flying-heart {
+  position: absolute;
+  font-size: 15px;
+  color: #a855f7;
+  animation: float 6s linear infinite;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Elogios flutuantes - Página 2 */
+.surpresa-body .flying-elogio {
+  position: absolute;
+  font-size: 14px;
+  color: #c9a3ff;
+  animation: moveElogio 8s linear infinite;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0.8;
+  }
