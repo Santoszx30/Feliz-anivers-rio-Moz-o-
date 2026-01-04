@@ -142,7 +142,6 @@ body {
 
 <!-- Botão de música -->
 <button class="top-button" id="musicBtn">Tocar Música 🎵</button>
-<audio id="audio" src="music/poesia13.mp3" loop preload="auto"></audio>
 
 <div class="giant-heart" id="giantHeart">💜</div>
 
@@ -156,7 +155,7 @@ body {
 <div class="final-text" id="finalText"></div>
 
 <script>
-// ---------- Variáveis principais ----------
+// ---------- Variáveis ----------
 const giantHeart = document.getElementById("giantHeart");
 const photoEl = document.getElementById("photo");
 const photoElogio = document.getElementById("photoElogio");
@@ -165,17 +164,29 @@ const finalBtn = document.getElementById("showText");
 const finalText = document.getElementById("finalText");
 const body = document.body;
 
-// ---------- Música ----------
-const audio = document.getElementById("audio");
-const musicBtn = document.getElementById("musicBtn");
+// ---------- Música funcional garantida ----------
+let audio = new Audio('music/poesia13.mp3');
+audio.loop = true;
 
-musicBtn.addEventListener("click", () => {
-    if(audio.paused){
-        audio.play().catch(err => console.log("Clique necessário para tocar música."));
-        musicBtn.innerText = "Pausar Música ⏸️";
+const musicBtn = document.getElementById('musicBtn');
+let musicStarted = false;
+
+musicBtn.addEventListener('click', () => {
+    if(!musicStarted){
+        audio.play().then(()=>{
+            musicBtn.innerText = "Pausar Música ⏸️";
+            musicStarted = true;
+        }).catch(err=>{
+            console.log("Clique necessário para tocar música.");
+        });
     } else {
-        audio.pause();
-        musicBtn.innerText = "Tocar Música 🎵";
+        if(!audio.paused){
+            audio.pause();
+            musicBtn.innerText = "Tocar Música 🎵";
+        } else {
+            audio.play();
+            musicBtn.innerText = "Pausar Música ⏸️";
+        }
     }
 });
 
