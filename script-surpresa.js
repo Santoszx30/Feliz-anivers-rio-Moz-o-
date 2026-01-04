@@ -8,9 +8,11 @@ window.onload = function() {
     const finalText = document.getElementById("finalText");
     const body = document.body;
 
+    // Fotos
     const photos = [];
-    for(let i=1; i<=20; i++) photos.push(`fotos/foto${i}.jpg`);
+    for(let i=1;i<=20;i++) photos.push(`fotos/foto${i}.jpg`);
 
+    // Elogios correspondentes
     const elogiosFotos = [
         "Seus olhos me prendem de um jeito que eu não consigo explicar 😍",
         "Olhar que me deixa sem palavras e apaixonado 💜",
@@ -57,12 +59,12 @@ window.onload = function() {
     // ----------------- Mostrar foto com fade -----------------
     function showPhoto(index){
         if(index<0 || index>=photos.length) return;
-        photoEl.style.opacity=0; // reseta fade
+        photoEl.style.opacity=0;
         setTimeout(()=>{
             photoEl.src=photos[index];
             photoElogio.innerText=elogiosFotos[index] || "";
             photoEl.onload=()=>{ photoEl.style.opacity=1; };
-        }, 100); // pequeno delay para transição
+        },100);
     }
 
     // ----------------- Clicar no coração gigante -----------------
@@ -121,7 +123,7 @@ Feliz aniversário, minha Pretinha, te amo infinito!
         `;
     });
 
-    // ----------------- Criar corações e elogios voando na página 2 -----------------
+    // ----------------- Corações e elogios voando -----------------
     const flyingWords = ["PRINCESA","PITUCHA","BUXINN","CACHEADA","PRETINHA","PITICA","HELLO KITTY","PEQUENA","LINDA","MARAVILHOSA","PERFEITA","CHEIROSA","GOSTOSA","DELÍCIA"];
 
     function createFlyingText(){
@@ -147,7 +149,6 @@ Feliz aniversário, minha Pretinha, te amo infinito!
         setTimeout(()=>heart.remove(),6000);
     }
 
-    // Criar emojis e corações infinitos
     setInterval(createFlyingText, 500);
     setInterval(createFlyingHearts, 700);
 
