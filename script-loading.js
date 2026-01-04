@@ -1,89 +1,68 @@
-window.onload = function() {
+const phone = document.getElementById("phone");
+const loadingBar = document.getElementById("loadingBar");
+const flyingWords = ["PRINCESA","PITUCHA","BUXINN","CACHEADA","PRETINHA","PITICA","HELLO KITTY","PEQUENA","LINDA","MARAVILHOSA","PERFEITA","CHEIROSA","GOSTOSA","DELÍCIA"];
+const flyingHearts = [];
 
-    const cellPhone = document.getElementById("cell-phone");
-    const loadingProgress = document.querySelector(".loading-progress");
-    const body = document.body;
+const photos = [];
+for(let i=1;i<=20;i++) photos.push(`fotos/foto${i}.jpg`);
 
-    // ----------------- FOTOS DENTRO DO CELULAR -----------------
-    const photos = [];
-    for (let i = 1; i <= 20; i++) {
-        photos.push(`fotos/foto${i}.jpg`);
+let currentPhoto = 0;
+
+// Criar fotos dentro do celular
+photos.forEach((src,i)=>{
+    const img = document.createElement("img");
+    img.src = src;
+    img.style.opacity=0;
+    phone.appendChild(img);
+});
+
+// Mostrar fotos dentro do celular automaticamente
+function showPhotos() {
+    const imgs = phone.querySelectorAll("img");
+    if(currentPhoto<imgs.length){
+        imgs[currentPhoto].style.opacity = 1;
+        currentPhoto++;
+        setTimeout(showPhotos, 500);
     }
+}
 
-    let currentPhoto = 0;
-    const imgEls = [];
+// Criar elogios voando
+function createFlyingText(){
+    const text = document.createElement("div");
+    text.className = "flyingText";
+    text.innerText = flyingWords[Math.floor(Math.random()*flyingWords.length)];
+    text.style.left = Math.random()*90 + "%";
+    text.style.color = ["#8a2be2","#00f","#fff","#f0f","#ff69b4"][Math.floor(Math.random()*5)];
+    text.style.fontSize = (16+Math.random()*12) + "px";
+    text.style.animationDuration = (4 + Math.random()*4) + "s";
+    document.body.appendChild(text);
+    setTimeout(()=>text.remove(),8000);
+}
 
-    photos.forEach(src => {
-        const img = document.createElement("img");
-        img.src = src;
-        img.style.opacity = 0;
-        img.style.transition = "opacity 0.5s";
-        cellPhone.appendChild(img);
-        imgEls.push(img);
-    });
+// Criar corações voando
+function createFlyingHearts(){
+    const heart = document.createElement("div");
+    heart.className="flyingHeart";
+    heart.innerText="💜";
+    heart.style.left = Math.random()*95 + "%";
+    heart.style.animationDuration = (3 + Math.random()*3)+"s";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),6000);
+}
 
-    function showPhotos() {
-        if (currentPhoto > 0) imgEls[currentPhoto - 1].style.opacity = 0;
-        if (currentPhoto < imgEls.length) {
-            imgEls[currentPhoto].style.opacity = 1;
-            currentPhoto++;
-            setTimeout(showPhotos, 500);
-        }
-    }
-    showPhotos();
-
-    // ----------------- BARRA DE CARREGAMENTO -----------------
-    loadingProgress.style.width = "0%";
-    loadingProgress.style.animation = "load 10s linear forwards";
-
-    // ----------------- CORAÇÕES VOANDO -----------------
-    const flyingHearts = ["💜","❤️","💖"];
-    function createFlyingHeart() {
-        const h = document.createElement("div");
-        h.className = "flying-heart";
-        h.innerText = flyingHearts[Math.floor(Math.random() * flyingHearts.length)];
-        h.style.left = Math.random() * window.innerWidth + "px";
-        h.style.top = window.innerHeight + "px";
-        h.style.fontSize = (10 + Math.random() * 20) + "px";
-        h.style.position = "fixed";
-        h.style.zIndex = 9999;
-        body.appendChild(h);
-
-        const duration = 4000 + Math.random() * 3000;
-        h.animate([
-            { transform: `translateY(0px)` },
-            { transform: `translateY(-${window.innerHeight + 50}px)` }
-        ], { duration: duration, iterations: 1 });
-
-        setTimeout(() => h.remove(), duration);
-    }
-    setInterval(createFlyingHeart, 300);
-
-    // ----------------- ELOGIOS VOANDO -----------------
-    const elogios = ["PRINCESA","PITUCHA","BUXINN","CACHEADA","PRETINHA","PITICA","HELLO KITTY","PEQUENA","LINDA","MARAVILHOSA","PERFEITA","CHEIROSA","GOSTOSA","DELÍCIA"];
-    function createFlyingElogio() {
-        const e = document.createElement("div");
-        e.className = "flying-elogio";
-        e.innerText = elogios[Math.floor(Math.random() * elogios.length)];
-        e.style.left = Math.random() * window.innerWidth + "px";
-        e.style.top = window.innerHeight + "px";
-        e.style.fontSize = (14 + Math.random() * 16) + "px";
-        e.style.position = "fixed";
-        e.style.zIndex = 9999;
-        body.appendChild(e);
-
-        const duration = 5000 + Math.random() * 3000;
-        e.animate([
-            { transform: `translateY(0px)` },
-            { transform: `translateY(-${window.innerHeight + 50}px)` }
-        ], { duration: duration, iterations: 1 });
-
-        setTimeout(() => e.remove(), duration);
-    }
-    setInterval(createFlyingElogio, 400);
-
-    // ----------------- REDIRECIONAMENTO AUTOMÁTICO -----------------
-    setTimeout(() => {
+// Barra de carregamento
+let progress = 0;
+const loadingInterval = setInterval(()=>{
+    progress += 1;
+    loadingBar.style.width = progress + "%";
+    createFlyingText();
+    createFlyingHearts();
+    if(progress>=100){
+        clearInterval(loadingInterval);
+        // Redirecionar para página 2
         window.location.href = "surpresa.html";
-    }, 10000); // 10 segundos
-};
+    }
+}, 100);
+
+// Iniciar fotos dentro do celular
+showPhotos();
