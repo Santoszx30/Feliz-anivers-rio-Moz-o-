@@ -8,13 +8,13 @@
 <style>
 html, body {
     height: 100%;
-    margin:0;
+    margin: 0;
     font-family: Arial, sans-serif;
     overflow-x: hidden;
     position: relative;
 }
 
-/* ---------- Gradiente de fundo completo ---------- */
+/* ---------- Gradiente de fundo ---------- */
 body {
     background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
     color: white;
@@ -46,32 +46,30 @@ body {
     position: relative;
 }
 
-/* ---------- Container da foto ---------- */
-.photo-container {
-    text-align:center;
-    position: relative;
+/* ---------- Área de fotos centralizada ---------- */
+.photo-wrapper {
     width: 100%;
-    max-width: 90%;
-    height: 400px; /* Limite da altura */
-    margin: 20px auto;
-    z-index:5;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
 }
 
 /* ---------- Foto ---------- */
 #photo {
     max-width: 80%;
-    max-height: 350px;
+    max-height: 400px;
     opacity: 0;
     transition: opacity 0.7s;
     border-radius: 15px;
     display: block;
-    margin: 0 auto 10px auto;
+    margin: 0 auto;
 }
 
-/* ---------- Elogio acima da foto ---------- */
+/* ---------- Elogio da foto ---------- */
 .photo-elogio {
     font-size: 22px;
-    margin-bottom: 15px;
+    margin: 10px 0 20px 0;
 }
 
 /* ---------- Botão próxima foto ---------- */
@@ -83,16 +81,13 @@ body {
     background: #8a2be2;
     color:white;
     cursor:pointer;
-    display:block;
-    margin: 0 auto 40px auto; /* Espaço para botão final */
-    z-index:10;
-    position: relative;
+    margin-bottom: 40px;
 }
 
 /* ---------- Botão final ---------- */
 .final-button {
     display:block;
-    margin: 30px auto;
+    margin: 20px auto;
     padding: 12px 25px;
     font-size:18px;
     border:none;
@@ -100,8 +95,6 @@ body {
     background: purple;
     color:white;
     cursor:pointer;
-    position: relative;
-    z-index:10;
 }
 
 /* ---------- Texto final ---------- */
@@ -112,34 +105,26 @@ body {
     font-size: 18px;
     text-align:left;
     line-height: 1.6;
-    z-index:10;
-    position: relative;
 }
 
-/* ---------- Efeitos de corações e textos voando ---------- */
+/* ---------- Efeitos voando ---------- */
 .flyingText, .flyingHeart {
     position: absolute;
     pointer-events: none;
     font-weight: bold;
     animation: floatUp linear forwards;
-    z-index:9999; /* Sempre acima de tudo */
+    z-index:9999;
 }
 
-.flyingText {
-    font-size: 18px;
-}
-
-.flyingHeart {
-    font-size: 20px;
-    animation: floatUp linear forwards;
-}
+.flyingText { font-size: 18px; }
+.flyingHeart { font-size: 20px; animation: floatUp linear forwards; }
 
 @keyframes floatUp {
     0% { transform: translateY(0); opacity:1; }
     100% { transform: translateY(-600px); opacity:0; }
 }
 
-/* ---------- Explosão de coração ao clicar ---------- */
+/* ---------- Explosão de coração ---------- */
 .explosion-heart {
     position: absolute;
     font-size: 20px;
@@ -159,7 +144,7 @@ body {
 
 <div class="giant-heart" id="giantHeart">💜</div>
 
-<div class="photo-container">
+<div class="photo-wrapper">
     <img id="photo" src="" alt="Foto da Giovanna">
     <div class="photo-elogio" id="photoElogio"></div>
     <button class="next-button" id="nextPhoto">Próxima Foto</button>
