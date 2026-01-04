@@ -5,22 +5,113 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Feliz Aniversário Giovanna 💜</title>
 <link rel="stylesheet" href="style.css">
+<style>
+body {
+    margin:0;
+    background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+.top-button {
+    display:block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    background: purple;
+    color:white;
+    border:none;
+    border-radius: 15px;
+    font-size: 16px;
+    cursor:pointer;
+}
+
+.giant-heart {
+    font-size: 150px;
+    text-align:center;
+    cursor: pointer;
+    display:block;
+    margin: 20px auto;
+}
+
+.photo-container {
+    text-align:center;
+    position: relative;
+    height: 400px;
+}
+
+#photo {
+    max-width: 80%;
+    max-height: 400px;
+    opacity: 0;
+    transition: opacity 0.7s;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+.photo-elogio {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.next-button {
+    padding: 8px 15px;
+    font-size: 16px;
+    border:none;
+    border-radius: 10px;
+    background: #8a2be2;
+    color:white;
+    cursor:pointer;
+}
+
+.final-button {
+    display:block;
+    margin: 30px auto;
+    padding: 12px 25px;
+    font-size:18px;
+    border:none;
+    border-radius:15px;
+    background: purple;
+    color:white;
+    cursor:pointer;
+}
+
+.final-text {
+    display:none;
+    margin: 20px auto;
+    width: 80%;
+    font-size: 18px;
+    text-align:left;
+    line-height: 1.6;
+}
+.explosion-heart {
+    position: absolute;
+    font-size: 20px;
+    z-index: 9999;
+    pointer-events: none;
+    animation: explode 1s forwards;
+}
+
+@keyframes explode {
+    to { transform: translate(var(--x), var(--y)); opacity:0; }
+}
+</style>
 </head>
-<body class="surpresa-body">
+<body>
 
-  <button class="top-button">Tocar Música 🎵</button>
+<button class="top-button">Tocar Música 🎵</button>
 
-  <div class="giant-heart" id="giantHeart">💜</div>
+<div class="giant-heart" id="giantHeart">💜</div>
 
-  <div class="photo-container">
+<div class="photo-container">
     <img id="photo" src="" alt="Foto da Giovanna">
     <div class="photo-elogio" id="photoElogio"></div>
     <button class="next-button" id="nextPhoto">Próxima Foto</button>
-  </div>
+</div>
 
-  <button class="final-button" id="showText">Clique aqui, princesa 💜</button>
-  <div class="final-text" id="finalText"></div>
+<button class="final-button" id="showText">Clique aqui, princesa 💜</button>
+<div class="final-text" id="finalText"></div>
 
 <script src="script-surpresa.js"></script>
 </body>
-</html>
+  </html>
