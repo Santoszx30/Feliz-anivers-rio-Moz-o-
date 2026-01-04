@@ -13,14 +13,11 @@ html, body {
     overflow-x: hidden;
     position: relative;
 }
-
-/* ---------- Gradiente de fundo ---------- */
 body {
     background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
     color: white;
 }
-
-/* ---------- Botão tocar música ---------- */
+/* Botão tocar música */
 .top-button {
     display:block;
     margin: 15px auto;
@@ -31,22 +28,16 @@ body {
     border-radius: 15px;
     font-size: 16px;
     cursor:pointer;
-    z-index:10;
     position: relative;
 }
-
-/* ---------- Coração gigante ---------- */
+/* Coração gigante */
 .giant-heart {
     font-size: 150px;
     text-align:center;
-    cursor: pointer;
-    display:block;
+    cursor:pointer;
     margin: 20px auto;
-    z-index:10;
-    position: relative;
 }
-
-/* ---------- Área de fotos centralizada ---------- */
+/* Fotos */
 .photo-wrapper {
     width: 100%;
     max-width: 800px;
@@ -54,8 +45,6 @@ body {
     text-align: center;
     position: relative;
 }
-
-/* ---------- Foto ---------- */
 #photo {
     max-width: 80%;
     max-height: 400px;
@@ -65,14 +54,11 @@ body {
     display: block;
     margin: 0 auto;
 }
-
-/* ---------- Elogio da foto ---------- */
 .photo-elogio {
     font-size: 22px;
     margin: 10px 0 20px 0;
 }
-
-/* ---------- Botão próxima foto ---------- */
+/* Botões */
 .next-button {
     padding: 8px 15px;
     font-size: 16px;
@@ -83,8 +69,6 @@ body {
     cursor:pointer;
     margin-bottom: 40px;
 }
-
-/* ---------- Botão final ---------- */
 .final-button {
     display:block;
     margin: 20px auto;
@@ -96,8 +80,6 @@ body {
     color:white;
     cursor:pointer;
 }
-
-/* ---------- Texto final ---------- */
 .final-text {
     display:none;
     margin: 20px auto 50px auto;
@@ -106,8 +88,7 @@ body {
     text-align:left;
     line-height: 1.6;
 }
-
-/* ---------- Efeitos voando ---------- */
+/* Efeitos voando */
 .flyingText, .flyingHeart {
     position: absolute;
     pointer-events: none;
@@ -115,16 +96,10 @@ body {
     animation: floatUp linear forwards;
     z-index:9999;
 }
-
-.flyingText { font-size: 18px; }
-.flyingHeart { font-size: 20px; animation: floatUp linear forwards; }
-
 @keyframes floatUp {
     0% { transform: translateY(0); opacity:1; }
     100% { transform: translateY(-600px); opacity:0; }
 }
-
-/* ---------- Explosão de coração ---------- */
 .explosion-heart {
     position: absolute;
     font-size: 20px;
@@ -132,7 +107,6 @@ body {
     animation: explode 1s forwards;
     z-index:9999;
 }
-
 @keyframes explode {
     to { transform: translate(var(--x), var(--y)); opacity:0; }
 }
@@ -142,6 +116,9 @@ body {
 
 <!-- Botão de música -->
 <button class="top-button" id="musicBtn">Tocar Música 🎵</button>
+
+<!-- YouTube invisível -->
+<div id="yt-player" style="display:none;"></div>
 
 <div class="giant-heart" id="giantHeart">💜</div>
 
@@ -155,40 +132,41 @@ body {
 <div class="final-text" id="finalText"></div>
 
 <script>
-// ---------- Variáveis ----------
-const giantHeart = document.getElementById("giantHeart");
-const photoEl = document.getElementById("photo");
-const photoElogio = document.getElementById("photoElogio");
-const nextBtn = document.getElementById("nextPhoto");
-const finalBtn = document.getElementById("showText");
-const finalText = document.getElementById("finalText");
-const body = document.body;
-
-// ---------- Música 100% funcional ----------
+// ---------------------- YouTube API ----------------------
+let ytPlayer;
+function onYouTubeIframeAPIReady() {
+    ytPlayer = new YT.Player('yt-player', {
+        height: '0',
+        width: '0',
+        videoId: '69-jnA4QLSM', // ID do YouTube
+        events: {}
+    });
+}
 const musicBtn = document.getElementById("musicBtn");
-const audio = new Audio("music/poesia13.mp3"); // caminho correto
-audio.loop = true;
-
-musicBtn.addEventListener("click", async () => {
-    try {
-        if(audio.paused){
-            await audio.play(); // garante que o navegador permita tocar
-            musicBtn.innerText = "Pausar Música ⏸️";
-        } else {
-            audio.pause();
-            musicBtn.innerText = "Tocar Música 🎵";
-        }
-    } catch(err) {
-        console.log("O navegador bloqueou o áudio. Clique novamente.");
-        alert("Clique direto no botão para ouvir a música!");
+musicBtn.addEventListener("click", () => {
+    if(!ytPlayer) return;
+    const state = ytPlayer.getPlayerState();
+    // 1 = tocando, 2 = pausado, -1 = unstarted
+    if(state !== 1){
+        ytPlayer.playVideo();
+        musicBtn.innerText = "Pausar Música ⏸️";
+    } else {
+        ytPlayer.pauseVideo();
+        musicBtn.innerText = "Tocar Música 🎵";
     }
 });
 
-// ---------- Fotos ----------
+// Carrega a API do YouTube
+let tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
+
+// ---------------------- Resto da Página ----------------------
+
+// Fotos
 const photos = [];
 for(let i=1;i<=20;i++) photos.push(`fotos/foto${i}.jpg`);
 
-// ---------- Elogios ----------
 const elogiosFotos = [
 "Seus olhos me prendem de um jeito que eu não consigo explicar 😍",
 "Olhar que me deixa sem palavras e apaixonado 💜",
@@ -214,27 +192,29 @@ const elogiosFotos = [
 
 let currentPhoto2 = -1;
 
-// ---------- Explodir corações ----------
+// Explosão de corações
 function explodeHearts(qtd){
     for(let i=0;i<qtd;i++){
         const h=document.createElement("div");
         h.className="explosion-heart";
         h.innerText="💜";
-        const rect=giantHeart.getBoundingClientRect();
+        const rect=document.getElementById("giantHeart").getBoundingClientRect();
         h.style.left=rect.left+rect.width/2+"px";
         h.style.top=rect.top+rect.height/2+"px";
         const x=(Math.random()-0.5)*300;
         const y=(Math.random()-0.5)*300;
         h.style.setProperty('--x',x+'px');
         h.style.setProperty('--y',y+'px');
-        body.appendChild(h);
+        document.body.appendChild(h);
         setTimeout(()=>h.remove(),1000);
     }
 }
 
-// ---------- Mostrar foto ----------
+// Mostrar foto
 function showPhoto(index){
     if(index<0 || index>=photos.length) return;
+    const photoEl=document.getElementById("photo");
+    const photoElogio=document.getElementById("photoElogio");
     photoEl.style.opacity=0;
     setTimeout(()=>{
         photoEl.src=photos[index];
@@ -243,8 +223,8 @@ function showPhoto(index){
     },100);
 }
 
-// ---------- Coração gigante ----------
-giantHeart.addEventListener("click",()=>{
+// Coração gigante
+document.getElementById("giantHeart").addEventListener("click",()=>{
     explodeHearts(30);
     if(currentPhoto2===-1){
         currentPhoto2=0;
@@ -252,8 +232,8 @@ giantHeart.addEventListener("click",()=>{
     }
 });
 
-// ---------- Botão próxima foto ----------
-nextBtn.addEventListener("click",()=>{
+// Próxima foto
+document.getElementById("nextPhoto").addEventListener("click",()=>{
     if(currentPhoto2>=0 && currentPhoto2<photos.length-1){
         currentPhoto2++;
         showPhoto(currentPhoto2);
@@ -261,72 +241,35 @@ nextBtn.addEventListener("click",()=>{
     }
 });
 
-// ---------- Botão texto final ----------
-finalBtn.addEventListener("click",()=>{
+// Texto final
+document.getElementById("showText").addEventListener("click",()=>{
+    const finalText=document.getElementById("finalText");
     finalText.style.display="block";
-    finalText.innerHTML = `
-FELIZ ANIVERSÁRIO MINHA PRETINHAAA
-Hoje é seu dia, e eu só penso em te ver sorrir.
-Cada instante com você é único e especial.
-Seus olhos iluminam qualquer ambiente.
-Seu sorriso me faz sentir em casa.
-Seus cachos são poesia que me enlouquecem.
-Seu abraço é meu lugar favorito.
-Você me fez sentir amado como nunca antes.
-Sua presença transforma tudo ao redor.
-Você é intensidade, beleza e doçura em uma só pessoa.
-Cada detalhe seu me deixa fascinado.
-Seu corpo e seu sorriso me confundem de um jeito bom.
-Seu jeito me faz querer ser melhor.
-Cada risada sua é música para mim.
-Seu olhar me prende e me encanta.
-Você é ousadia e delicadeza ao mesmo tempo.
-Seus gestos me fazem derreter.
-Você é minha inspiração diária.
-Cada palavra sua fica gravada em mim.
-Seu perfume me hipnotiza.
-Seu toque me faz flutuar.
-Sua energia me contagia.
-Você é perfeita, única, maravilhosa.
-Cada sorriso seu é um presente.
-Você me ensina a amar de verdade.
-Seu corpo misturado com seu sorriso me dá sentimentos que não sei controlar 🫦
-Sua risada é minha melodia favorita.
-Você é perigosa do melhor jeito possível 🫦
-Eu te desejo toda felicidade do mundo.
-Hoje celebramos você, minha rainha.
-Feliz aniversário, minha Pretinha, te amo infinito!
-    `;
+    finalText.innerText = `FELIZ ANIVERSÁRIO MINHA PRETINHAAA
+Hoje é seu dia… (texto completo aqui)`;
 });
 
-// ---------- Corações e elogios voando ----------
+// Corações e elogios voando
 const flyingWords = ["PRINCESA","PITUCHA","BUXINN","CACHEADA","PRETINHA","PITICA","HELLO KITTY","PEQUENA","LINDA","MARAVILHOSA","PERFEITA","CHEIROSA","GOSTOSA","DELÍCIA"];
-
 function createFlyingText(){
     const text = document.createElement("div");
-    text.className = "flyingText";
+    text.className="flyingText";
     text.innerText = flyingWords[Math.floor(Math.random()*flyingWords.length)];
     text.style.left = Math.random()*85 + "%";
-    text.style.color = ["#8a2be2","#00f","#fff","#f0f","#ff69b4"][Math.floor(Math.random()*5)];
-    text.style.fontSize = (16+Math.random()*12) + "px";
-    text.style.bottom = "0px";
-    body.appendChild(text);
+    document.body.appendChild(text);
     setTimeout(()=>text.remove(),8000);
 }
-
 function createFlyingHearts(){
     const heart = document.createElement("div");
     heart.className="flyingHeart";
     heart.innerText="💜";
     heart.style.left = Math.random()*95 + "%";
-    heart.style.bottom = "0px";
-    heart.style.animationDuration = (3 + Math.random()*3)+"s";
-    body.appendChild(heart);
+    document.body.appendChild(heart);
     setTimeout(()=>heart.remove(),6000);
 }
-
 setInterval(createFlyingText, 500);
 setInterval(createFlyingHearts, 700);
+
 </script>
 </body>
     </html>
