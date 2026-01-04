@@ -1,124 +1,110 @@
-// ----------------- Galeria de Fotos e Elogios -----------------
-const photos2 = [];
-for(let i=1;i<=20;i++){
-  photos2.push(`fotos/foto${i}.jpg`);
-}
+window.onload = function() {
 
-const elogios2 = [
-  "Seus olhos me prendem de um jeito que eu nunca senti antes.",
-  "Olhar nos seus olhos é como mergulhar em um mar de carinho e intensidade.",
-  "Seu sorriso me deixa sem palavras, é impossível não me perder nele.",
-  "Cada cacho seu é como uma obra de arte que eu poderia admirar o dia todo.",
-  "Quando você me abraça, sinto que finalmente encontrei meu lugar no mundo.",
-  "Seu jeito doce me faz sentir amado de uma forma que eu nunca imaginei.",
-  "Te observar me fez entender que amor é muito mais que palavras; é cuidado, respeito, confiança… e desejo.",
-  "Seu corpo é simplesmente hipnotizante, e cada curva me fascina sem limite.",
-  "Seus cachos e seu sorriso juntos formam uma combinação que me enlouquece.",
-  "Sua presença transforma qualquer momento comum em algo extraordinário.",
-  "O jeito que você sorri me faz esquecer de tudo e querer estar sempre perto.",
-  "Seu corpo e seu charme me fazem sentir algo que não consigo controlar.",
-  "Seu sorriso ilumina até os meus dias mais cinzentos.",
-  "Quando te vejo, sinto que cada momento ao seu lado vale mais que qualquer sonho.",
-  "Sua personalidade vibrante me faz sorrir só de pensar em você.",
-  "Seus cachos, seu corpo e seu jeito me deixam completamente fascinado.",
-  "O simples toque do seu olhar faz meu coração acelerar.",
-  "Cada gesto seu me faz sentir mais apaixonado e conectado a você.",
-  "Seu corpo misturado com seu sorriso, me dão sentimentos que eu não sei controlar 🫦",
-  "Você é intensa do melhor jeito possível 🫦"
-];
+    const giantHeart = document.getElementById("giantHeart");
+    const photoEl = document.getElementById("photo");
+    const photoElogio = document.getElementById("photoElogio");
+    const nextBtn = document.getElementById("nextPhoto");
+    const finalBtn = document.getElementById("showText");
+    const finalText = document.getElementById("finalText");
+    const body = document.body;
 
-let currentPhoto2 = 0;
+    const photos = [];
+    for(let i=1; i<=20; i++) photos.push(`fotos/foto${i}.jpg`);
 
-const photoEl = document.getElementById("photo");
-const elogioEl = document.getElementById("photoElogio");
-const nextBtn = document.getElementById("nextPhoto");
-const giantHeart = document.getElementById("giantHeart");
-const finalBtn = document.getElementById("showText");
-const finalText = document.getElementById("finalText");
-const body = document.body;
+    const elogiosFotos = [
+        "Seus olhos me prendem de um jeito que eu não consigo explicar 😍",
+        "Olhar que me deixa sem palavras e apaixonado 💜",
+        "Seu sorriso é simplesmente perfeito 😘",
+        "Seus cachos são maravilhosos e me enlouquecem 🫶",
+        "Ela me fez sentir amado de verdade 💖",
+        "Ela me ensinou que respeito e confiança são amor 💕",
+        "Seu corpo me deixa maravilhado 😏",
+        "Sua personalidade me deixa muito feliz 😊",
+        "Você é intensa do melhor jeito possível 🔥",
+        "Seu corpo misturado com seu sorriso me dão sentimentos que eu não sei controlar 🫦",
+        // ... adicione elogios para fotos 11-19
+        "Você é perigosa do melhor jeito possível 🫦"
+    ];
 
-// ----------------- Mostrar Foto Atual -----------------
-function showPhoto(index){
-  if(index >= photos2.length) return;
-  photoEl.src = photos2[index];
-  photoEl.style.display = "block";
-  photoEl.style.opacity = 0;
-  photoEl.style.transform = "scale(0.8)";
-  elogioEl.innerText = elogios2[index];
-  setTimeout(()=>{
-    photoEl.style.transition = "opacity 1s, transform 1s";
-    photoEl.style.opacity = 1;
-    photoEl.style.transform = "scale(1)";
-  }, 50);
-}
+    let currentPhoto2 = -1; // começa fechado
 
-// ----------------- Botão Próxima Foto -----------------
-nextBtn.addEventListener("click", ()=>{
-  currentPhoto2++;
-  if(currentPhoto2 >= photos2.length) currentPhoto2 = photos2.length-1;
-  showPhoto(currentPhoto2);
-  explodeHearts(20);
-});
+    // ----------------- FUNÇÃO DE EXPLODIR CORAÇÕES -----------------
+    function explodeHearts(qtd){
+        for(let i=0; i<qtd; i++){
+            const h = document.createElement("div");
+            h.className="explosion-heart";
+            h.innerText="💜";
+            h.style.left = giantHeart.offsetLeft + giantHeart.offsetWidth/2 + "px";
+            h.style.top = giantHeart.offsetTop + giantHeart.offsetHeight/2 + "px";
+            const x = (Math.random()-0.5)*300;
+            const y = (Math.random()-0.5)*300;
+            h.style.setProperty('--x', x+'px');
+            h.style.setProperty('--y', y+'px');
+            body.appendChild(h);
+            setTimeout(()=>h.remove(), 1000);
+        }
+    }
 
-// ----------------- Explosão de corações -----------------
-function explodeHearts(number){
-  for(let i=0;i<number;i++){
-    const h = document.createElement("div");
-    h.className = "explosion-heart";
-    h.style.left = (giantHeart.offsetLeft + 50) + "px";
-    h.style.top = (giantHeart.offsetTop + 50) + "px";
-    h.style.setProperty("--x", (Math.random()*200-100)+"px");
-    h.style.setProperty("--y", (Math.random()*200-100)+"px");
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),1000);
-  }
-}
+    // ----------------- FUNÇÃO MOSTRAR FOTO -----------------
+    function showPhoto(index){
+        if(index < 0 || index >= photos.length) return;
+        photoEl.src = photos[index];
+        photoEl.style.opacity = 1;
+        photoElogio.innerText = elogiosFotos[index] || "";
+    }
 
-// ----------------- Coração Gigante Clique -----------------
-giantHeart.addEventListener("click", ()=>{
-  explodeHearts(30);
-  currentPhoto2 = 0;
-  showPhoto(currentPhoto2);
-});
+    // ----------------- CLICAR NO CORAÇÃO GIGANTE -----------------
+    giantHeart.addEventListener("click", ()=>{
+        explodeHearts(30);
+        currentPhoto2 = 0;
+        showPhoto(currentPhoto2);
+    });
 
-// ----------------- Botão Texto Final -----------------
-finalBtn.addEventListener("click", ()=>{
-  finalText.style.display="block";
-  finalText.innerHTML = `
+    // ----------------- BOTÃO PRÓXIMA FOTO -----------------
+    nextBtn.addEventListener("click", ()=>{
+        if(currentPhoto2 < photos.length-1){
+            currentPhoto2++;
+            showPhoto(currentPhoto2);
+            explodeHearts(15);
+        }
+    });
+
+    // ----------------- BOTÃO FINAL (TEXTO) -----------------
+    finalBtn.addEventListener("click", ()=>{
+        finalText.style.display="block";
+        finalText.innerHTML = `
 FELIZ ANIVERSÁRIO MINHA PRETINHAAA
-... (texto completo de 30 linhas)
-  `;
-});
+1. Hoje é seu dia, e eu só penso em te ver sorrir. <br>
+2. Cada instante com você é único e especial. <br>
+3. Seus olhos iluminam qualquer ambiente. <br>
+4. Seu sorriso me faz sentir em casa. <br>
+5. Seus cachos são poesia que me enlouquece. <br>
+6. Seu abraço é meu lugar favorito. <br>
+7. Você me faz sentir amado como nunca antes. <br>
+8. Sua presença transforma tudo ao redor. <br>
+9. Você é intensidade, beleza e doçura em uma só pessoa. <br>
+10. Cada detalhe seu me deixa fascinado. <br>
+11. Seu corpo e seu sorriso me confundem de um jeito bom. <br>
+12. Seu jeito me faz querer ser melhor. <br>
+13. Cada risada sua é música para mim. <br>
+14. Seu olhar me prende e me encanta. <br>
+15. Você é ousadia e delicadeza ao mesmo tempo. <br>
+16. Seus gestos me fazem derreter. <br>
+17. Você é minha inspiração diária. <br>
+18. Cada palavra sua fica gravada em mim. <br>
+19. Seu perfume me hipnotiza. <br>
+20. Seu toque me faz flutuar. <br>
+21. Sua energia me contagia. <br>
+22. Você é perfeita, única, maravilhosa. <br>
+23. Cada sorriso seu é um presente. <br>
+24. Você me ensina a amar de verdade. <br>
+25. Seu corpo misturado com seu sorriso me dá sentimentos que não sei controlar 🫦. <br>
+26. Sua risada é minha melodia favorita. <br>
+27. Você é perigo do melhor jeito possível 🫦. <br>
+28. Eu te desejo toda felicidade do mundo. <br>
+29. Hoje celebramos você, minha rainha. <br>
+30. Feliz aniversário, minha Pretinha, te amo infinito! <br>
+`;
+    });
 
-// ----------------- Corações Voando Automáticos -----------------
-const flyingHearts2 = ["💜","❤️","💖"];
-function createFlyingHeart(){
-  const h = document.createElement("div");
-  h.className = "flying-heart";
-  h.innerText = flyingHearts2[Math.floor(Math.random()*flyingHearts2.length)];
-  h.style.left = Math.random()*window.innerWidth + "px";
-  h.style.top = window.innerHeight + "px";
-  h.style.fontSize = (10 + Math.random()*15) + "px";
-  body.appendChild(h);
-  setTimeout(()=>h.remove(),6000);
-}
-setInterval(createFlyingHeart, 400);
-
-// ----------------- Elogios Flutuantes Automáticos -----------------
-const elogiosFlutuantes2 = [
-  "PRINCESA","PITUCHA","BUXINN","CACHEADA","PRETINHA","PITICA",
-  "HELLO KITTY","PEQUENA","LINDA","MARAVILHOSA","PERFEITA","CHEIROSA",
-  "GOSTOSA","DELÍCIA","Você é intensa do melhor jeito possível 🫦"
-];
-function createFlyingElogio(){
-  const e = document.createElement("div");
-  e.className = "flying-elogio";
-  e.innerText = elogiosFlutuantes2[Math.floor(Math.random()*elogiosFlutuantes2.length)];
-  e.style.top = Math.random()*window.innerHeight + "px";
-  body.appendChild(e);
-  setTimeout(()=>e.remove(),8000);
-}
-setInterval(createFlyingElogio, 500);
-
-// ----------------- Inicializa primeira foto -----------------
-showPhoto(currentPhoto2);
+};
