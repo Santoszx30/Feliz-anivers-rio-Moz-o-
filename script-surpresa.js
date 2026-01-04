@@ -8,6 +8,10 @@ const finalBtn = document.getElementById("showText");
 const finalText = document.getElementById("finalText");
 const body = document.body;
 
+// NOVO: Música
+const audio = document.getElementById("audio");
+const musicBtn = document.getElementById("musicBtn");
+
 // Fotos
 const photos = [];
 for(let i=1;i<=20;i++) photos.push(`fotos/foto${i}.jpg`);
@@ -38,7 +42,18 @@ const elogiosFotos = [
 
 let currentPhoto2 = -1;
 
-// Explodir corações
+// ----------------- Música funcional -----------------
+musicBtn.addEventListener("click", () => {
+    if(audio.paused){
+        audio.play().catch(err => console.log("Clique necessário para tocar música."));
+        musicBtn.innerText = "Pausar Música ⏸️";
+    } else {
+        audio.pause();
+        musicBtn.innerText = "Tocar Música 🎵";
+    }
+});
+
+// ----------------- Explodir corações -----------------
 function explodeHearts(qtd){
     for(let i=0;i<qtd;i++){
         const h=document.createElement("div");
@@ -56,7 +71,7 @@ function explodeHearts(qtd){
     }
 }
 
-// Mostrar foto com fade
+// ----------------- Mostrar foto com fade -----------------
 function showPhoto(index){
     if(index<0 || index>=photos.length) return;
     photoEl.style.opacity=0;
@@ -67,7 +82,7 @@ function showPhoto(index){
     },100);
 }
 
-// Clicar no coração gigante
+// ----------------- Clicar no coração gigante -----------------
 giantHeart.addEventListener("click",()=>{
     explodeHearts(30);
     if(currentPhoto2===-1){
@@ -76,7 +91,7 @@ giantHeart.addEventListener("click",()=>{
     }
 });
 
-// Botão próxima foto
+// ----------------- Botão próxima foto -----------------
 nextBtn.addEventListener("click",()=>{
     if(currentPhoto2>=0 && currentPhoto2<photos.length-1){
         currentPhoto2++;
@@ -85,7 +100,7 @@ nextBtn.addEventListener("click",()=>{
     }
 });
 
-// Botão texto final
+// ----------------- Botão texto final -----------------
 finalBtn.addEventListener("click",()=>{
     finalText.style.display="block";
     finalText.innerHTML = `
@@ -123,7 +138,7 @@ Feliz aniversário, minha Pretinha, te amo infinito!
     `;
 });
 
-// Corações e elogios voando
+// ----------------- Corações e elogios voando ----------
 const flyingWords = ["PRINCESA","PITUCHA","BUXINN","CACHEADA","PRETINHA","PITICA","HELLO KITTY","PEQUENA","LINDA","MARAVILHOSA","PERFEITA","CHEIROSA","GOSTOSA","DELÍCIA"];
 
 function createFlyingText(){
