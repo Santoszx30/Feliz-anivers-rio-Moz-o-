@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -140,7 +140,9 @@ body {
 </head>
 <body>
 
-<button class="top-button">Tocar Música 🎵</button>
+<!-- Botão de música -->
+<button class="top-button" id="musicBtn">Tocar Música 🎵</button>
+<audio id="audio" src="music/poesia13.mp3" loop></audio>
 
 <div class="giant-heart" id="giantHeart">💜</div>
 
@@ -154,5 +156,20 @@ body {
 <div class="final-text" id="finalText"></div>
 
 <script src="script-surpresa.js"></script>
+<script>
+// ---------- Botão de música funcional ----------
+const audio = document.getElementById("audio");
+const musicBtn = document.getElementById("musicBtn");
+
+musicBtn.addEventListener("click",()=>{
+    if(audio.paused){
+        audio.play();
+        musicBtn.innerText="Pausar Música ⏸️";
+    } else {
+        audio.pause();
+        musicBtn.innerText="Tocar Música 🎵";
+    }
+});
+</script>
 </body>
 </html>
