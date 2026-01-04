@@ -21,21 +21,29 @@ window.onload = function() {
         "Seu corpo me deixa maravilhado 😏",
         "Sua personalidade me deixa muito feliz 😊",
         "Você é intensa do melhor jeito possível 🔥",
-        "Seu corpo misturado com seu sorriso me dão sentimentos que eu não sei controlar 🫦",
-        // ... adicione elogios para fotos 11-19
+        "Seu corpo misturado com seu sorriso me dá sentimentos que eu não sei controlar 🫦",
+        "Seu jeito de se mover me hipnotiza ✨",
+        "Seu sorriso combinado com seu olhar me enlouquece 💘",
+        "Você tem um magnetismo que ninguém consegue resistir 😏",
+        "A forma como você ri me deixa sem fôlego 😍",
+        "Seu charme me deixa perdido em pensamentos 💖",
+        "Cada detalhe seu é arrebatador 💜",
+        "Seu jeito doce e ousado ao mesmo tempo me fascina 🫶",
+        "Você é pura tentação e doçura 🔥",
+        "Seu corpo e energia me deixam sem controle 😘",
         "Você é perigosa do melhor jeito possível 🫦"
     ];
 
-    let currentPhoto2 = -1; // começa fechado
+    let currentPhoto2 = -1;
 
-    // ----------------- FUNÇÃO DE EXPLODIR CORAÇÕES -----------------
     function explodeHearts(qtd){
         for(let i=0; i<qtd; i++){
             const h = document.createElement("div");
             h.className="explosion-heart";
             h.innerText="💜";
-            h.style.left = giantHeart.offsetLeft + giantHeart.offsetWidth/2 + "px";
-            h.style.top = giantHeart.offsetTop + giantHeart.offsetHeight/2 + "px";
+            const rect = giantHeart.getBoundingClientRect();
+            h.style.left = rect.left + rect.width/2 + "px";
+            h.style.top = rect.top + rect.height/2 + "px";
             const x = (Math.random()-0.5)*300;
             const y = (Math.random()-0.5)*300;
             h.style.setProperty('--x', x+'px');
@@ -45,22 +53,22 @@ window.onload = function() {
         }
     }
 
-    // ----------------- FUNÇÃO MOSTRAR FOTO -----------------
     function showPhoto(index){
         if(index < 0 || index >= photos.length) return;
         photoEl.src = photos[index];
-        photoEl.style.opacity = 1;
+        photoEl.style.opacity = 0;
+        photoEl.onload = () => {
+            photoEl.style.opacity = 1;
+        };
         photoElogio.innerText = elogiosFotos[index] || "";
     }
 
-    // ----------------- CLICAR NO CORAÇÃO GIGANTE -----------------
     giantHeart.addEventListener("click", ()=>{
         explodeHearts(30);
         currentPhoto2 = 0;
         showPhoto(currentPhoto2);
     });
 
-    // ----------------- BOTÃO PRÓXIMA FOTO -----------------
     nextBtn.addEventListener("click", ()=>{
         if(currentPhoto2 < photos.length-1){
             currentPhoto2++;
@@ -69,42 +77,41 @@ window.onload = function() {
         }
     });
 
-    // ----------------- BOTÃO FINAL (TEXTO) -----------------
     finalBtn.addEventListener("click", ()=>{
         finalText.style.display="block";
         finalText.innerHTML = `
-FELIZ ANIVERSÁRIO MINHA PRETINHAAA
-1. Hoje é seu dia, e eu só penso em te ver sorrir. <br>
-2. Cada instante com você é único e especial. <br>
-3. Seus olhos iluminam qualquer ambiente. <br>
-4. Seu sorriso me faz sentir em casa. <br>
-5. Seus cachos são poesia que me enlouquece. <br>
-6. Seu abraço é meu lugar favorito. <br>
-7. Você me faz sentir amado como nunca antes. <br>
-8. Sua presença transforma tudo ao redor. <br>
-9. Você é intensidade, beleza e doçura em uma só pessoa. <br>
-10. Cada detalhe seu me deixa fascinado. <br>
-11. Seu corpo e seu sorriso me confundem de um jeito bom. <br>
-12. Seu jeito me faz querer ser melhor. <br>
-13. Cada risada sua é música para mim. <br>
-14. Seu olhar me prende e me encanta. <br>
-15. Você é ousadia e delicadeza ao mesmo tempo. <br>
-16. Seus gestos me fazem derreter. <br>
-17. Você é minha inspiração diária. <br>
-18. Cada palavra sua fica gravada em mim. <br>
-19. Seu perfume me hipnotiza. <br>
-20. Seu toque me faz flutuar. <br>
-21. Sua energia me contagia. <br>
-22. Você é perfeita, única, maravilhosa. <br>
-23. Cada sorriso seu é um presente. <br>
-24. Você me ensina a amar de verdade. <br>
-25. Seu corpo misturado com seu sorriso me dá sentimentos que não sei controlar 🫦. <br>
-26. Sua risada é minha melodia favorita. <br>
-27. Você é perigo do melhor jeito possível 🫦. <br>
-28. Eu te desejo toda felicidade do mundo. <br>
-29. Hoje celebramos você, minha rainha. <br>
-30. Feliz aniversário, minha Pretinha, te amo infinito! <br>
-`;
+FELIZ ANIVERSÁRIO MINHA PRETINHAAA  
+Hoje é seu dia, e eu só penso em te ver sorrir.  
+Cada instante com você é único e especial.  
+Seus olhos iluminam qualquer ambiente.  
+Seu sorriso me faz sentir em casa.  
+Seus cachos são poesia que me enlouquece.  
+Seu abraço é meu lugar favorito.  
+Você me fez sentir amado como nunca antes.  
+Sua presença transforma tudo ao redor.  
+Você é intensidade, beleza e doçura em uma só pessoa.  
+Cada detalhe seu me deixa fascinado.  
+Seu corpo e seu sorriso me confundem de um jeito bom.  
+Seu jeito me faz querer ser melhor.  
+Cada risada sua é música para mim.  
+Seu olhar me prende e me encanta.  
+Você é ousadia e delicadeza ao mesmo tempo.  
+Seus gestos me fazem derreter.  
+Você é minha inspiração diária.  
+Cada palavra sua fica gravada em mim.  
+Seu perfume me hipnotiza.  
+Seu toque me faz flutuar.  
+Sua energia me contagia.  
+Você é perfeita, única, maravilhosa.  
+Cada sorriso seu é um presente.  
+Você me ensina a amar de verdade.  
+Seu corpo misturado com seu sorriso me dá sentimentos que não sei controlar 🫦  
+Sua risada é minha melodia favorita.  
+Você é perigosa do melhor jeito possível 🫦  
+Eu te desejo toda felicidade do mundo.  
+Hoje celebramos você, minha rainha.  
+Feliz aniversário, minha Pretinha, te amo infinito!  
+        `;
     });
 
 };
