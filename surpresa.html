@@ -164,29 +164,22 @@ const finalBtn = document.getElementById("showText");
 const finalText = document.getElementById("finalText");
 const body = document.body;
 
-// ---------- Música funcional garantida ----------
-let audio = new Audio('music/poesia13.mp3');
+// ---------- Música 100% funcional ----------
+const musicBtn = document.getElementById("musicBtn");
+const audio = new Audio("music/poesia13.mp3");
 audio.loop = true;
 
-const musicBtn = document.getElementById('musicBtn');
-let musicStarted = false;
-
-musicBtn.addEventListener('click', () => {
-    if(!musicStarted){
-        audio.play().then(()=>{
+musicBtn.addEventListener("click", async function() {
+    try {
+        if(audio.paused){
+            await audio.play();
             musicBtn.innerText = "Pausar Música ⏸️";
-            musicStarted = true;
-        }).catch(err=>{
-            console.log("Clique necessário para tocar música.");
-        });
-    } else {
-        if(!audio.paused){
+        } else {
             audio.pause();
             musicBtn.innerText = "Tocar Música 🎵";
-        } else {
-            audio.play();
-            musicBtn.innerText = "Pausar Música ⏸️";
         }
+    } catch(err) {
+        console.log("O navegador bloqueou o áudio. Clique novamente.");
     }
 });
 
