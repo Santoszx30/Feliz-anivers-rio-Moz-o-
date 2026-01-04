@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teste Música Giovanna 💜</title>
+<style>
+body {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
+    font-family: Arial, sans-serif;
+    color: white;
+}
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    border:none;
+    border-radius:15px;
+    background:#8a2be2;
+    color:white;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<button id="musicBtn">Tocar Música 🎵</button>
+
+<script>
+// ---------- Caminho do arquivo ----------
+const audio = new Audio("music/poesia13.mp3"); // verifique se está exatamente aqui
+audio.loop = true;
+
+// ---------- Botão play/pause ----------
+const musicBtn = document.getElementById("musicBtn");
+
+musicBtn.addEventListener("click", async () => {
+    try {
+        if(audio.paused){
+            await audio.play(); // garante que o navegador permita tocar
+            musicBtn.innerText = "Pausar Música ⏸️";
+        } else {
+            audio.pause();
+            musicBtn.innerText = "Tocar Música 🎵";
+        }
+    } catch(err){
+        console.log("O navegador bloqueou o áudio. Clique novamente.");
+        alert("Clique direto no botão para ouvir a música!");
+    }
+});
+</script>
+
+</body>
+</html>
