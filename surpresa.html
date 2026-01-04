@@ -166,13 +166,13 @@ const body = document.body;
 
 // ---------- Música 100% funcional ----------
 const musicBtn = document.getElementById("musicBtn");
-const audio = new Audio("music/poesia13.mp3");
+const audio = new Audio("music/poesia13.mp3"); // caminho correto
 audio.loop = true;
 
-musicBtn.addEventListener("click", async function() {
+musicBtn.addEventListener("click", async () => {
     try {
         if(audio.paused){
-            await audio.play();
+            await audio.play(); // garante que o navegador permita tocar
             musicBtn.innerText = "Pausar Música ⏸️";
         } else {
             audio.pause();
@@ -180,6 +180,7 @@ musicBtn.addEventListener("click", async function() {
         }
     } catch(err) {
         console.log("O navegador bloqueou o áudio. Clique novamente.");
+        alert("Clique direto no botão para ouvir a música!");
     }
 });
 
