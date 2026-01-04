@@ -8,36 +8,25 @@
 </head>
 <body class="surpresa-body">
 
-  <!-- Corações flutuantes -->
-  <div id="hearts-container2"></div>
-  <div id="words-container2"></div>
+  <!-- Botão de tocar música (visual por enquanto) -->
+  <button id="playMusic" class="top-button">▶️ Ouvir música</button>
 
-  <div class="surpresa-wrapper">
+  <!-- Coração gigante central -->
+  <div id="giantHeart" class="giant-heart">💜</div>
 
-    <!-- Coração gigante -->
-    <div id="bigHeart" class="big-heart">💜</div>
-
-    <!-- Botão Play Música -->
-    <button id="playMusic">▶️ Ouvir Música</button>
-
-    <!-- Botão “clique aqui, princesa” -->
-    <button id="textoBtn">clique aqui, princesa 💜</button>
-
-    <!-- Galeria de fotos -->
-    <div class="gallery" id="gallery"></div>
-
-    <!-- Texto final -->
-    <div id="finalText" class="hidden">
-      <p>
-        Feliz aniversário, Giovanna! 💜<br>
-        Hoje é um dia especial, dedicado a você...<br>
-        <!-- aqui vai o texto de ~30 linhas, que podemos colocar depois -->
-      </p>
-    </div>
-
+  <!-- Container da galeria de fotos -->
+  <div class="photo-container">
+    <img id="photo" src="" alt="Foto da Giovanna">
+    <p id="photoElogio" class="photo-elogio"></p>
+    <button id="nextPhoto" class="next-button">Próxima foto</button>
   </div>
 
-  <audio id="music" src="music/poesia13.mp3"></audio>
+  <!-- Botão para mostrar o texto final -->
+  <button id="showText" class="final-button">Clique aqui, princesa 💜</button>
+
+  <!-- Texto final -->
+  <div id="finalText" class="final-text"></div>
+
   <script src="script-surpresa.js"></script>
 </body>
 </html>
