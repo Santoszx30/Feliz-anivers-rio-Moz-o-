@@ -14,9 +14,10 @@ body {
     overflow-x: hidden;
 }
 
+/* Botão tocar música */
 .top-button {
     display:block;
-    margin: 10px auto;
+    margin: 15px auto;
     padding: 10px 20px;
     background: purple;
     color:white;
@@ -26,6 +27,7 @@ body {
     cursor:pointer;
 }
 
+/* Coração gigante */
 .giant-heart {
     font-size: 150px;
     text-align:center;
@@ -34,10 +36,12 @@ body {
     margin: 20px auto;
 }
 
+/* Container da foto */
 .photo-container {
     text-align:center;
     position: relative;
-    height: 400px;
+    max-height: 450px;
+    margin-bottom: 20px;
 }
 
 #photo {
@@ -46,7 +50,8 @@ body {
     opacity: 0;
     transition: opacity 0.7s;
     border-radius: 15px;
-    margin-bottom: 10px;
+    display: block;
+    margin: 0 auto 10px auto;
 }
 
 .photo-elogio {
@@ -54,6 +59,7 @@ body {
     margin-bottom: 15px;
 }
 
+/* Botão próxima foto */
 .next-button {
     padding: 8px 15px;
     font-size: 16px;
@@ -62,8 +68,11 @@ body {
     background: #8a2be2;
     color:white;
     cursor:pointer;
+    display:block;
+    margin: 0 auto;
 }
 
+/* Botão final */
 .final-button {
     display:block;
     margin: 30px auto;
@@ -76,14 +85,16 @@ body {
     cursor:pointer;
 }
 
+/* Texto final */
 .final-text {
     display:none;
-    margin: 20px auto;
+    margin: 20px auto 50px auto;
     width: 80%;
     font-size: 18px;
     text-align:left;
     line-height: 1.6;
 }
+
 .explosion-heart {
     position: absolute;
     font-size: 20px;
@@ -114,4 +125,4 @@ body {
 
 <script src="script-surpresa.js"></script>
 </body>
-  </html>
+</html>
