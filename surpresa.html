@@ -6,6 +6,7 @@
 <title>Feliz Aniversário Giovanna 💜</title>
 <link rel="stylesheet" href="style.css">
 <style>
+/* ---------- Corpo e gradiente de fundo ---------- */
 body {
     margin:0;
     min-height:100vh;
@@ -13,16 +14,15 @@ body {
     color: white;
     font-family: Arial, sans-serif;
     overflow-x: hidden;
-    overflow-y: hidden;
     position: relative;
 }
 
-/* Botão tocar música */
+/* ---------- Botão tocar música ---------- */
 .top-button {
     display:block;
     margin: 15px auto;
     padding: 10px 20px;
-    background: purple;
+    background: #8a2be2;
     color:white;
     border:none;
     border-radius: 15px;
@@ -30,7 +30,7 @@ body {
     cursor:pointer;
 }
 
-/* Coração gigante */
+/* ---------- Coração gigante ---------- */
 .giant-heart {
     font-size: 150px;
     text-align:center;
@@ -39,15 +39,16 @@ body {
     margin: 20px auto;
 }
 
-/* Container da foto */
+/* ---------- Container da foto ---------- */
 .photo-container {
     text-align:center;
     position: relative;
+    max-width: 90%;
     max-height: 400px;
     margin: 20px auto;
 }
 
-/* Fotos */
+/* ---------- Foto ---------- */
 #photo {
     max-width: 80%;
     max-height: 350px;
@@ -55,16 +56,16 @@ body {
     transition: opacity 0.7s;
     border-radius: 15px;
     display: block;
-    margin: 0 auto 15px auto;
+    margin: 0 auto 10px auto;
 }
 
-/* Elogio acima da foto */
+/* ---------- Elogio acima da foto ---------- */
 .photo-elogio {
     font-size: 22px;
     margin-bottom: 15px;
 }
 
-/* Botão próxima foto */
+/* ---------- Botão próxima foto ---------- */
 .next-button {
     padding: 8px 15px;
     font-size: 16px;
@@ -74,10 +75,10 @@ body {
     color:white;
     cursor:pointer;
     display:block;
-    margin: 0 auto 30px auto; /* Espaço extra para não invadir o botão final */
+    margin: 0 auto 40px auto; /* Espaço extra para não invadir botão final */
 }
 
-/* Botão final */
+/* ---------- Botão final ---------- */
 .final-button {
     display:block;
     margin: 30px auto;
@@ -90,7 +91,7 @@ body {
     cursor:pointer;
 }
 
-/* Texto final */
+/* ---------- Texto final ---------- */
 .final-text {
     display:none;
     margin: 20px auto 50px auto;
@@ -100,7 +101,7 @@ body {
     line-height: 1.6;
 }
 
-/* Efeitos de corações e textos flutuando */
+/* ---------- Efeitos de corações e textos voando ---------- */
 .flyingText, .flyingHeart {
     position: absolute;
     pointer-events: none;
@@ -122,7 +123,7 @@ body {
     100% { transform: translateY(-600px); opacity:0; }
 }
 
-/* Explosão de coração ao clicar */
+/* ---------- Explosão de coração ao clicar ---------- */
 .explosion-heart {
     position: absolute;
     font-size: 20px;
