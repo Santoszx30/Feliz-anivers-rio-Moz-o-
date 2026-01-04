@@ -1,10 +1,10 @@
-// Fotos e elogios
+// ----------------- Galeria de Fotos e Elogios -----------------
 const photos = [];
 for(let i=1;i<=20;i++){
   photos.push(`fotos/foto${i}.jpg`);
 }
 
-// Elogios
+// Elogios íntimos (20 fotos)
 const elogios = [
   "Seus olhos me prendem de um jeito que eu nunca senti antes.",
   "Olhar nos seus olhos é como mergulhar em um mar de carinho e intensidade.",
@@ -36,8 +36,9 @@ const nextBtn = document.getElementById("nextPhoto");
 const giantHeart = document.getElementById("giantHeart");
 const finalBtn = document.getElementById("showText");
 const finalText = document.getElementById("finalText");
+const body = document.body;
 
-// Função para mostrar foto atual
+// ----------------- Mostrar Foto Atual -----------------
 function showPhoto(index){
   if(index >= photos.length) return;
   photoEl.src = photos[index];
@@ -52,15 +53,17 @@ function showPhoto(index){
   }, 50);
 }
 
+// ----------------- Botão Próxima Foto -----------------
 nextBtn.addEventListener("click", ()=>{
   currentPhoto++;
   if(currentPhoto >= photos.length) currentPhoto = photos.length-1;
   showPhoto(currentPhoto);
+  explodeHearts(20); // Pequena explosão a cada foto
 });
 
-// Explosão de corações
-giantHeart.addEventListener("click", ()=>{
-  for(let i=0;i<30;i++){
+// ----------------- Explosão de corações -----------------
+function explodeHearts(number){
+  for(let i=0;i<number;i++){
     const h = document.createElement("div");
     h.className = "explosion-heart";
     h.style.left = (giantHeart.offsetLeft + 50) + "px";
@@ -70,11 +73,16 @@ giantHeart.addEventListener("click", ()=>{
     document.body.appendChild(h);
     setTimeout(()=>h.remove(),1000);
   }
+}
+
+// ----------------- Coração Gigante Clique -----------------
+giantHeart.addEventListener("click", ()=>{
+  explodeHearts(30);
   currentPhoto = 0;
   showPhoto(currentPhoto);
 });
 
-// Botão texto final
+// ----------------- Botão Texto Final -----------------
 finalBtn.addEventListener("click", ()=>{
   finalText.style.display="block";
   finalText.innerHTML = `
@@ -109,5 +117,35 @@ Eu nunca vou cansar de te elogiar, de te admirar e de te querer cada vez mais.
 Que todos os seus sonhos comecem a se realizar hoje… e que você realize alguns meus também.
 Obrigado por ser você, exatamente do jeitinho que me faz sorrir tanto… e suspirar demais.
 FELIZ ANIVERSÁRIO, minha pretinha… você é meu maior presente, minha tentação e meu desejo! 💜
-`;
+  `;
 });
+
+// ----------------- Corações Voando Automáticos -----------------
+const flyingHearts = ["💜","❤️","💖"];
+function createFlyingHeart(){
+  const h = document.createElement("div");
+  h.className = "flying-heart";
+  h.innerText = flyingHearts[Math.floor(Math.random()*flyingHearts.length)];
+  h.style.left = Math.random()*window.innerWidth + "px";
+  h.style.top = window.innerHeight + "px";
+  h.style.fontSize = (10 + Math.random()*15) + "px";
+  body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+}
+setInterval(createFlyingHeart, 400);
+
+// ----------------- Elogios Flutuantes Automáticos -----------------
+const elogiosFlutuantes = [
+  "PRINCESA","PITUCHA","BUXINN","CACHEADA","PRETINHA","PITICA",
+  "HELLO KITTY","PEQUENA","LINDA","MARAVILHOSA","PERFEITA","CHEIROSA",
+  "GOSTOSA","DELÍCIA","Você é intensa do melhor jeito possível 🫦"
+];
+function createFlyingElogio(){
+  const e = document.createElement("div");
+  e.className = "flying-elogio";
+  e.innerText = elogiosFlutuantes[Math.floor(Math.random()*elogiosFlutuantes.length)];
+  e.style.top = Math.random()*window.innerHeight + "px";
+  body.appendChild(e);
+  setTimeout(()=>e.remove(),8000);
+}
+setInterval(createFlyingElogio, 500);
