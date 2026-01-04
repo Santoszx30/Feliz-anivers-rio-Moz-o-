@@ -5,23 +5,29 @@
   font-family: Arial, sans-serif;
 }
 
-body.loading-body, body.surpresa-body {
+body.loading-body {
   height: 100vh;
-  background: linear-gradient(135deg, #2b1055, #3b82f6);
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
   text-align: center;
+  color: white;
+  background: linear-gradient(135deg, #2b1055, #3b82f6);
+  animation: gradientBG 10s ease infinite alternate;
 }
 
-/* Wrapper central */
-.loading-wrapper, .surpresa-wrapper {
-  z-index: 2;
+/* Gradiente animado */
+@keyframes gradientBG {
+  0% { background: linear-gradient(135deg, #2b1055, #3b82f6); }
+  50% { background: linear-gradient(135deg, #3b82f6, #6f42c1); }
+  100% { background: linear-gradient(135deg, #2b1055, #3b82f6); }
 }
 
-/* Celular */
+/* Wrapper */
+.loading-wrapper { z-index: 2; text-align: center; }
+
+/* Celular (NÃO ALTERAR) */
 .phone {
   width: 220px;
   height: 420px;
@@ -31,16 +37,14 @@ body.loading-body, body.surpresa-body {
   margin: 0 auto 20px;
   background: black;
 }
-
 .phone-screen {
   width: 100%;
   height: 100%;
   border-radius: 20px;
-  background: linear-gradient(135deg, #1f1f3a, #000);
+  background: linear-gradient(135deg,#1f1f3a,#000);
   overflow: hidden;
   position: relative;
 }
-
 .phone-screen img {
   position: absolute;
   width: 60%;
@@ -49,18 +53,16 @@ body.loading-body, body.surpresa-body {
   border-radius: 12px;
   animation: enterPhone 3s ease forwards;
 }
-
 @keyframes enterPhone {
-  to {
-    top: 20%;
-  }
+  to { top: 20%; }
 }
 
-/* Texto */
+/* Texto digitação */
 .loading-text {
   margin-bottom: 10px;
-  font-size: 1.2em;
+  font-size: 1.5em;
   color: #c9a3ff;
+  min-height: 1.5em;
 }
 
 /* Barra de loading */
@@ -70,34 +72,32 @@ body.loading-body, body.surpresa-body {
   background: #222;
   border-radius: 10px;
   overflow: hidden;
+  position: relative;
 }
 
 .loading-progress {
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg, #6f42c1, #3b82f6);
+  position: relative;
 }
 
-/* Galeria Surpresa */
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 20px;
+/* Pequenos corações saindo da barra */
+.loading-progress::after {
+  content: "💜";
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  animation: heartFromBar 1s linear infinite;
+  font-size: 16px;
 }
 
-.gallery img {
-  width: 100%;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: transform 0.3s;
+@keyframes heartFromBar {
+  0% { transform: translateY(0) scale(1); opacity:1; }
+  100% { transform: translateY(-30px) scale(1.2); opacity:0; }
 }
 
-.gallery img:hover {
-  transform: scale(1.2);
-}
-
-/* Corações */
+/* Corações flutuantes */
 .heart {
   position: fixed;
   bottom: -20px;
@@ -105,57 +105,39 @@ body.loading-body, body.surpresa-body {
   color: #a855f7;
   animation: floatUp 6s linear infinite;
 }
-
 @keyframes floatUp {
   from { transform: translateY(0); opacity: 1; }
   to { transform: translateY(-110vh); opacity: 0; }
 }
 
-/* Palavras */
+/* Elogios flutuantes */
 .word {
   position: fixed;
-  color: #c084fc;
-  font-size: 14px;
+  font-size: 18px;
+  font-weight: bold;
   animation: moveWord 10s linear infinite;
-  opacity: 0.8;
+  opacity: 0;
+  transform: rotate(-10deg);
 }
-
 @keyframes moveWord {
-  from { transform: translateX(-20vw); }
-  to { transform: translateX(120vw); }
+  from { transform: translateX(-20vw) rotate(-10deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  to { transform: translateX(120vw) rotate(10deg); opacity: 0; }
 }
 
-/* Coração gigante */
-.big-heart {
-  font-size: 80px;
-  cursor: pointer;
-  animation: pulse 1.5s infinite;
+/* Estrelas */
+.star {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: twinkle 2s infinite alternate;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
-/* Botões */
-button {
-  padding: 12px 25px;
-  border: none;
-  border-radius: 30px;
-  background: #ff4d6d;
-  color: white;
-  font-size: 1em;
-  cursor: pointer;
-  margin: 5px;
-  transition: 0.2s;
-}
-
-button:hover {
-  transform: scale(1.05);
-  background: #ff2e55;
-}
-
-/* Texto final */
-.hidden { display: none; }
-#finalText { margin-top: 20px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
+@keyframes twinkle {
+  from { opacity: 0.3; }
+  to { opacity: 1; }
+  }
