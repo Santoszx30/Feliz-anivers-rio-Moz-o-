@@ -8,11 +8,9 @@ window.onload = function() {
     const finalText = document.getElementById("finalText");
     const body = document.body;
 
-    // 20 fotos
     const photos = [];
     for(let i=1; i<=20; i++) photos.push(`fotos/foto${i}.jpg`);
 
-    // 20 elogios correspondentes às fotos
     const elogiosFotos = [
         "Seus olhos me prendem de um jeito que eu não consigo explicar 😍",
         "Olhar que me deixa sem palavras e apaixonado 💜",
@@ -38,7 +36,6 @@ window.onload = function() {
 
     let currentPhoto2 = -1;
 
-    // ----------------- Explodir corações -----------------
     function explodeHearts(qtd){
         for(let i=0;i<qtd;i++){
             const h=document.createElement("div");
@@ -56,18 +53,16 @@ window.onload = function() {
         }
     }
 
-    // ----------------- Mostrar foto com fade -----------------
     function showPhoto(index){
         if(index<0 || index>=photos.length) return;
-        photoEl.style.opacity=0; // reseta fade
+        photoEl.style.opacity=0;
         setTimeout(()=>{
             photoEl.src=photos[index];
-            photoElogio.innerText=elogiosFotos[index] || "";
+            photoElogio.innerText=elogiosFotos[index];
             photoEl.onload=()=>{ photoEl.style.opacity=1; };
-        }, 100); // pequeno delay para transição
+        }, 100);
     }
 
-    // ----------------- Clicar no coração gigante -----------------
     giantHeart.addEventListener("click",()=>{
         explodeHearts(30);
         if(currentPhoto2===-1){
@@ -76,7 +71,6 @@ window.onload = function() {
         }
     });
 
-    // ----------------- Botão próxima foto -----------------
     nextBtn.addEventListener("click",()=>{
         if(currentPhoto2>=0 && currentPhoto2<photos.length-1){
             currentPhoto2++;
@@ -85,7 +79,6 @@ window.onload = function() {
         }
     });
 
-    // ----------------- Botão texto final -----------------
     finalBtn.addEventListener("click",()=>{
         finalText.style.display="block";
         finalText.innerHTML = `
