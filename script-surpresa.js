@@ -12,7 +12,7 @@ window.onload = function() {
     const photos = [];
     for(let i=1;i<=20;i++) photos.push(`fotos/foto${i}.jpg`);
 
-    // Elogios correspondentes
+    // Elogios
     const elogiosFotos = [
         "Seus olhos me prendem de um jeito que eu não consigo explicar 😍",
         "Olhar que me deixa sem palavras e apaixonado 💜",
@@ -94,7 +94,7 @@ Hoje é seu dia, e eu só penso em te ver sorrir.
 Cada instante com você é único e especial.
 Seus olhos iluminam qualquer ambiente.
 Seu sorriso me faz sentir em casa.
-Seus cachos são poesia que me enlouquece.
+Seus cachos são poesia que me enlouquecem.
 Seu abraço é meu lugar favorito.
 Você me fez sentir amado como nunca antes.
 Sua presença transforma tudo ao redor.
@@ -123,7 +123,8 @@ Feliz aniversário, minha Pretinha, te amo infinito!
         `;
     });
 
-    // ----------------- Corações e elogios voando -----------------
+    // ----------------- Corações e elogios voando ----------
+
     const flyingWords = ["PRINCESA","PITUCHA","BUXINN","CACHEADA","PRETINHA","PITICA","HELLO KITTY","PEQUENA","LINDA","MARAVILHOSA","PERFEITA","CHEIROSA","GOSTOSA","DELÍCIA"];
 
     function createFlyingText(){
