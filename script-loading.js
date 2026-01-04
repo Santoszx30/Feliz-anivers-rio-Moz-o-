@@ -16,6 +16,8 @@ window.onload = function() {
     photos.forEach(src => {
         const img = document.createElement("img");
         img.src = src;
+        img.style.opacity = 0;
+        img.style.transition = "opacity 0.5s";
         cellPhone.appendChild(img);
         imgEls.push(img);
     });
@@ -42,13 +44,20 @@ window.onload = function() {
         h.innerText = flyingHearts[Math.floor(Math.random() * flyingHearts.length)];
         h.style.left = Math.random() * window.innerWidth + "px";
         h.style.top = window.innerHeight + "px";
-        h.style.fontSize = (10 + Math.random() * 15) + "px";
-        h.style.position = "absolute";
+        h.style.fontSize = (10 + Math.random() * 20) + "px";
+        h.style.position = "fixed";
         h.style.zIndex = 9999;
         body.appendChild(h);
-        setTimeout(() => h.remove(), 6000);
+
+        const duration = 4000 + Math.random() * 3000;
+        h.animate([
+            { transform: `translateY(0px)` },
+            { transform: `translateY(-${window.innerHeight + 50}px)` }
+        ], { duration: duration, iterations: 1 });
+
+        setTimeout(() => h.remove(), duration);
     }
-    setInterval(createFlyingHeart, 400);
+    setInterval(createFlyingHeart, 300);
 
     // ----------------- ELOGIOS VOANDO -----------------
     const elogios = ["PRINCESA","PITUCHA","BUXINN","CACHEADA","PRETINHA","PITICA","HELLO KITTY","PEQUENA","LINDA","MARAVILHOSA","PERFEITA","CHEIROSA","GOSTOSA","DELÍCIA"];
@@ -56,13 +65,22 @@ window.onload = function() {
         const e = document.createElement("div");
         e.className = "flying-elogio";
         e.innerText = elogios[Math.floor(Math.random() * elogios.length)];
-        e.style.top = Math.random() * window.innerHeight + "px";
-        e.style.position = "absolute";
+        e.style.left = Math.random() * window.innerWidth + "px";
+        e.style.top = window.innerHeight + "px";
+        e.style.fontSize = (14 + Math.random() * 16) + "px";
+        e.style.position = "fixed";
         e.style.zIndex = 9999;
         body.appendChild(e);
-        setTimeout(() => e.remove(), 8000);
+
+        const duration = 5000 + Math.random() * 3000;
+        e.animate([
+            { transform: `translateY(0px)` },
+            { transform: `translateY(-${window.innerHeight + 50}px)` }
+        ], { duration: duration, iterations: 1 });
+
+        setTimeout(() => e.remove(), duration);
     }
-    setInterval(createFlyingElogio, 500);
+    setInterval(createFlyingElogio, 400);
 
     // ----------------- REDIRECIONAMENTO AUTOMÁTICO -----------------
     setTimeout(() => {
