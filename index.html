@@ -3,18 +3,105 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carregando sua beleza...</title>
+<title>Carregando sua beleza 💜</title>
 <link rel="stylesheet" href="style.css">
+<style>
+body {
+    margin:0;
+    background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Celular central */
+#phone {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 500px;
+    border: 5px solid #8a2be2;
+    border-radius: 30px;
+    background: black;
+    overflow: hidden;
+}
+
+/* Fotos dentro do celular */
+#phone img {
+    position: absolute;
+    width: 80%;
+    left: 10%;
+    top: 10%;
+    opacity: 0;
+    border-radius: 15px;
+    transition: all 0.8s ease;
+}
+
+/* Barra de carregamento */
+#loadingBarContainer {
+    position: absolute;
+    bottom: 60px;
+    width: 80%;
+    left: 10%;
+    height: 10px;
+    background: #222;
+    border-radius: 5px;
+    overflow: hidden;
+}
+#loadingBar {
+    width: 0%;
+    height: 100%;
+    background: purple;
+    transition: width 0.1s linear;
+}
+
+/* Frase carregando */
+#loadingText {
+    position: absolute;
+    bottom: 40px;
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+}
+
+/* Elogios voando */
+.flyingText {
+    position: absolute;
+    font-size: 18px;
+    font-weight: bold;
+    animation: floatUp linear forwards;
+}
+@keyframes floatUp {
+    0% { transform: translateY(0px); opacity:1; }
+    100% { transform: translateY(-600px); opacity:0; }
+}
+
+/* Corações voando */
+.flyingHeart {
+    position: absolute;
+    font-size: 20px;
+    animation: heartUp linear forwards;
+}
+@keyframes heartUp {
+    0% { transform: translateY(0px); opacity:1; }
+    100% { transform: translateY(-600px); opacity:0; }
+}
+</style>
 </head>
-<body class="loading-body">
+<body>
 
-  <div id="cell-phone"></div>
+<div id="phone">
+    <!-- Fotos serão adicionadas via JS -->
+</div>
 
-  <div class="loading-text">Carregando sua beleza...</div>
-  <div class="loading-bar">
-    <div class="loading-progress"></div>
-  </div>
+<div id="loadingBarContainer">
+    <div id="loadingBar"></div>
+</div>
+<div id="loadingText">Carregando sua beleza...</div>
 
 <script src="script-loading.js"></script>
 </body>
-</html>
+  </html>
