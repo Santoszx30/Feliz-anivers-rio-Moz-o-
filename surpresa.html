@@ -8,10 +8,13 @@
 <style>
 body {
     margin:0;
+    min-height:100vh;
     background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
     color: white;
     font-family: Arial, sans-serif;
     overflow-x: hidden;
+    overflow-y: hidden;
+    position: relative;
 }
 
 /* Botão tocar música */
@@ -40,20 +43,22 @@ body {
 .photo-container {
     text-align:center;
     position: relative;
-    max-height: 450px;
-    margin-bottom: 20px;
+    max-height: 400px;
+    margin: 20px auto;
 }
 
+/* Fotos */
 #photo {
     max-width: 80%;
-    max-height: 400px;
+    max-height: 350px;
     opacity: 0;
     transition: opacity 0.7s;
     border-radius: 15px;
     display: block;
-    margin: 0 auto 10px auto;
+    margin: 0 auto 15px auto;
 }
 
+/* Elogio acima da foto */
 .photo-elogio {
     font-size: 22px;
     margin-bottom: 15px;
@@ -69,7 +74,7 @@ body {
     color:white;
     cursor:pointer;
     display:block;
-    margin: 0 auto;
+    margin: 0 auto 30px auto; /* Espaço extra para não invadir o botão final */
 }
 
 /* Botão final */
@@ -95,6 +100,29 @@ body {
     line-height: 1.6;
 }
 
+/* Efeitos de corações e textos flutuando */
+.flyingText, .flyingHeart {
+    position: absolute;
+    pointer-events: none;
+    font-weight: bold;
+    animation: floatUp linear forwards;
+}
+
+.flyingText {
+    font-size: 18px;
+}
+
+.flyingHeart {
+    font-size: 20px;
+    animation: floatUp linear forwards;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity:1; }
+    100% { transform: translateY(-600px); opacity:0; }
+}
+
+/* Explosão de coração ao clicar */
 .explosion-heart {
     position: absolute;
     font-size: 20px;
