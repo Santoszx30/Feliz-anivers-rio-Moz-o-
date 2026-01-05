@@ -89,3 +89,62 @@ body {
 @keyframes explode {
     to { transform: translate(var(--x), var(--y)); opacity:0; }
 }
+/* FINAL SECRETO */
+#final-trigger {
+  text-align: center;
+  margin: 80px 0;
+}
+
+#final-trigger button {
+  background: linear-gradient(135deg, #6a00ff, #2d0b59);
+  color: white;
+  font-size: 20px;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(150, 0, 255, 0.5);
+}
+
+#final-secreto {
+  display: none;
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0b0016, #1a0033, #0a0f2d);
+  overflow: hidden;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+#frase-final {
+  font-size: 26px;
+  color: #d6b3ff;
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: textoLento 6s forwards;
+}
+
+@keyframes textoLento {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fotos-coracao {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.fotos-coracao img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  clip-path: path("M60 20 C60 0, 0 0, 0 40 C0 80, 60 120, 60 120 C60 120, 120 80, 120 40 C120 0, 60 0, 60 20 Z");
+  opacity: 0;
+  animation: aparecerFoto 1.5s forwards;
+}
+
+@keyframes aparecerFoto {
+  to { opacity: 1; }
+    }
