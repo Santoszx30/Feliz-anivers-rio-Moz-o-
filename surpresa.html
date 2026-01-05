@@ -23,6 +23,61 @@
 <button class="final-button" id="showText">Clique aqui, princesa 💜</button>
 <div class="final-text" id="finalText"></div>
 
-<script src="script.js"></script>
+<script>
+/* YOUTUBE */
+let ytPlayer;
+function onYouTubeIframeAPIReady() {
+  ytPlayer = new YT.Player('yt-player', {
+    height:'0',
+    width:'0',
+    videoId:'69-jnA4QLSM'
+  });
+}
+
+const tag=document.createElement('script');
+tag.src="https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
+
+document.getElementById("musicBtn").onclick=()=>{
+  if(!ytPlayer) return;
+  ytPlayer.getPlayerState()!==1 ? ytPlayer.playVideo() : ytPlayer.pauseVideo();
+};
+
+/* FOTOS */
+const photos=[...Array(20)].map((_,i)=>`fotos/foto${i+1}.jpg`);
+const elogios=[
+"Seus olhos me prendem de um jeito inexplicável 😍",
+"Seu olhar me desmonta por completo 💜",
+"...",
+"Você é perigosa do melhor jeito possível 🫦"
+];
+
+let index=-1;
+const img=document.getElementById("photo");
+const elogio=document.getElementById("photoElogio");
+
+document.getElementById("giantHeart").onclick=()=>{
+  if(index===-1){ index=0; show(); }
+};
+
+document.getElementById("nextPhoto").onclick=()=>{
+  if(index<photos.length-1){ index++; show(); }
+};
+
+function show(){
+  img.style.opacity=0;
+  setTimeout(()=>{
+    img.src=photos[index];
+    elogio.innerText=elogios[index]||"";
+    img.onload=()=>img.style.opacity=1;
+  },100);
+}
+
+/* TEXTO FINAL */
+document.getElementById("showText").onclick=()=>{
+  document.getElementById("finalText").style.display="block";
+};
+</script>
+
 </body>
 </html>
