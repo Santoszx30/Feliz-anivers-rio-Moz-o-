@@ -1,211 +1,224 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Para Giovanna 💜</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Giovanna 💜</title>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  <!-- Fonte bonita -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+/* ===== FUNDO GERAL ===== */
+body {
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg, #12001f, #2b0050, #12001f);
+  color: white;
+  overflow-x: hidden;
+}
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(160deg, #0b0016, #1a0033, #0a0f2d);
-      color: white;
-      overflow-x: hidden;
-    }
+/* ===== CORAÇÕES FLUTUANTES ===== */
+.bg-heart {
+  position: fixed;
+  bottom: -10%;
+  color: rgba(180,120,255,0.35);
+  animation: subir linear forwards;
+  z-index: 0;
+}
 
-    /* ===== CORAÇÕES DE FUNDO ===== */
-    .bg-heart {
-      position: fixed;
-      top: -50px;
-      color: rgba(170, 100, 255, 0.25);
-      animation: fall linear forwards;
-      z-index: 1;
-      pointer-events: none;
-    }
+@keyframes subir {
+  from { transform: translateY(0); opacity: 0; }
+  to { transform: translateY(-120vh); opacity: 1; }
+}
 
-    @keyframes fall {
-      to {
-        transform: translateY(110vh);
-        opacity: 0;
-      }
-    }
+/* ===== CONTAINER ===== */
+.container {
+  position: relative;
+  z-index: 1;
+  padding: 40px 20px 100px;
+  text-align: center;
+}
 
-    /* ===== BOTÃO FINAL ===== */
-    #final-trigger {
-      position: relative;
-      z-index: 5;
-      text-align: center;
-      margin: 120px 0;
-    }
+/* ===== BOTÕES ===== */
+button {
+  background: linear-gradient(90deg, #7f00ff, #b84cff);
+  border: none;
+  padding: 14px 28px;
+  border-radius: 30px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 25px auto;
+  box-shadow: 0 0 20px rgba(180,120,255,0.6);
+}
 
-    #final-trigger button {
-      background: linear-gradient(135deg, #6a00ff, #2d0b59);
-      color: white;
-      font-size: 20px;
-      padding: 14px 32px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      box-shadow: 0 0 25px rgba(150, 0, 255, 0.6);
-    }
+/* ===== FRASE ===== */
+.frase {
+  font-size: 26px;
+  margin: 30px 0 50px;
+}
 
-    /* ===== FINAL SECRETO ===== */
-    #final-secreto {
-      display: none;
-      position: relative;
-      z-index: 5;
-      min-height: 100vh;
-      padding: 80px 20px;
-      text-align: center;
-    }
+/* ===== CORAÇÕES GRANDES COM FOTO ===== */
+.fotos-coracao {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  align-items: center;
+}
 
-    #frase-final {
-      font-size: 26px;
-      color: #e0c7ff;
-      margin-bottom: 50px;
-      opacity: 0;
-      animation: textoLento 6s forwards;
-    }
+.coracao {
+  width: 280px;
+  height: 260px;
+  position: relative;
+  transform: rotate(-45deg);
+  overflow: hidden;
+}
 
-    @keyframes textoLento {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+.coracao::before,
+.coracao::after {
+  content: "";
+  width: 280px;
+  height: 280px;
+  background: inherit;
+  border-radius: 50%;
+  position: absolute;
+}
 
-    /* ===== FOTOS EM CORAÇÃO ===== */
-    .fotos-coracao {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 22px;
-    }
+.coracao::before { top: -140px; left: 0; }
+.coracao::after { left: 140px; top: 0; }
 
-    .fotos-coracao img {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      clip-path: path("M60 20 C60 0, 0 0, 0 40 C0 80, 60 120, 60 120 C60 120, 120 80, 120 40 C120 0, 60 0, 60 20 Z");
-      opacity: 0;
-      animation: aparecerFoto 1.8s forwards;
-    }
+.coracao img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: rotate(45deg) scale(1.2);
+}
 
-    @keyframes aparecerFoto {
-      to { opacity: 1; }
-    }
+/* ===== CORAÇÃO GIGANTE COM FRASE ===== */
+.coracao-gigante {
+  width: 320px;
+  height: 300px;
+  margin: 80px auto;
+  position: relative;
+  transform: rotate(-45deg) scale(0.8);
+  background: linear-gradient(145deg, #7f00ff, #b84cff);
+  box-shadow: 0 0 40px rgba(180,120,255,0.8);
+  opacity: 0;
+  animation: aparecer 2s forwards;
+}
 
-    /* ===== PLAYER YOUTUBE ===== */
-    #player-container {
-      position: fixed;
-      top: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-    }
+.coracao-gigante::before,
+.coracao-gigante::after {
+  content: "";
+  width: 320px;
+  height: 320px;
+  background: inherit;
+  border-radius: 50%;
+  position: absolute;
+}
 
-    #player-container iframe {
-      width: 0;
-      height: 0;
-      border: none;
-    }
+.coracao-gigante::before { top: -160px; left: 0; }
+.coracao-gigante::after { left: 160px; top: 0; }
 
-    #music-btn {
-      background: linear-gradient(135deg, #5f00ff, #2a0b52);
-      color: white;
-      border: none;
-      padding: 10px 22px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 14px;
-      box-shadow: 0 0 15px rgba(140, 0, 255, 0.6);
-    }
-  </style>
+.coracao-gigante span {
+  position: absolute;
+  transform: rotate(45deg);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  text-align: center;
+  padding: 30px;
+}
+
+@keyframes aparecer {
+  to { opacity: 1; transform: rotate(-45deg) scale(1); }
+}
+
+/* ===== TELA FINAL ===== */
+#final-secreto {
+  display: none;
+  min-height: 80vh;
+  margin-top: 80px;
+  padding: 60px 20px;
+  background: linear-gradient(180deg, #2b0050, #12001f);
+  animation: fade 2s forwards;
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+#final-secreto p {
+  font-size: 28px;
+}
+</style>
 </head>
 
 <body>
 
-  <!-- PLAYER YOUTUBE -->
-  <div id="player-container">
-    <button id="music-btn" onclick="toggleMusic()">Tocar música 🎶</button>
-    <iframe
-      id="ytplayer"
-      src="https://www.youtube.com/embed/69-jnA4QLSM?enablejsapi=1"
-      allow="autoplay">
-    </iframe>
-  </div>
+<audio id="musica" src="musica/musica.mp3"></audio>
 
-  <!-- BOTÃO FINAL -->
-  <div id="final-trigger">
-    <button onclick="mostrarFinal()">Ainda não acabou 💜</button>
-  </div>
+<div class="container">
 
-  <!-- FINAL SECRETO -->
-  <section id="final-secreto">
-    <p id="frase-final">Você é meu lugar favorito</p>
+<button onclick="tocarMusica()">Tocar música 🎶</button>
 
-    <div class="fotos-coracao">
-      <img src="final/casal1.jpg">
-      <img src="final/casal2.jpg">
-      <img src="final/casal3.jpg">
-      <img src="final/casal4.jpg">
-      <img src="final/casal5.jpg">
-      <img src="final/casal6.jpg">
-      <img src="final/casal7.jpg">
-    </div>
-  </section>
+<div class="frase">Você é meu lugar favorito</div>
 
-  <!-- JAVASCRIPT -->
-  <script>
-    /* ===== CORAÇÕES DE FUNDO ===== */
-    function createBackgroundHearts() {
-      const h = document.createElement("div");
-      h.className = "bg-heart";
-      h.innerText = "💜";
-      h.style.left = Math.random() * 100 + "vw";
-      h.style.fontSize = (14 + Math.random() * 24) + "px";
-      h.style.animationDuration = (8 + Math.random() * 6) + "s";
-      document.body.appendChild(h);
-      setTimeout(() => h.remove(), 14000);
-    }
-    setInterval(createBackgroundHearts, 400);
+<div class="fotos-coracao">
+  <div class="coracao"><img src="final/casa11.jpg"></div>
+  <div class="coracao"><img src="final/casa12.jpg"></div>
+  <div class="coracao"><img src="final/casa13.jpg"></div>
+  <div class="coracao"><img src="final/casa14.jpg"></div>
+  <div class="coracao"><img src="final/casa15.jpg"></div>
+  <div class="coracao"><img src="final/casa16.jpg"></div>
+  <div class="coracao"><img src="final/casa17.jpg"></div>
+</div>
 
-    /* ===== FINAL SECRETO ===== */
-    function mostrarFinal() {
-      document.getElementById("final-trigger").style.display = "none";
-      document.getElementById("final-secreto").style.display = "block";
-    }
+<div class="coracao-gigante">
+  <span>Você é meu lar 💜</span>
+</div>
 
-    /* ===== YOUTUBE PLAYER ===== */
-    let player;
-    let playing = false;
+<button onclick="mostrarFinal()">Ainda não acabou 💜</button>
 
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('ytplayer');
-    }
+<section id="final-secreto">
+  <p>Te escolheria em todas as vidas 🤍</p>
+</section>
 
-    function toggleMusic() {
-      if (!player) return;
-      if (!playing) {
-        player.playVideo();
-        document.getElementById("music-btn").innerText = "Pausar música ⏸";
-        playing = true;
-      } else {
-        player.pauseVideo();
-        document.getElementById("music-btn").innerText = "Tocar música 🎶";
-        playing = false;
-      }
-    }
+</div>
 
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.body.appendChild(tag);
-  </script>
+<script>
+function tocarMusica() {
+  const m = document.getElementById("musica");
+  m.paused ? m.play() : m.pause();
+}
+
+function mostrarFinal() {
+  const f = document.getElementById("final-secreto");
+  f.style.display = "block";
+  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+}
+
+function criarCoracoes() {
+  const h = document.createElement("div");
+  h.className = "bg-heart";
+  h.innerText = "💜";
+  h.style.left = Math.random()*100+"vw";
+  h.style.fontSize = (20+Math.random()*30)+"px";
+  h.style.animationDuration = (10+Math.random()*8)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),18000);
+}
+
+setInterval(criarCoracoes, 500);
+</script>
 
 </body>
 </html>
