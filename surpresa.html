@@ -1,398 +1,211 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para Giovanna 💜</title>
+  <meta charset="UTF-8">
+  <title>Para Giovanna 💜</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-html,body{
-  margin:0;
-  padding:0;
-  min-height:100%;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg,#2a0d3f,#000,#1a1a5c);
-  color:#fff;
-  overflow-x:hidden;
-}
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
 
-/* BOTÃO MÚSICA */
-#musicBtn{
-  display:block;
-  margin:15px auto;
-  padding:10px 22px;
-  background:#8a2be2;
-  border:none;
-  border-radius:18px;
-  font-size:16px;
-  color:white;
-  cursor:pointer;
-  z-index:10;
-  position:relative;
-}
+  <!-- Fonte bonita -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
-/* TEXTO INICIAL */
-#emotionalIntro{
-  text-align:center;
-  font-size:20px;
-  color:#cfa8ff;
-  margin-top:8px;
-  opacity:0;
-  animation:introFade 4s forwards;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(160deg, #0b0016, #1a0033, #0a0f2d);
+      color: white;
+      overflow-x: hidden;
+    }
 
-@keyframes introFade{
-  0%{opacity:0}
-  20%{opacity:1}
-  80%{opacity:1}
-  100%{opacity:0}
-}
+    /* ===== CORAÇÕES DE FUNDO ===== */
+    .bg-heart {
+      position: fixed;
+      top: -50px;
+      color: rgba(170, 100, 255, 0.25);
+      animation: fall linear forwards;
+      z-index: 1;
+      pointer-events: none;
+    }
 
-/* CORAÇÃO GIGANTE */
-#giantHeart{
-  font-size:150px;
-  text-align:center;
-  cursor:pointer;
-  margin:30px 0;
-  position:relative;
-  z-index:5;
-}
+    @keyframes fall {
+      to {
+        transform: translateY(110vh);
+        opacity: 0;
+      }
+    }
 
-/* ÁREA DAS FOTOS */
-#photoArea{
-  text-align:center;
-  max-width:900px;
-  margin:auto;
-  display:none;
-  position:relative;
-  z-index:5;
-}
+    /* ===== BOTÃO FINAL ===== */
+    #final-trigger {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      margin: 120px 0;
+    }
 
-#photo{
-  max-width:80%;
-  max-height:420px;
-  border-radius:18px;
-  opacity:0;
-  transition:opacity .7s;
-}
+    #final-trigger button {
+      background: linear-gradient(135deg, #6a00ff, #2d0b59);
+      color: white;
+      font-size: 20px;
+      padding: 14px 32px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(150, 0, 255, 0.6);
+    }
 
-#photoElogio{
-  font-size:22px;
-  margin:15px 0;
-}
+    /* ===== FINAL SECRETO ===== */
+    #final-secreto {
+      display: none;
+      position: relative;
+      z-index: 5;
+      min-height: 100vh;
+      padding: 80px 20px;
+      text-align: center;
+    }
 
-#nextPhoto{
-  padding:8px 18px;
-  border:none;
-  border-radius:12px;
-  background:#8a2be2;
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-  margin-bottom:35px;
-}
+    #frase-final {
+      font-size: 26px;
+      color: #e0c7ff;
+      margin-bottom: 50px;
+      opacity: 0;
+      animation: textoLento 6s forwards;
+    }
 
-/* BOTÃO TEXTO */
-#showText{
-  display:block;
-  margin:20px auto;
-  padding:12px 26px;
-  font-size:18px;
-  background:purple;
-  border:none;
-  border-radius:18px;
-  color:white;
-  cursor:pointer;
-  position:relative;
-  z-index:5;
-}
+    @keyframes textoLento {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
-/* TEXTO FINAL */
-#finalText{
-  display:none;
-  width:80%;
-  margin:30px auto;
-  font-size:18px;
-  line-height:1.7;
-  position:relative;
-  z-index:5;
-}
+    /* ===== FOTOS EM CORAÇÃO ===== */
+    .fotos-coracao {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 22px;
+    }
 
-/* CORAÇÕES DE FUNDO */
-.bg-heart{
-  position:fixed;
-  font-size:24px;
-  color:rgba(138,43,226,.25);
-  pointer-events:none;
-  animation:bgFloat linear forwards;
-  z-index:1;
-}
+    .fotos-coracao img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      clip-path: path("M60 20 C60 0, 0 0, 0 40 C0 80, 60 120, 60 120 C60 120, 120 80, 120 40 C120 0, 60 0, 60 20 Z");
+      opacity: 0;
+      animation: aparecerFoto 1.8s forwards;
+    }
 
-@keyframes bgFloat{
-  from{transform:translateY(100vh);opacity:0}
-  to{transform:translateY(-120vh);opacity:1}
-}
+    @keyframes aparecerFoto {
+      to { opacity: 1; }
+    }
 
-/* EXPLOSÃO */
-.explosion-heart{
-  position:absolute;
-  font-size:22px;
-  animation:explode 1s forwards;
-  pointer-events:none;
-  z-index:10;
-}
+    /* ===== PLAYER YOUTUBE ===== */
+    #player-container {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
 
-@keyframes explode{
-  to{transform:translate(var(--x),var(--y));opacity:0}
-}
+    #player-container iframe {
+      width: 0;
+      height: 0;
+      border: none;
+    }
 
-/* FINAL SECRETO */
-#secretMoment{
-  position:fixed;
-  inset:0;
-  background:black;
-  display:none;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-}
-
-.secretCenter{
-  font-size:26px;
-  color:white;
-  text-align:center;
-  z-index:3;
-  max-width:240px;
-  line-height:1.4;
-  text-shadow:0 0 10px rgba(138,43,226,.8);
-}
-
-.secretPhotos img{
-  width:90px;
-  height:90px;
-  object-fit:cover;
-  position:absolute;
-  clip-path:path(
-    "M50 15
-     C35 -5,0 10,25 40
-     L50 65
-     L75 40
-     C100 10,65 -5,50 15 Z"
-  );
-  opacity:0;
-  animation:fadeIn 1s forwards;
-  filter:drop-shadow(0 0 8px rgba(138,43,226,.6));
-}
-
-@keyframes fadeIn{to{opacity:1}}
-</style>
+    #music-btn {
+      background: linear-gradient(135deg, #5f00ff, #2a0b52);
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 0 15px rgba(140, 0, 255, 0.6);
+    }
+  </style>
 </head>
 
 <body>
 
-<button id="musicBtn">Tocar Música 🎵</button>
-<div id="emotionalIntro">Esse momento foi feito pra você 💜</div>
+  <!-- PLAYER YOUTUBE -->
+  <div id="player-container">
+    <button id="music-btn" onclick="toggleMusic()">Tocar música 🎶</button>
+    <iframe
+      id="ytplayer"
+      src="https://www.youtube.com/embed/69-jnA4QLSM?enablejsapi=1"
+      allow="autoplay">
+    </iframe>
+  </div>
 
-<div id="giantHeart">💜</div>
+  <!-- BOTÃO FINAL -->
+  <div id="final-trigger">
+    <button onclick="mostrarFinal()">Ainda não acabou 💜</button>
+  </div>
 
-<div id="photoArea">
-  <img id="photo">
-  <div id="photoElogio"></div>
-  <button id="nextPhoto">Próxima foto</button>
-</div>
+  <!-- FINAL SECRETO -->
+  <section id="final-secreto">
+    <p id="frase-final">Você é meu lugar favorito</p>
 
-<button id="showText">Clique aqui, princesa 💜</button>
-<div id="finalText"></div>
+    <div class="fotos-coracao">
+      <img src="final/casal1.jpg">
+      <img src="final/casal2.jpg">
+      <img src="final/casal3.jpg">
+      <img src="final/casal4.jpg">
+      <img src="final/casal5.jpg">
+      <img src="final/casal6.jpg">
+      <img src="final/casal7.jpg">
+    </div>
+  </section>
 
-<div id="secretMoment">
-  <div class="secretCenter">Você é meu lugar favorito</div>
-  <div class="secretPhotos"></div>
-</div>
-
-<div id="yt-player" style="display:none"></div>
-
-<script>
-// YOUTUBE
-let ytPlayer;
-function onYouTubeIframeAPIReady(){
-  ytPlayer=new YT.Player('yt-player',{videoId:'69-jnA4QLSM'});
-}
-let tag=document.createElement('script');
-tag.src="https://www.youtube.com/iframe_api";
-document.body.appendChild(tag);
-
-musicBtn.onclick=()=>{
-  if(!ytPlayer) return;
-  ytPlayer.getPlayerState()!==1
-  ? (ytPlayer.playVideo(),musicBtn.innerText="Pausar Música ⏸️")
-  : (ytPlayer.pauseVideo(),musicBtn.innerText="Tocar Música 🎵");
-};
-
-// VIBRAÇÃO
-function vibrateSoft(){
-  if(navigator.vibrate) navigator.vibrate(20);
-}
-
-// FOTOS
-const fotos=[...Array(20)].map((_,i)=>`fotos/foto${i+1}.jpg`);
-const elogios=[
-"Seus olhos me prendem completamente 😍",
-"Seu olhar me desmonta 💜",
-"Seu sorriso é perfeito",
-"Seus cachos são poesia",
-"Você me faz sentir amado",
-"Você me ensinou o que é amor",
-"Seu corpo me deixa maravilhado",
-"Sua personalidade me encanta",
-"Você é intensidade",
-"Você é fogo",
-"Você é doçura",
-"Você é tudo",
-"Seu jeito me vicia",
-"Seu toque arrepia",
-"Seu olhar hipnotiza",
-"Seu sorriso confunde",
-"Você me fascina",
-"Você me enlouquece",
-"Seu corpo e sorriso me confundem 🫦",
-"Você é perigosa do melhor jeito possível 🫦"
-];
-
-let index=-1;
-
-giantHeart.onclick=()=>{
-  vibrateSoft();
-  explode(30);
-  if(index===-1){
-    index=0;
-    photoArea.style.display="block";
-    showPhoto();
-  }
-};
-
-nextPhoto.onclick=()=>{
-  vibrateSoft();
-  if(index<fotos.length-1){
-    index++;
-    explode(15);
-    showPhoto();
-  }
-};
-
-function showPhoto(){
-  photo.style.opacity=0;
-  setTimeout(()=>{
-    photo.src=fotos[index];
-    photoElogio.innerText=elogios[index];
-    photo.onload=()=>photo.style.opacity=1;
-  },200);
-}
-
-// TEXTO FINAL
-const linhas=[
-"FELIZ ANIVERSÁRIO MINHA PRETINHAAA",
-"",
-"Hoje é seu dia.",
-"Seu sorriso muda tudo.",
-"Seus olhos iluminam.",
-"Seus cachos são arte.",
-"Seu abraço é casa.",
-"Você me ensinou a amar.",
-"Respeito, confiança, admiração.",
-"Seu corpo me encanta.",
-"Sua presença me transforma.",
-"",
-"Seu corpo misturado com seu sorriso",
-"me dão sentimentos que eu não sei controlar 🫦",
-"",
-"Você é perigosa do melhor jeito possível 🫦",
-"",
-"Eu te escolho. Sempre."
-];
-
-showText.onclick=()=>{
-  vibrateSoft();
-  finalText.innerHTML="";
-  finalText.style.display="block";
-  let i=0;
-  const t=setInterval(()=>{
-    if(i<linhas.length){
-      const p=document.createElement("p");
-      p.innerText=linhas[i++];
-      p.style.opacity=0;
-      p.style.transition="opacity .5s";
-      finalText.appendChild(p);
-      setTimeout(()=>p.style.opacity=1,50);
-    }else{
-      clearInterval(t);
-      setTimeout(showSecret,1200);
+  <!-- JAVASCRIPT -->
+  <script>
+    /* ===== CORAÇÕES DE FUNDO ===== */
+    function createBackgroundHearts() {
+      const h = document.createElement("div");
+      h.className = "bg-heart";
+      h.innerText = "💜";
+      h.style.left = Math.random() * 100 + "vw";
+      h.style.fontSize = (14 + Math.random() * 24) + "px";
+      h.style.animationDuration = (8 + Math.random() * 6) + "s";
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 14000);
     }
-  },350);
-};
+    setInterval(createBackgroundHearts, 400);
 
-// FINAL SECRETO
-function showSecret(){
-  secretMoment.style.display="flex";
-  const c=document.querySelector(".secretPhotos");
-  for(let i=1;i<=7;i++){
-    const img=document.createElement("img");
-    img.src=`final/final${i}.jpg`;
-    const ang=(360/7)*i;
-    const r=170;
-    img.style.transform=
-      `translate(${Math.cos(ang*Math.PI/180)*r}px,
-                 ${Math.sin(ang*Math.PI/180)*r}px)`;
-    c.appendChild(img);
-  }
-}
+    /* ===== FINAL SECRETO ===== */
+    function mostrarFinal() {
+      document.getElementById("final-trigger").style.display = "none";
+      document.getElementById("final-secreto").style.display = "block";
+    }
 
-// EXPLOSÃO
-function explode(q){
-  for(let i=0;i<q;i++){
-    const h=document.createElement("div");
-    h.className="explosion-heart";
-    h.innerText="💜";
-    h.style.left="50%";
-    h.style.top="50%";
-    h.style.setProperty('--x',(Math.random()-0.5)*300+"px");
-    h.style.setProperty('--y',(Math.random()-0.5)*300+"px");
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),1000);
-  }
-}
+    /* ===== YOUTUBE PLAYER ===== */
+    let player;
+    let playing = false;
 
-// CORAÇÕES DE FUNDO
-function createBackgroundHearts(){
-  const h=document.createElement("div");
-  h.className="bg-heart";
-  h.innerText="💜";
-  h.style.left=Math.random()*100+"vw";
-  h.style.fontSize=(16+Math.random()*24)+"px";
-  h.style.animationDuration=(8+Math.random()*6)+"s";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),14000);
-}
-setInterval(createBackgroundHearts,400);
-</script>
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('ytplayer');
+    }
+
+    function toggleMusic() {
+      if (!player) return;
+      if (!playing) {
+        player.playVideo();
+        document.getElementById("music-btn").innerText = "Pausar música ⏸";
+        playing = true;
+      } else {
+        player.pauseVideo();
+        document.getElementById("music-btn").innerText = "Tocar música 🎶";
+        playing = false;
+      }
+    }
+
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+  </script>
 
 </body>
-    </html>
-<!-- BOTÃO FINAL -->
-<div id="final-trigger">
-  <button onclick="mostrarFinal()">Ainda não acabou 💜</button>
-</div>
-
-<!-- FINAL SECRETO -->
-<section id="final-secreto">
-  <p id="frase-final">Você é meu lugar favorito</p>
-
-  <div class="fotos-coracao">
-    <img src="final/casal1.jpg">
-    <img src="final/casal2.jpg">
-    <img src="final/casal3.jpg">
-    <img src="final/casal4.jpg">
-    <img src="final/casal5.jpg">
-    <img src="final/casal6.jpg">
-    <img src="final/casal7.jpg">
-  </div>
-</section>
+</html>
