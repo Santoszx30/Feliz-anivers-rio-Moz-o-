@@ -9,22 +9,26 @@
 
 <body>
 
+<!-- BOTÃO MÚSICA -->
 <button class="top-button" id="musicBtn">Tocar Música 🎵</button>
 <div id="yt-player" style="display:none;"></div>
 
+<!-- CORAÇÃO GIGANTE -->
 <div class="giant-heart" id="giantHeart">💜</div>
 
+<!-- FOTOS -->
 <div class="photo-wrapper">
   <div class="photo-elogio" id="photoElogio"></div>
   <img id="photo" src="" alt="Foto">
   <button class="next-button" id="nextPhoto">Próxima Foto</button>
 </div>
 
+<!-- TEXTO FINAL -->
 <button class="final-button" id="showText">Clique aqui, princesa 💜</button>
 <div class="final-text" id="finalText"></div>
 
 <script>
-/* YOUTUBE */
+/* ================= YOUTUBE ================= */
 let ytPlayer;
 function onYouTubeIframeAPIReady() {
   ytPlayer = new YT.Player('yt-player', {
@@ -33,50 +37,134 @@ function onYouTubeIframeAPIReady() {
     videoId:'69-jnA4QLSM'
   });
 }
-
 const tag=document.createElement('script');
 tag.src="https://www.youtube.com/iframe_api";
 document.body.appendChild(tag);
 
 document.getElementById("musicBtn").onclick=()=>{
   if(!ytPlayer) return;
-  ytPlayer.getPlayerState()!==1 ? ytPlayer.playVideo() : ytPlayer.pauseVideo();
+  ytPlayer.getPlayerState()!==1
+    ? (ytPlayer.playVideo(), musicBtn.innerText="Pausar Música ⏸️")
+    : (ytPlayer.pauseVideo(), musicBtn.innerText="Tocar Música 🎵");
 };
 
-/* FOTOS */
-const photos=[...Array(20)].map((_,i)=>`fotos/foto${i+1}.jpg`);
-const elogios=[
-"Seus olhos me prendem de um jeito inexplicável 😍",
-"Seu olhar me desmonta por completo 💜",
-"...",
+/* ================= FOTOS ================= */
+const photos = [];
+for(let i=1;i<=20;i++) photos.push(`fotos/foto${i}.jpg`);
+
+const elogios = [
+"Seus olhos me prendem de um jeito que eu nunca vou entender 😍",
+"O brilho do seu olhar me desmonta por completo 💜",
+"Seu sorriso é simplesmente perfeito, ele me desarma 😘",
+"Seus cachos são maravilhosos, eu me perco neles 🫶",
+"Você me fez sentir amado de verdade 💖",
+"Com você eu aprendi que amor é respeito e cuidado 💕",
+"Seu corpo me deixa completamente maravilhado 😏",
+"Sua personalidade me faz sorrir sem perceber 😊",
+"Você é intensa do melhor jeito possível 🔥",
+"Seu toque me arrepia inteiro 💫",
+"Seu jeito me provoca sem você tentar 😘",
+"Você tem um charme que me deixa fraco 😍",
+"Sua presença muda tudo ao meu redor 💜",
+"Seu sorriso misturado com seu olhar é perigo puro 😏",
+"Cada detalhe seu me deixa sem defesa 💖",
+"Seu cheiro me vicia 🫶",
+"Você consegue ser doce e ousada ao mesmo tempo 🔥",
+"Você é tentação e carinho na mesma pessoa 😘",
+"Seu corpo misturado com seu sorriso me dão sentimentos que eu não sei controlar 🫦",
 "Você é perigosa do melhor jeito possível 🫦"
 ];
 
-let index=-1;
-const img=document.getElementById("photo");
-const elogio=document.getElementById("photoElogio");
+let index = -1;
+const img = document.getElementById("photo");
+const elogio = document.getElementById("photoElogio");
 
-document.getElementById("giantHeart").onclick=()=>{
-  if(index===-1){ index=0; show(); }
-};
-
-document.getElementById("nextPhoto").onclick=()=>{
-  if(index<photos.length-1){ index++; show(); }
-};
-
-function show(){
-  img.style.opacity=0;
+function showPhoto(){
+  img.style.opacity = 0;
   setTimeout(()=>{
-    img.src=photos[index];
-    elogio.innerText=elogios[index]||"";
-    img.onload=()=>img.style.opacity=1;
-  },100);
+    img.src = photos[index];
+    elogio.innerText = elogios[index];
+    img.onload = ()=> img.style.opacity = 1;
+  },150);
 }
 
-/* TEXTO FINAL */
-document.getElementById("showText").onclick=()=>{
-  document.getElementById("finalText").style.display="block";
+document.getElementById("giantHeart").onclick = ()=>{
+  if(index === -1){
+    index = 0;
+    showPhoto();
+  }
 };
+
+document.getElementById("nextPhoto").onclick = ()=>{
+  if(index < photos.length - 1){
+    index++;
+    showPhoto();
+  }
+};
+
+/* ================= TEXTO FINAL ================= */
+document.getElementById("showText").onclick = ()=>{
+  const t = document.getElementById("finalText");
+  t.style.display = "block";
+  t.innerHTML = `
+<b>FELIZ ANIVERSÁRIO MINHA PRETINHAAA</b><br><br>
+Hoje é seu dia, e eu só penso em te ver sorrir.<br>
+Cada instante com você é único e especial.<br>
+Seus olhos iluminam qualquer ambiente.<br>
+Seu sorriso me faz sentir em casa.<br>
+Seus cachos são poesia viva.<br>
+Seu abraço é meu lugar favorito.<br>
+Você me fez sentir amado de verdade.<br>
+Com você aprendi o que é amar com respeito.<br>
+Seu corpo me deixa sem reação.<br>
+Seu jeito me desmonta.<br>
+Sua risada é minha música favorita.<br>
+Seu toque me arrepia.<br>
+Sua presença muda tudo.<br>
+Você é intensidade pura.<br>
+Você é beleza, alma e desejo.<br>
+Você me provoca sem esforço.<br>
+Você é minha tentação favorita.<br>
+Você é única.<br>
+Você é tudo que eu quero.<br>
+Seu corpo misturado com seu sorriso me dão sentimentos que eu não sei controlar 🫦<br>
+Você é perigosa do melhor jeito possível 🫦<br><br>
+Eu te amo. 💜
+`;
+};
+
+/* ================= CORAÇÕES & ELOGIOS VOANDO ================= */
+const flyingWords = [
+"PRINCESA","PITUCHA","BUXINN","CACHEADA","PRETINHA",
+"PITICA","HELLO KITTY","PEQUENA","LINDA","MARAVILHOSA",
+"PERFEITA","CHEIROSA","GOSTOSA","DELÍCIA"
+];
+
+function flyingHeart(){
+  const h=document.createElement("div");
+  h.className="flyingHeart";
+  h.innerText="💜";
+  h.style.left=Math.random()*95+"%";
+  h.style.fontSize=(20+Math.random()*25)+"px";
+  h.style.opacity=0.6;
+  h.style.animationDuration=(4+Math.random()*4)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),8000);
+}
+
+function flyingText(){
+  const t=document.createElement("div");
+  t.className="flyingText";
+  t.innerText=flyingWords[Math.floor(Math.random()*flyingWords.length)];
+  t.style.left=Math.random()*90+"%";
+  t.style.color="#c77dff";
+  t.style.fontSize=(14+Math.random()*14)+"px";
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),8000);
+}
+
+setInterval(flyingHeart,500);
+setInterval(flyingText,900);
 </script>
 
 </body>
