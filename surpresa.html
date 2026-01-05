@@ -1,37 +1,164 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Para Giovanna 💜</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Para Giovanna 💜</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: linear-gradient(180deg, #2a003d, #120018);
+  color: #fff;
+}
+
+/* CONTAINER CENTRAL */
+.container {
+  max-width: 600px;
+  margin: 120px auto 80px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* BOTÃO MÚSICA */
+.btn-musica {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 30px;
+  border: none;
+  background: #7a1fd1;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 5;
+  box-shadow: 0 0 15px rgba(122,31,209,.6);
+}
+
+/* TEXTO */
+.texto {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  white-space: pre-line;
+  min-height: 200px;
+}
+
+/* CORAÇÕES DE FUNDO */
+.bg-heart {
+  position: fixed;
+  bottom: -50px;
+  color: rgba(180, 90, 255, 0.25);
+  animation: subir linear forwards;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes subir {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- CORAÇÕES DE FUNDO -->
-  <div id="hearts-container"></div>
+<button class="btn-musica" onclick="tocarMusica()">Tocar música 🎶</button>
 
-  <!-- BOTÃO MÚSICA -->
-  <button class="btn-musica" onclick="tocarMusica()">Tocar música 🎶</button>
+<div class="container">
+  <p id="texto" class="texto"></p>
+</div>
 
-  <!-- FRASE -->
-  <h1 class="frase-central">Você é meu lugar favorito</h1>
+<audio id="musica" src="music/poesia13.mp3"></audio>
 
-  <!-- GALERIA FINAL -->
-  <section class="galeria-coracoes">
-    <img src="final/casa11.jpg">
-    <img src="final/casa12.jpg">
-    <img src="final/casa13.jpg">
-    <img src="final/casa14.jpg">
-    <img src="final/casa15.jpg">
-    <img src="final/casa16.jpg">
-    <img src="final/casa17.jpg">
-  </section>
+<script>
+/* ===============================
+   TEXTO DIGITADO DEVAGAR
+================================ */
+const textoCompleto = `
+Feliz aniversário minha pretinha 💜
 
-  <!-- BOTÃO FINAL -->
-  <button class="btn-final" onclick="mostrarFinal()">Ainda não acabou 💜</button>
+Hoje não é só o dia em que você nasceu,
+é o dia que o mundo ficou mais bonito.
 
-  <script src="script-surpresa.js"></script>
+Você é calma quando tudo pesa,
+é sorriso quando tudo falta,
+é meu lugar seguro,
+meu amor tranquilo,
+meu lar.
+
+Que a vida continue te abraçando,
+e que eu esteja sempre ao seu lado
+pra te cuidar, te apoiar e te amar.
+
+Eu te amo.
+`;
+
+let i = 0;
+const velocidade = 45;
+const elTexto = document.getElementById("texto");
+
+function escreverTexto() {
+  if (i < textoCompleto.length) {
+    elTexto.innerHTML += textoCompleto.charAt(i);
+    i++;
+    setTimeout(escreverTexto, velocidade);
+  }
+}
+escreverTexto();
+
+/* ===============================
+   MÚSICA
+================================ */
+let tocando = false;
+function tocarMusica() {
+  const musica = document.getElementById("musica");
+  if (!musica) return;
+
+  if (!tocando) {
+    musica.play();
+    tocando = true;
+  } else {
+    musica.pause();
+    tocando = false;
+  }
+}
+
+/* ===============================
+   CORAÇÕES FLUTUANDO
+================================ */
+function criarCoracao() {
+  const h = document.createElement("div");
+  h.className = "bg-heart";
+  h.innerText = "💜";
+  h.style.left = Math.random() * 100 + "vw";
+  h.style.fontSize = (16 + Math.random() * 30) + "px";
+  h.style.animationDuration = (8 + Math.random() * 6) + "s";
+
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 14000);
+}
+
+setInterval(criarCoracao, 400);
+</script>
+
 </body>
 </html>
