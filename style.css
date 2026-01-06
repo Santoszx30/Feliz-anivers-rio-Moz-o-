@@ -1,101 +1,84 @@
-  html, body {
-  margin: 0;
-  height: 100%;
-  font-family: Arial, sans-serif;
-  overflow-x: hidden;
+* {
+  box-sizing: border-box;
 }
 
 body {
+  margin: 0;
+  font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
   color: white;
+  overflow-x: hidden;
 }
 
-/* LOADING */
-.loading-body {
-  display:flex;
-  justify-content:center;
-  align-items:center;
+/* ===== CONTAINER PRINCIPAL ===== */
+.pagina3 {
+  padding: 40px 20px 100px;
+  position: relative;
+  z-index: 2;
 }
 
-.loading-container {
-  text-align:center;
-}
-
-.loading-heart {
-  font-size:120px;
-  animation:pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0%,100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-}
-
-/* BOTÕES */
-.top-button,
-.next-button,
-.final-button {
-  background:#8a2be2;
-  color:white;
-  border:none;
-  border-radius:15px;
-  padding:10px 20px;
-  cursor:pointer;
-  display:block;
-  margin:15px auto;
-}
-
-/* CORAÇÃO */
-.giant-heart {
-  font-size:150px;
-  text-align:center;
-  cursor:pointer;
-}
-
-/* FOTOS */
-.photo-wrapper {
-  text-align:center;
-}
-
-#photo {
-  max-width:80%;
-  max-height:400px;
-  opacity:0;
-  transition:opacity .7s;
-  border-radius:15px;
-}
-
-.photo-elogio {
-  font-size:22px;
-  margin:10px 0;
-}
-
-/* TEXTO FINAL */
-.final-text {
-  display:none;
-  width:80%;
-  margin:20px auto 50px;
-  line-height:1.6;
-}
-
-/* ELEMENTOS VOANDO */
-.flyingText, .flyingHeart {
-  position:absolute;
-  bottom:0;
-  animation:floatUp linear forwards;
-}
-
-@keyframes floatUp {
-  to { transform:translateY(-600px); opacity:0; }
-}
-.mensagem-final {
-  max-width: 900px;
-  margin: 80px auto;
-  padding: 30px;
-  font-size: 20px;
-  line-height: 1.8;
+/* ===== BLOCO DE FOTO + TEXTO ===== */
+.photo-block {
+  margin-bottom: 80px;
   text-align: center;
-  color: white;
-  background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
-  border-radius: 25px;
 }
+
+/* TEXTO ROMÂNTICO */
+.photo-text {
+  font-size: 20px;
+  line-height: 1.7;
+  margin-bottom: 25px;
+  padding: 0 15px;
+  word-wrap: break-word;
+}
+
+/* ===== FOTO EM FORMATO DE CORAÇÃO ===== */
+.heart-photo {
+  width: 240px;
+  height: 220px;
+  margin: 0 auto;
+  clip-path: path("M120 210 C-20 120 40 20 120 70 C200 20 260 120 120 210 Z");
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(138, 43, 226, 0.6);
+  background: rgba(0,0,0,0.2);
+}
+
+/* FOTO AJUSTADA (90% visível) */
+.heart-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(0.9);
+}
+
+/* ===== MENSAGEM FINAL ===== */
+.mensagem-final {
+  margin-top: 90px;
+  padding: 30px 20px 70px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 18px;
+  line-height: 1.9;
+  text-align: left;
+}
+
+/* ===== CORAÇÕES VOANDO ===== */
+.flying-heart {
+  position: fixed;
+  bottom: -40px;
+  font-size: 30px;
+  opacity: 0.35;
+  animation: subir 12s linear forwards;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes subir {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-140vh);
+  }
+  }
