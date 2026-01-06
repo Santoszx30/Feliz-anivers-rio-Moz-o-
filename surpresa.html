@@ -170,6 +170,71 @@ setInterval(flyingText,900);
 <button id="btnPagina3" class="final-button" style="display:none;">
   ainda não acabou bb 💜
 </button>
-  
+  <script>
+    
+/* ================= TEXTO FINAL ================= */
+
+const textoFinalCompleto = `FELIZ ANIVERSÁRIO MINHA PRETINHAAA
+Hoje é seu dia, e eu só penso em te ver sorrir.
+Cada instante com você é único e especial.
+Seus olhos iluminam qualquer ambiente.
+Seu sorriso me faz sentir em casa.
+Seus cachos são poesia que me enlouquecem.
+Seu abraço é meu lugar favorito.
+Você me fez sentir amado como nunca antes.
+Sua presença transforma tudo ao redor.
+Você é intensidade, beleza e doçura.
+Cada detalhe seu me deixa fascinado.
+Seu corpo e seu sorriso me confundem de um jeito bom.
+Seu jeito me faz querer ser melhor.
+Você é minha pessoa.
+Te amo infinito 💜`;
+
+const botaoTexto = document.getElementById("showText");
+const areaTexto = document.getElementById("finalText");
+const botaoPagina3 = document.getElementById("btnPagina3");
+
+if (botaoPagina3) {
+  botaoPagina3.style.display = "none";
+  botaoPagina3.style.pointerEvents = "none";
+}
+
+botaoTexto.addEventListener("click", () => {
+  botaoTexto.style.display = "none";
+  areaTexto.style.display = "block";
+  areaTexto.innerHTML = "";
+
+  let i = 0;
+
+  const escrever = setInterval(() => {
+    if (textoFinalCompleto[i] === "\n") {
+      areaTexto.innerHTML += "<br>";
+    } else {
+      areaTexto.innerHTML += textoFinalCompleto[i];
+    }
+
+    i++;
+
+    if (i >= textoFinalCompleto.length) {
+      clearInterval(escrever);
+
+      // 🔥 AGORA SIM O BOTÃO APARECE
+      if (botaoPagina3) {
+        botaoPagina3.style.display = "block";
+        botaoPagina3.style.pointerEvents = "auto";
+        botaoPagina3.style.zIndex = "9999";
+      }
+    }
+  }, 45); // velocidade do texto
+});
+
+/* ================= BOTÃO PÁGINA 3 ================= */
+
+if (botaoPagina3) {
+  botaoPagina3.addEventListener("click", () => {
+    window.location.href = "pagina3.html";
+  });
+}
+  </script>
 </body>
 </html>
