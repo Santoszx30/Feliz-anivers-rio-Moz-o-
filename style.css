@@ -88,3 +88,14 @@ body {
 @keyframes floatUp {
   to { transform:translateY(-600px); opacity:0; }
 }
+.mensagem-final {
+  max-width: 900px;
+  margin: 80px auto;
+  padding: 30px;
+  font-size: 20px;
+  line-height: 1.8;
+  text-align: center;
+  color: white;
+  background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
+  border-radius: 25px;
+}
