@@ -1,1 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nossa História 💜</title>
 
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+body {
+    background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
+    color: white;
+    min-height: 100vh;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 15px 80px;
+}
+
+/* Título */
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 28px;
+}
+
+/* Bloco foto */
+.photo-block {
+    margin-bottom: 60px;
+    text-align: center;
+    position: relative;
+}
+
+/* Foto */
+.photo-block img {
+    width: 85%;
+    max-width: 450px;
+    border-radius: 25px;
+    box-shadow: 0 0 25px rgba(138,43,226,0.6);
+}
+
+/* Frase */
+.photo-text {
+    margin-top: 15px;
+    font-size: 18px;
+    line-height: 1.5;
+    padding: 0 10px;
+}
+
+/* Corações voando */
+.flying-heart {
+    position: fixed;
+    bottom: -30px;
+    font-size: 26px;
+    opacity: 0.6;
+    animation: floatUp linear forwards;
+    pointer-events: none;
+    z-index: 999;
+}
+
+@keyframes floatUp {
+    from {
+        transform: translateY(0);
+        opacity: 0.6;
+    }
+    to {
+        transform: translateY(-110vh);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Nossa história escrita em detalhes 💜</h1>
+
+    <div class="photo-block">
+        <img src="casal1.jpg">
+        <div class="photo-text">
+            Tudo começou simples… mas desde o começo já era intenso, verdadeiro e nosso.
+        </div>
+    </div>
+
+    <div class="photo-block">
+        <img src="casal2.jpg">
+        <div class="photo-text">
+            Cada momento ao seu lado virou memória boa, daquelas que aquecem o coração.
+        </div>
+    </div>
+
+    <div class="photo-block">
+        <img src="casal3.jpg">
+        <div class="photo-text">
+            Seu sorriso virou meu lugar seguro, e seu abraço meu descanso favorito.
+        </div>
+    </div>
+
+    <div class="photo-block">
+        <img src="casal4.jpg">
+        <div class="photo-text">
+            A gente se entende no olhar, se completa no toque e se fortalece juntos.
+        </div>
+    </div>
+
+    <div class="photo-block">
+        <img src="casal5.jpg">
+        <div class="photo-text">
+            Não é só amor… é parceria, cuidado, desejo e conexão de alma.
+        </div>
+    </div>
+
+    <div class="photo-block">
+        <img src="casal6.jpg">
+        <div class="photo-text">
+            Você é minha escolha diária, mesmo nos dias difíceis, mesmo no caos.
+        </div>
+    </div>
+
+    <div class="photo-block">
+        <img src="casal7.jpg">
+        <div class="photo-text">
+            E se eu tivesse que escolher de novo, escolheria você todas as vezes.
+        </div>
+    </div>
+</div>
+
+<script>
+function createFlyingHeart() {
+    const heart = document.createElement("div");
+    heart.className = "flying-heart";
+    heart.innerText = "💜";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (4 + Math.random() * 3) + "s";
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 8000);
+}
+
+setInterval(createFlyingHeart, 500);
+</script>
+
+</body>
+          </html>
