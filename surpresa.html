@@ -2,54 +2,70 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<title>Surpresa 💜</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Feliz Aniversário 💜</title>
 
 <style>
-/* ================= RESET ================= */
-* { box-sizing: border-box; }
+/* ===== RESET ===== */
+* {
+  box-sizing: border-box;
+}
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
-  color: white;
   overflow-x: hidden;
 }
 
-/* ================= BOTÃO MÚSICA ================= */
-.top-button {
-  display: block;
-  margin: 15px auto;
-  padding: 10px 22px;
+/* ===== PÁGINA 2 ===== */
+.pagina2 {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
+  color: white;
+  padding: 25px 15px 80px;
+  position: relative;
+}
+
+/* BOTÕES */
+.top-button,
+.next-button,
+.final-button {
   background: #8a2be2;
   color: white;
   border: none;
-  border-radius: 15px;
+  border-radius: 14px;
+  padding: 10px 18px;
   font-size: 16px;
   cursor: pointer;
-  z-index: 10;
 }
 
-/* ================= CORAÇÃO GIGANTE ================= */
+.top-button {
+  display: block;
+  margin: 0 auto 15px;
+}
+
+/* CORAÇÃO */
 .giant-heart {
-  font-size: 150px;
+  font-size: 140px;
   text-align: center;
   cursor: pointer;
-  margin: 20px auto;
+  margin: 10px 0;
 }
 
-/* ================= FOTOS PÁGINA 2 ================= */
+/* FOTOS */
 .photo-wrapper {
   text-align: center;
+  max-width: 800px;
+  margin: auto;
 }
 
 #photo {
-  max-width: 80%;
-  max-height: 400px;
+  max-width: 85%;
+  max-height: 420px;
+  border-radius: 18px;
   opacity: 0;
-  transition: opacity 0.7s;
-  border-radius: 15px;
+  transition: opacity .6s;
 }
 
 .photo-elogio {
@@ -57,170 +73,68 @@ body {
   margin: 15px 0;
 }
 
-.next-button {
-  padding: 8px 15px;
-  font-size: 16px;
-  border: none;
-  border-radius: 10px;
-  background: #8a2be2;
-  color: white;
-  cursor: pointer;
-}
-
-/* ================= TEXTO FINAL ================= */
-.final-button {
-  display: block;
-  margin: 25px auto;
-  padding: 12px 25px;
-  font-size: 18px;
-  border: none;
-  border-radius: 15px;
-  background: purple;
-  color: white;
-  cursor: pointer;
-}
-
+/* TEXTO FINAL */
 .final-text {
   display: none;
-  width: 80%;
-  margin: 20px auto;
-  font-size: 18px;
-  line-height: 1.8;
-}
-
-/* ================= PÁGINA 3 ================= */
-#pagina3 {
-  display: none;
-}
-
-.pagina3 {
-  padding: 40px 20px 100px;
-}
-
-.photo-block {
-  margin-bottom: 80px;
-  text-align: center;
-}
-
-.photo-text {
   font-size: 20px;
-  line-height: 1.7;
-  margin-bottom: 25px;
-  padding: 0 15px;
+  line-height: 1.9;
+  margin-top: 30px;
+  white-space: pre-line;
 }
 
-/* Coração com foto */
-.heart-photo {
-  width: 240px;
-  height: 220px;
-  margin: 0 auto;
-  clip-path: path("M120 210 C-20 120 40 20 120 70 C200 20 260 120 120 210 Z");
-  overflow: hidden;
-  box-shadow: 0 0 30px rgba(138,43,226,0.6);
-}
-
-.heart-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transform: scale(0.9);
-}
-
-/* ================= CORAÇÕES VOANDO ================= */
+/* CORAÇÕES VOANDO */
 .flying-heart {
   position: fixed;
   bottom: -40px;
-  font-size: 30px;
-  opacity: 0.35;
-  animation: subir 12s linear forwards;
+  font-size: 26px;
+  opacity: 0.4;
+  animation: subir 10s linear forwards;
   pointer-events: none;
-  z-index: 1;
 }
 
 @keyframes subir {
-  from { transform: translateY(0); }
-  to { transform: translateY(-140vh); }
+  from {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- BOTÃO MÚSICA -->
+<section class="pagina2">
+
 <button class="top-button" id="musicBtn">Tocar Música 🎵</button>
+
 <div id="yt-player" style="display:none;"></div>
 
-<!-- PÁGINA 2 -->
-<div id="pagina2">
+<div class="giant-heart" id="giantHeart">💜</div>
 
-  <div class="giant-heart" id="giantHeart">💜</div>
-
-  <div class="photo-wrapper">
-    <img id="photo">
-    <div class="photo-elogio" id="photoElogio"></div>
-    <button class="next-button" id="nextPhoto">Próxima Foto</button>
-  </div>
-
-  <button class="final-button" id="showText">Clique aqui, princesa 💜</button>
-  <div class="final-text" id="finalText"></div>
-
-  <button class="final-button" id="btnPagina3" style="display:none;">
-    ainda não acabou bb 💜
-  </button>
-
+<div class="photo-wrapper">
+  <img id="photo" src="">
+  <div class="photo-elogio" id="photoElogio"></div>
+  <button class="next-button" id="nextPhoto">Próxima Foto</button>
 </div>
 
-<!-- PÁGINA 3 -->
-<section id="pagina3">
-  <div class="pagina3">
+<button class="final-button" id="showText">Clique aqui, princesa 💜</button>
 
-    <div class="photo-block">
-      <div class="photo-text">Seu sorriso do meu lado é onde eu sempre quero estar.</div>
-      <div class="heart-photo"><img src="final/casal1.jpg"></div>
-    </div>
+<div class="final-text" id="finalText"></div>
 
-    <div class="photo-block">
-      <div class="photo-text">Cada momento com você vira lembrança boa automaticamente.</div>
-      <div class="heart-photo"><img src="final/casal2.jpg"></div>
-    </div>
+<button class="final-button" id="goPage3" style="display:none;">
+  Ainda não acabou bb 💜
+</button>
 
-    <div class="photo-block">
-      <div class="photo-text">Nosso jeito, nossas risadas, nossa conexão… tudo é real.</div>
-      <div class="heart-photo"><img src="final/casal3.jpg"></div>
-    </div>
-
-    <div class="photo-block">
-      <div class="photo-text">Você é calma e caos na medida perfeita pra mim.</div>
-      <div class="heart-photo"><img src="final/casal4.jpg"></div>
-    </div>
-
-    <div class="photo-block">
-      <div class="photo-text">Seu abraço é onde meu mundo desacelera.</div>
-      <div class="heart-photo"><img src="final/casal5.jpg"></div>
-    </div>
-
-    <div class="photo-block">
-      <div class="photo-text">Você é meu lugar seguro em qualquer bagunça.</div>
-      <div class="heart-photo"><img src="final/casal6.jpg"></div>
-    </div>
-
-    <div class="photo-block">
-      <div class="photo-text">Se eu tivesse que escolher um lugar pra sempre, seria você.</div>
-      <div class="heart-photo"><img src="final/casal7.jpg"></div>
-    </div>
-
-    <div class="final-text" style="display:block;">
-      <strong>Feliz aniversário, minha pretinha.</strong><br><br>
-      Eu te amo do meu jeito, no meu tempo, inteiro.<br>
-      E escolheria você… sempre. 💜
-    </div>
-
-  </div>
 </section>
 
 <script>
-/* ================= YOUTUBE ================= */
+/* ===== YOUTUBE ===== */
 let ytPlayer;
+
 function onYouTubeIframeAPIReady() {
   ytPlayer = new YT.Player('yt-player', {
     height: '0',
@@ -228,103 +142,104 @@ function onYouTubeIframeAPIReady() {
     videoId: '69-jnA4QLSM'
   });
 }
-const tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-document.body.appendChild(tag);
 
-musicBtn.onclick = () => {
+const yt = document.createElement("script");
+yt.src = "https://www.youtube.com/iframe_api";
+document.body.appendChild(yt);
+
+document.getElementById("musicBtn").onclick = () => {
   if (!ytPlayer) return;
-  ytPlayer.getPlayerState() !== 1 ? ytPlayer.playVideo() : ytPlayer.pauseVideo();
+  if (ytPlayer.getPlayerState() !== 1) {
+    ytPlayer.playVideo();
+    musicBtn.innerText = "Pausar Música ⏸️";
+  } else {
+    ytPlayer.pauseVideo();
+    musicBtn.innerText = "Tocar Música 🎵";
+  }
 };
 
-/* ================= FOTOS ================= */
-const photos = [];
-for (let i=1;i<=20;i++) photos.push(`fotos/foto${i}.jpg`);
+/* ===== FOTOS ===== */
+const fotos = [
+  "fotos/foto1.jpg",
+  "fotos/foto2.jpg",
+  "fotos/foto3.jpg"
+];
 
 const elogios = [
-  "Seus olhos me prendem de um jeito inexplicável 😍",
-  "Seu olhar me desmonta 💜",
-  "Seu sorriso é perfeito",
-  "Seus cachos são maravilhosos",
-  "Você me fez sentir amado",
-  "Você me ensinou o que é amor",
-  "Seu corpo me deixa maravilhado",
-  "Sua personalidade me encanta",
-  "Você é intensidade pura",
-  "Seu sorriso me confunde 🫦",
-  "Você é hipnotizante",
-  "Você é única",
-  "Cada detalhe seu me fascina",
-  "Seu jeito me conquista",
-  "Você é absurda",
-  "Você é surreal",
-  "Você é tentação",
-  "Você é doce",
-  "Você me enlouquece",
-  "Você é perigosa do melhor jeito possível 🫦"
+  "Seu sorriso me desmonta inteiro 💜",
+  "Seu olhar é meu ponto fraco 😍",
+  "Você é meu lugar favorito 🫶"
 ];
 
 let atual = -1;
 
+function mostrarFoto(i) {
+  const img = document.getElementById("photo");
+  img.style.opacity = 0;
+  setTimeout(() => {
+    img.src = fotos[i];
+    document.getElementById("photoElogio").innerText = elogios[i];
+    img.onload = () => img.style.opacity = 1;
+  }, 200);
+}
+
 giantHeart.onclick = () => {
   if (atual === -1) {
     atual = 0;
-    mostrarFoto();
+    mostrarFoto(atual);
   }
 };
 
 nextPhoto.onclick = () => {
-  if (atual < photos.length-1) {
+  if (atual < fotos.length - 1) {
     atual++;
-    mostrarFoto();
+    mostrarFoto(atual);
   }
 };
 
-function mostrarFoto() {
-  photo.style.opacity = 0;
-  setTimeout(() => {
-    photo.src = photos[atual];
-    photoElogio.innerText = elogios[atual];
-    photo.onload = () => photo.style.opacity = 1;
-  }, 200);
+/* ===== TEXTO LETRA POR LETRA ===== */
+function escrever(el, texto) {
+  el.innerText = "";
+  let i = 0;
+  const t = setInterval(() => {
+    el.innerText += texto[i];
+    i++;
+    if (i >= texto.length) clearInterval(t);
+  }, 45);
 }
 
-/* ================= TEXTO FINAL ================= */
 showText.onclick = () => {
   finalText.style.display = "block";
-  finalText.innerText =
-`FELIZ ANIVERSÁRIO MINHA PRETINHAAA
+  escrever(finalText,
+`Feliz aniversário, minha pretinha 💜
 
-Hoje é seu dia e eu só quero te ver sorrindo.
-Você transformou minha forma de amar.
-Seu sorriso é meu lar.
-Seu abraço é meu refúgio.
-Você é minha calma e meu caos.
-Seu corpo e sua alma me prendem.
-Eu te amo mais do que sei dizer.`;
+Você é abrigo, é calma, é bagunça boa.
+É meu riso fácil e meu pensamento distante.
+Seu abraço é onde tudo desacelera.
+E amar você é a coisa mais simples que já fiz.
+
+Eu te amo. Sempre.`);
 
   setTimeout(() => {
-    btnPagina3.style.display = "block";
-  }, 1200);
+    goPage3.style.display = "block";
+  }, 4500);
 };
 
-/* ================= IR PARA PÁGINA 3 ================= */
-btnPagina3.onclick = () => {
-  pagina2.style.display = "none";
-  pagina3.style.display = "block";
-  window.scrollTo(0,0);
+/* ===== BOTÃO PÁGINA 3 ===== */
+goPage3.onclick = () => {
+  window.location.href = "pagina3.html";
 };
 
-/* ================= CORAÇÕES ================= */
+/* ===== CORAÇÕES ===== */
 setInterval(() => {
   const h = document.createElement("div");
   h.className = "flying-heart";
   h.innerText = "💜";
-  h.style.left = Math.random()*100 + "vw";
+  h.style.left = Math.random() * 100 + "vw";
   document.body.appendChild(h);
-  setTimeout(()=>h.remove(),12000);
-}, 500);
+  setTimeout(() => h.remove(), 10000);
+}, 600);
 </script>
 
 </body>
-        </html>
+</html>
