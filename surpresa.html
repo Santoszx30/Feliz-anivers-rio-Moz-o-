@@ -7,240 +7,248 @@
 
 <style>
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
-/* ===== BODY ===== */
 body {
-  min-height: 100vh;
+  margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
+  background: linear-gradient(135deg, #2b0a3d, #000000, #1a2a6c);
   color: white;
   overflow-x: hidden;
 }
 
-/* ===== PÁGINAS ===== */
-.page {
-  display: none;
-  min-height: 100vh;
-  padding: 50px 20px;
-}
-
-.page.active {
+/* BOTÃO MÚSICA */
+.top-button {
   display: block;
+  margin: 15px auto;
+  padding: 10px 25px;
+  background: #8a2be2;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-/* ===== TEXTO PRINCIPAL (IGUAL AO ORIGINAL) ===== */
-.text-box {
+/* CORAÇÃO GIGANTE */
+.giant-heart {
+  font-size: 150px;
+  text-align: center;
+  cursor: pointer;
+  margin: 20px 0;
+}
+
+/* FOTO */
+.photo {
+  display: block;
+  max-width: 70%;
+  margin: 20px auto;
+  border-radius: 15px;
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+
+/* TEXTO DA FOTO */
+.photo-text {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+/* BOTÕES */
+.next-button,
+.final-button {
+  display: block;
+  margin: 20px auto;
+  padding: 12px 30px;
+  border-radius: 20px;
+  background: #8a2be2;
+  color: white;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* TEXTO FINAL */
+#texto-final {
   max-width: 900px;
-  margin: 0 auto;
-  font-size: 30px;
-  line-height: 1.8;
-  font-weight: 500;
+  margin: 40px auto;
+  padding: 20px;
+  font-size: 22px;
+  line-height: 1.7;
   white-space: pre-line;
 }
 
-/* ===== BOTÕES ===== */
-button {
-  padding: 14px 30px;
-  font-size: 20px;
-  border: none;
-  border-radius: 18px;
-  background: #8a2be2;
-  color: white;
-  cursor: pointer;
-}
-
-/* ===== CORAÇÃO GIGANTE ===== */
-.giant-heart {
-  font-size: 140px;
-  text-align: center;
-  margin: 40px 0;
-  cursor: pointer;
-}
-
-/* ===== CORAÇÕES VOANDO ===== */
-.flying-heart {
+/* CORAÇÕES VOANDO */
+.floating-heart {
   position: fixed;
   bottom: -40px;
-  font-size: 26px;
-  animation: flyUp 10s linear forwards;
+  font-size: 30px;
+  opacity: 0.6;
+  animation: subir 8s linear forwards;
   pointer-events: none;
 }
 
-@keyframes flyUp {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(-120vh); opacity: 0; }
-}
-
-/* ===== PAGE 3 ===== */
-.photo-block {
-  margin: 70px auto;
-  max-width: 360px;
-  text-align: center;
-}
-
-.photo-text {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-/* CORAÇÃO */
-.heart-photo {
-  width: 320px;
-  height: 290px;
-  margin: 0 auto;
-  background: transparent;
-  clip-path: path("M160 290 C-30 130 50 -40 160 50 C270 -40 350 130 160 290 Z");
-  overflow: hidden;
-}
-
-/* IMAGEM VISÍVEL */
-.heart-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* ===== MENSAGEM FINAL ===== */
-.mensagem-final {
-  max-width: 900px;
-  margin: 90px auto;
-  font-size: 26px;
-  line-height: 1.8;
+@keyframes subir {
+  to {
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- ===== MÚSICA ===== -->
-<audio id="music" src="audio/musica.mp3" loop></audio>
+<button class="top-button" id="musicBtn">Tocar Música 🎵</button>
+<div id="yt-player"></div>
 
-<div style="text-align:center; margin-bottom:30px;">
-  <button onclick="toggleMusic()">🎵 Tocar / Pausar</button>
-</div>
+<div class="giant-heart" id="heart">💜</div>
 
-<!-- ===== PAGE 1 ===== -->
-<section id="page1" class="page active">
-  <div class="text-box">
-    Eu fiz isso pensando em você.
-    Com carinho, calma…
-    e muito amor 💜
-  </div>
+<img id="photo" class="photo" src="">
+<div id="photoText" class="photo-text"></div>
+<button id="nextPhoto" class="next-button">Próxima Foto</button>
 
-  <div style="text-align:center; margin-top:50px;">
-    <button onclick="goToPage(2)">Começar</button>
-  </div>
-</section>
+<button id="showText" class="final-button">Clique aqui, princesa 💜</button>
+<div id="texto-final"></div>
 
-<!-- ===== PAGE 2 ===== -->
-<section id="page2" class="page">
-  <div class="giant-heart" onclick="explode()">💜</div>
-
-  <div class="text-box" id="typedText"></div>
-
-  <div style="text-align:center; margin-top:60px;">
-    <button id="btnPage3" style="display:none;" onclick="goToPage(3)">
-      ainda não acabou bb 💜
-    </button>
-  </div>
-</section>
-
-<!-- ===== PAGE 3 ===== -->
-<section id="page3" class="page">
-
-  <div class="photo-block">
-    <div class="photo-text">Seu sorriso do meu lado é onde eu sempre quero estar.</div>
-    <div class="heart-photo"><img src="final/casal1.jpg"></div>
-  </div>
-
-  <div class="photo-block">
-    <div class="photo-text">Cada momento com você vira lembrança boa automaticamente.</div>
-    <div class="heart-photo"><img src="final/casal2.jpg"></div>
-  </div>
-
-  <div class="photo-block">
-    <div class="photo-text">Nosso jeito, nossas risadas, nossa conexão… tudo é real.</div>
-    <div class="heart-photo"><img src="final/casal3.jpg"></div>
-  </div>
-
-  <div class="photo-block">
-    <div class="photo-text">Seu abraço é onde meu mundo desacelera.</div>
-    <div class="heart-photo"><img src="final/casal4.jpg"></div>
-  </div>
-
-  <div class="photo-block">
-    <div class="photo-text">Se eu tivesse que escolher um lugar pra sempre, seria você.</div>
-    <div class="heart-photo"><img src="final/casal5.jpg"></div>
-  </div>
-
-  <section class="mensagem-final">
-    <strong>Feliz aniversário, minha pretinha.</strong> 💜<br><br>
-    Você é meu lugar favorito.
-    E eu te amo… sempre.
-  </section>
-</section>
+<script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-/* ===== PÁGINAS ===== */
-function goToPage(n){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page'+n).classList.add('active');
-}
-
 /* ===== MÚSICA ===== */
-const music=document.getElementById("music");
-function toggleMusic(){
-  music.paused ? music.play() : music.pause();
+let player;
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('yt-player', {
+    height: '0',
+    width: '0',
+    videoId: '69-jnA4QLSM'
+  });
 }
 
-/* ===== TEXTO LETRA POR LETRA ===== */
-const texto=`Hoje é o seu dia.
-E tudo aqui é só um reflexo
-do quanto você é especial pra mim.
+musicBtn.onclick = () => {
+  if (!player) return;
+  player.getPlayerState() !== 1 ? player.playVideo() : player.pauseVideo();
+};
 
-Cada detalhe seu
-é amor,
-é abrigo,
-é verdade.`;
+/* ===== FOTOS ===== */
+const photos = Array.from({length:20},(_,i)=>`fotos/foto${i+1}.jpg`);
+const texts = [
+"Seus olhos me prendem.",
+"Seu olhar me desmonta.",
+"Seu sorriso muda tudo.",
+"Seus cachos são poesia.",
+"Você me fez sentir amado.",
+"Você me ensinou respeito.",
+"Você é intensidade.",
+"Você é calma.",
+"Você é verdade.",
+"Você é luz.",
+"Você é única.",
+"Você é abrigo.",
+"Você é presença.",
+"Você é carinho.",
+"Você é escolha.",
+"Você é meu lugar.",
+"Você é minha paz.",
+"Você é minha alegria.",
+"Você é tudo.",
+"Você é perigosa do melhor jeito possível 🫦"
+];
 
-let i=0;
-const el=document.getElementById("typedText");
-(function type(){
-  if(i<texto.length){
-    el.innerHTML+=texto.charAt(i++);
-    setTimeout(type,55);
-  }else{
-    document.getElementById("btnPage3").style.display="inline-block";
+let index = -1;
+
+function mostrarFoto() {
+  if (index >= photos.length) return;
+  photo.style.opacity = 0;
+  setTimeout(() => {
+    photo.src = photos[index];
+    photoText.innerText = texts[index];
+    photo.onload = () => photo.style.opacity = 1;
+  }, 200);
+}
+
+heart.onclick = () => {
+  if (index === -1) {
+    index = 0;
+    mostrarFoto();
   }
-})();
+};
+
+nextPhoto.onclick = () => {
+  if (index < photos.length - 1) {
+    index++;
+    mostrarFoto();
+  }
+};
+
+/* ===== TEXTO FINAL LETRA POR LETRA ===== */
+const texto = `FELIZ ANIVERSÁRIO, MEU AMOR.
+
+Hoje o mundo acordou mais bonito,
+porque é o dia de celebrar você.
+
+Celebrar seu sorriso,
+seu jeito único,
+sua luz que chega devagar
+e muda tudo sem fazer barulho.
+
+Você tem uma presença que acalma,
+um olhar que fala,
+e uma forma de existir
+que deixa tudo mais leve.
+
+Ao seu lado, eu aprendi
+que amar não é exagero,
+é cuidado.
+Não é promessa vazia,
+é presença de verdade.
+
+Você me ensinou
+que respeito também é amor,
+que carinho mora nos detalhes
+e que confiança se constrói com o tempo.
+
+Seu sorriso tem o poder
+de organizar meu caos.
+Sua voz me traz paz.
+Seu abraço é onde tudo faz sentido.
+
+Você é delicadeza e força,
+doçura e verdade,
+intensidade do jeito certo.
+
+Hoje é seu dia.
+Mas todos os dias com você
+são motivo de comemorar.
+
+Você é meu lugar favorito.
+E sempre vai ser.
+
+Eu te amo.`;
+
+showText.onclick = () => {
+  textoFinal.innerHTML = "";
+  let i = 0;
+  function escrever() {
+    if (i < texto.length) {
+      textoFinal.innerHTML += texto.charAt(i++);
+      setTimeout(escrever, 35);
+    }
+  }
+  escrever();
+};
 
 /* ===== CORAÇÕES VOANDO ===== */
-setInterval(()=>{
-  const h=document.createElement("div");
-  h.className="flying-heart";
-  h.innerText="💜";
-  h.style.left=Math.random()*100+"vw";
+setInterval(() => {
+  const h = document.createElement("div");
+  h.className = "floating-heart";
+  h.innerText = "💜";
+  h.style.left = Math.random() * 100 + "vw";
   document.body.appendChild(h);
-  setTimeout(()=>h.remove(),10000);
-},600);
-
-/* ===== EXPLOSÃO ===== */
-function explode(){
-  for(let i=0;i<25;i++){
-    const h=document.createElement("div");
-    h.className="flying-heart";
-    h.innerText="💜";
-    h.style.left="50vw";
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),4000);
-  }
-}
+  setTimeout(() => h.remove(), 8000);
+}, 600);
 </script>
 
 </body>
-</html>
+  </html>
