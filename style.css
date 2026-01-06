@@ -81,64 +81,109 @@ body {
   to {
     transform: translateY(-140vh);
   }
-  }
-/* ===== CONTAINER DA PÁGINA 3 ===== */
-#pagina3 {
-  display: none;
-  padding: 80px 20px 120px;
-  background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
+  } 
+/* =========================
+   PÁGINA 3 – AJUSTE FINAL
+   NÃO AFETA PÁGINA 1 E 2
+========================= */
+
+.pagina3 {
+  min-height: 100vh;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #2b003f, #090014, #1a0033);
+  color: #ffffff;
+  font-family: Arial, sans-serif;
 }
 
-/* ===== BLOCO FOTO + TEXTO ===== */
-.photo-block {
-  max-width: 500px;
-  margin: 90px auto;
+/* Texto grande e legível */
+.pagina3 p,
+.pagina3 .photo-text {
+  font-size: 20px;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto 25px auto;
   text-align: center;
 }
 
-/* TEXTO GRANDE E LEGÍVEL */
-.photo-text {
-  font-size: 22px;
-  line-height: 1.6;
-  margin-bottom: 30px;
-  color: #ffffff;
+/* Bloco de cada foto + frase */
+.photo-block {
+  margin: 60px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* ===== CORAÇÃO REAL ===== */
+/* FRASE NÃO CORTA */
+.photo-text {
+  padding: 0 10px;
+  word-break: break-word;
+}
+
+/* ===== CORAÇÃO DE VERDADE ===== */
 .heart-photo {
-  position: relative;
   width: 260px;
   height: 240px;
-  margin: 0 auto;
-  transform: rotate(-45deg);
+  position: relative;
+  margin: 25px auto;
   overflow: hidden;
 }
 
+/* cria o coração */
 .heart-photo::before,
 .heart-photo::after {
   content: "";
   position: absolute;
-  width: 260px;
-  height: 240px;
-  background: inherit;
-  border-radius: 50%;
-}
-
-.heart-photo::before {
-  top: -130px;
-  left: 0;
-}
-
-.heart-photo::after {
-  left: 130px;
+  width: 130px;
+  height: 200px;
+  background: transparent;
+  border-radius: 130px 130px 0 0;
   top: 0;
 }
 
-/* IMAGEM DENTRO DO CORAÇÃO */
+.heart-photo::before {
+  left: 130px;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+}
+
+.heart-photo::after {
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+
+/* imagem ocupa 95% do coração */
 .heart-photo img {
   position: absolute;
-  width: 140%;
-  height: 140%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  transform: rotate(45deg) translate(-20%, -20%);
+  clip-path: path(
+    "M130 240
+     C-20 140 40 0 130 70
+     C220 0 280 140 130 240 Z"
+  );
+}
+
+/* ===== CORAÇÕES FLUTUANDO ===== */
+.flying-heart {
+  position: fixed;
+  bottom: -30px;
+  font-size: 22px;
+  opacity: 0.4;
+  animation: floatUp 10s linear forwards;
+  pointer-events: none;
+  z-index: 999;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
   }
