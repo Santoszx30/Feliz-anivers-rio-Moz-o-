@@ -3,80 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nossa História 💜</title>
+<title>Você é meu lugar favorito 💜</title>
 
 <style>
 html, body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  overflow-x: hidden;
 }
 
 body {
-    background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
-    color: white;
-    min-height: 100vh;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #2a0845, #000000, #1b1b6b);
+  color: white;
+  text-align: center;
+  padding-bottom: 120px;
 }
 
-/* Container */
-.container {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 30px 15px 80px;
-}
-
-/* Título */
-h1 {
-    text-align: center;
-    margin-bottom: 40px;
-    font-size: 28px;
-}
-
-/* Bloco foto */
-.photo-block {
-    margin-bottom: 60px;
-    text-align: center;
-    position: relative;
-}
-
-/* Foto */
-.photo-block img {
-    width: 85%;
-    max-width: 450px;
-    border-radius: 25px;
-    box-shadow: 0 0 25px rgba(138,43,226,0.6);
-}
-
-/* Frase */
-.photo-text {
-    margin-top: 15px;
-    font-size: 18px;
-    line-height: 1.5;
-    padding: 0 10px;
-}
-
-/* Corações voando */
+/* ================= CORAÇÕES VOANDO ================= */
 .flying-heart {
-    position: fixed;
-    bottom: -30px;
-    font-size: 26px;
-    opacity: 0.6;
-    animation: floatUp linear forwards;
-    pointer-events: none;
-    z-index: 999;
+  position: fixed;
+  bottom: -40px;
+  font-size: 28px;
+  opacity: 0.35;
+  animation: rise 10s linear forwards;
+  pointer-events: none;
 }
 
-@keyframes floatUp {
-    from {
-        transform: translateY(0);
-        opacity: 0.6;
-    }
-    to {
-        transform: translateY(-110vh);
-        opacity: 0;
-    }
+@keyframes rise {
+  from { transform: translateY(0); opacity: 0.5; }
+  to { transform: translateY(-120vh); opacity: 0; }
+}
+
+/* ================= CONTAINER ================= */
+.container {
+  width: 90%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* ================= TÍTULO ================= */
+.title {
+  font-size: 30px;
+  margin: 40px 0 10px;
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 20px;
+  margin-bottom: 50px;
+  color: #c9a7ff;
+}
+
+/* ================= BLOCO FOTO ================= */
+.photo-block {
+  margin-bottom: 80px;
+}
+
+.photo-text {
+  font-size: 20px;
+  margin-bottom: 25px;
+  line-height: 1.7;
+  padding: 0 12px;
+}
+
+/* ================= FOTO EM FORMATO DE CORAÇÃO ================= */
+.heart-photo {
+  width: 320px;
+  height: 300px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  clip-path: path("M160 280 L20 140 C-30 70 40 0 110 40 C140 60 160 90 160 90 C160 90 180 60 210 40 C280 0 350 70 300 140 Z");
+  box-shadow: 0 0 30px rgba(138,43,226,0.5);
+}
+
+.heart-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>
 </head>
@@ -84,74 +90,58 @@ h1 {
 <body>
 
 <div class="container">
-    <h1>Nossa história escrita em detalhes 💜</h1>
 
-    <div class="photo-block">
-        <img src="casal1.jpg">
-        <div class="photo-text">
-            Tudo começou simples… mas desde o começo já era intenso, verdadeiro e nosso.
-        </div>
-    </div>
+  <div class="title">Você é meu lugar favorito 💜</div>
+  <div class="subtitle">com você, tudo faz sentido</div>
 
-    <div class="photo-block">
-        <img src="casal2.jpg">
-        <div class="photo-text">
-            Cada momento ao seu lado virou memória boa, daquelas que aquecem o coração.
-        </div>
-    </div>
+  <div class="photo-block">
+    <div class="photo-text">A gente junto tem uma energia que não se explica, só se sente.</div>
+    <div class="heart-photo"><img src="fotos/casal1.jpg"></div>
+  </div>
 
-    <div class="photo-block">
-        <img src="casal3.jpg">
-        <div class="photo-text">
-            Seu sorriso virou meu lugar seguro, e seu abraço meu descanso favorito.
-        </div>
-    </div>
+  <div class="photo-block">
+    <div class="photo-text">Seu sorriso do meu lado é onde eu sempre quero estar.</div>
+    <div class="heart-photo"><img src="fotos/casal2.jpg"></div>
+  </div>
 
-    <div class="photo-block">
-        <img src="casal4.jpg">
-        <div class="photo-text">
-            A gente se entende no olhar, se completa no toque e se fortalece juntos.
-        </div>
-    </div>
+  <div class="photo-block">
+    <div class="photo-text">Cada momento com você vira lembrança boa automaticamente.</div>
+    <div class="heart-photo"><img src="fotos/casal3.jpg"></div>
+  </div>
 
-    <div class="photo-block">
-        <img src="casal5.jpg">
-        <div class="photo-text">
-            Não é só amor… é parceria, cuidado, desejo e conexão de alma.
-        </div>
-    </div>
+  <div class="photo-block">
+    <div class="photo-text">Nosso jeito, nossas risadas, nossa conexão… tudo é real.</div>
+    <div class="heart-photo"><img src="fotos/casal4.jpg"></div>
+  </div>
 
-    <div class="photo-block">
-        <img src="casal6.jpg">
-        <div class="photo-text">
-            Você é minha escolha diária, mesmo nos dias difíceis, mesmo no caos.
-        </div>
-    </div>
+  <div class="photo-block">
+    <div class="photo-text">Você é calma e caos na medida perfeita pra mim.</div>
+    <div class="heart-photo"><img src="fotos/casal5.jpg"></div>
+  </div>
 
-    <div class="photo-block">
-        <img src="casal7.jpg">
-        <div class="photo-text">
-            E se eu tivesse que escolher de novo, escolheria você todas as vezes.
-        </div>
-    </div>
+  <div class="photo-block">
+    <div class="photo-text">Seu abraço é onde meu mundo desacelera.</div>
+    <div class="heart-photo"><img src="fotos/casal6.jpg"></div>
+  </div>
+
+  <div class="photo-block">
+    <div class="photo-text">Se eu tivesse que escolher um lugar pra sempre, seria você.</div>
+    <div class="heart-photo"><img src="fotos/casal7.jpg"></div>
+  </div>
+
 </div>
 
 <script>
-function createFlyingHeart() {
-    const heart = document.createElement("div");
-    heart.className = "flying-heart";
-    heart.innerText = "💜";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.animationDuration = (4 + Math.random() * 3) + "s";
-    document.body.appendChild(heart);
-
-    setTimeout(() => {
-        heart.remove();
-    }, 8000);
-}
-
-setInterval(createFlyingHeart, 500);
+/* ===== CORAÇÕES VOANDO ===== */
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.className = "flying-heart";
+  heart.innerText = "💜";
+  heart.style.left = Math.random() * 100 + "vw";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 10000);
+}, 600);
 </script>
 
 </body>
-          </html>
+</html>
