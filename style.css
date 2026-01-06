@@ -1,188 +1,66 @@
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #3b0d5d, #000000, #2a2a8c);
+  background: linear-gradient(135deg, #2b0a3d, #000, #1a2a6c);
   color: white;
   overflow-x: hidden;
 }
 
-/* ===== CONTAINER PRINCIPAL ===== */
-.pagina3 {
-  padding: 40px 20px 100px;
-  position: relative;
-  z-index: 2;
+.top-button {
+  margin: 15px auto;
+  display: block;
+  padding: 10px 20px;
+  background: purple;
+  border-radius: 15px;
+  border: none;
+  color: white;
 }
 
-/* ===== BLOCO DE FOTO + TEXTO ===== */
-.photo-block {
-  margin-bottom: 80px;
+.giant-heart {
+  font-size: 150px;
   text-align: center;
+  cursor: pointer;
 }
 
-/* TEXTO ROMÂNTICO */
+.photo {
+  display: block;
+  max-width: 70%;
+  margin: 20px auto;
+  border-radius: 15px;
+}
+
 .photo-text {
-  font-size: 20px;
-  line-height: 1.7;
-  margin-bottom: 25px;
-  padding: 0 15px;
-  word-wrap: break-word;
+  text-align: center;
+  font-size: 22px;
 }
 
-/* ===== FOTO EM FORMATO DE CORAÇÃO ===== */
-.heart-photo {
-  width: 240px;
-  height: 220px;
-  margin: 0 auto;
-  clip-path: path("M120 210 C-20 120 40 20 120 70 C200 20 260 120 120 210 Z");
-  overflow: hidden;
-  box-shadow: 0 0 30px rgba(138, 43, 226, 0.6);
-  background: rgba(0,0,0,0.2);
+.next-button, .final-button {
+  display: block;
+  margin: 20px auto;
+  padding: 12px 25px;
+  border-radius: 15px;
+  background: purple;
+  color: white;
+  border: none;
 }
 
-/* FOTO AJUSTADA (90% visível) */
-.heart-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transform: scale(0.9);
-}
-
-/* ===== MENSAGEM FINAL ===== */
-.mensagem-final {
-  margin-top: 90px;
-  padding: 30px 20px 70px;
+#texto-final {
   max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-  font-size: 18px;
-  line-height: 1.9;
-  text-align: left;
+  margin: 40px auto;
+  font-size: 22px;
+  line-height: 1.7;
+  white-space: pre-line;
 }
 
-/* ===== CORAÇÕES VOANDO ===== */
-.flying-heart {
+.floating-heart {
   position: fixed;
-  bottom: -40px;
+  bottom: -50px;
   font-size: 30px;
-  opacity: 0.35;
-  animation: subir 12s linear forwards;
-  pointer-events: none;
-  z-index: 1;
+  animation: subir 8s linear;
 }
 
 @keyframes subir {
-  from {
-    transform: translateY(0);
-  }
   to {
-    transform: translateY(-140vh);
-  }
-  } 
-/* =========================
-   PÁGINA 3 – AJUSTE FINAL
-   NÃO AFETA PÁGINA 1 E 2
-========================= */
-
-.pagina3 {
-  min-height: 100vh;
-  padding: 60px 20px;
-  background: linear-gradient(135deg, #2b003f, #090014, #1a0033);
-  color: #ffffff;
-  font-family: Arial, sans-serif;
-}
-
-/* Texto grande e legível */
-.pagina3 p,
-.pagina3 .photo-text {
-  font-size: 20px;
-  line-height: 1.6;
-  max-width: 700px;
-  margin: 0 auto 25px auto;
-  text-align: center;
-}
-
-/* Bloco de cada foto + frase */
-.photo-block {
-  margin: 60px auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* FRASE NÃO CORTA */
-.photo-text {
-  padding: 0 10px;
-  word-break: break-word;
-}
-
-/* ===== CORAÇÃO DE VERDADE ===== */
-.heart-photo {
-  width: 260px;
-  height: 240px;
-  position: relative;
-  margin: 25px auto;
-  overflow: hidden;
-}
-
-/* cria o coração */
-.heart-photo::before,
-.heart-photo::after {
-  content: "";
-  position: absolute;
-  width: 130px;
-  height: 200px;
-  background: transparent;
-  border-radius: 130px 130px 0 0;
-  top: 0;
-}
-
-.heart-photo::before {
-  left: 130px;
-  transform: rotate(-45deg);
-  transform-origin: 0 100%;
-}
-
-.heart-photo::after {
-  left: 0;
-  transform: rotate(45deg);
-  transform-origin: 100% 100%;
-}
-
-/* imagem ocupa 95% do coração */
-.heart-photo img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  clip-path: path(
-    "M130 240
-     C-20 140 40 0 130 70
-     C220 0 280 140 130 240 Z"
-  );
-}
-
-/* ===== CORAÇÕES FLUTUANDO ===== */
-.flying-heart {
-  position: fixed;
-  bottom: -30px;
-  font-size: 22px;
-  opacity: 0.4;
-  animation: floatUp 10s linear forwards;
-  pointer-events: none;
-  z-index: 999;
-}
-
-@keyframes floatUp {
-  0% {
-    transform: translateY(0);
-    opacity: 0.4;
-  }
-  100% {
     transform: translateY(-120vh);
     opacity: 0;
   }
