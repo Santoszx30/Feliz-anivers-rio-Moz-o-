@@ -2,245 +2,301 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Feliz Aniversário 💜</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Você 💜</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow-x:hidden;font-family:'Poppins',sans-serif}
-
+html,body{width:100%;height:100%;font-family:Arial,sans-serif;overflow-x:hidden}
 body{
   background:linear-gradient(135deg,#12001f,#2b0040,#3a005f);
-  color:#fff;
-}
-
-/* ===== BOTÕES ===== */
-button{
-  padding:14px 32px;
-  border:none;
-  border-radius:30px;
-  background:#a855f7;
   color:white;
-  font-size:1.1rem;
-  cursor:pointer;
-  margin-top:30px;
 }
 
-/* ===== SEÇÕES ===== */
+/* SEÇÕES */
 .section{
   min-height:100vh;
   padding:60px 20px;
   display:flex;
   flex-direction:column;
-  justify-content:center;
   align-items:center;
-  text-align:center;
+  justify-content:center;
 }
-
 .hidden{display:none}
 
-/* ===== TEXTO ===== */
+/* BOTÕES */
+button{
+  margin-top:30px;
+  padding:14px 36px;
+  font-size:18px;
+  border:none;
+  border-radius:30px;
+  background:#a855f7;
+  color:white;
+  cursor:pointer;
+}
+button:hover{opacity:.9}
+
+/* TEXTO GRANDE */
 .texto-grande{
   max-width:900px;
-  font-size:1.45rem;
+  font-size:22px;
   line-height:2;
+  text-align:center;
   margin-top:30px;
-  white-space:pre-line;
 }
 
-/* ===== FOTOS ===== */
-.photo-container{
-  position:relative;
-  width:280px;
+/* PLAYER */
+#musicBtn{
+  position:fixed;
+  top:15px;
+  right:15px;
+  z-index:999;
+}
+
+/* SLIDER FOTOS */
+.photo-box{
+  text-align:center;
+}
+.photo-box img{
+  width:260px;
   height:260px;
-  margin-top:40px;
-}
-
-.heart-photo{
-  width:100%;
-  height:100%;
-  clip-path:path("M140 260 C-40 160 40 -40 140 80 C240 -40 320 160 140 260 Z");
-  overflow:hidden;
-}
-
-.heart-photo img{
-  width:100%;
-  height:100%;
   object-fit:cover;
+  border-radius:20px;
   opacity:0;
   transition:opacity .8s;
 }
-
-.photo-text{
-  position:absolute;
-  top:-60px;
-  width:100%;
-  font-size:1.3rem;
-  font-weight:500;
+.photo-caption{
+  font-size:22px;
+  margin-bottom:15px;
 }
 
-/* ===== CORAÇÕES VOANDO ===== */
+/* CORAÇÕES VOANDO */
 .flying-heart{
   position:fixed;
   bottom:-40px;
-  font-size:30px;
+  font-size:28px;
   opacity:.35;
   animation:subir 10s linear forwards;
 }
-
 @keyframes subir{
   to{transform:translateY(-120vh)}
+}
+
+/* PÁGINA 3 */
+.photo-block{
+  margin:60px 0;
+  text-align:center;
+}
+.photo-text{
+  font-size:22px;
+  margin-bottom:20px;
+}
+.heart-photo{
+  width:280px;
+  height:260px;
+  margin:auto;
+  clip-path:path("M140 250 C-40 150 40 -20 140 70 C240 -20 320 150 140 250 Z");
+  overflow:hidden;
+}
+.heart-photo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  transform:scale(1.15);
 }
 </style>
 </head>
 
 <body>
 
-<!-- ===== MÚSICA ===== -->
+<button id="musicBtn">Tocar música 🎵</button>
 <audio id="musica" loop>
   <source src="poesia13.mp3" type="audio/mpeg">
 </audio>
-<button onclick="toggleMusic()">🎵 Tocar / Pausar música</button>
 
-<!-- ===== PÁGINA 1 ===== -->
+<!-- PÁGINA 1 -->
 <section class="section" id="p1">
   <h1>Tenho algo pra você 💜</h1>
-  <button onclick="go(2)">Começar</button>
+  <button onclick="go2()">Começar</button>
 </section>
 
-<!-- ===== PÁGINA 2 ===== -->
+<!-- PÁGINA 2 -->
 <section class="section hidden" id="p2">
 
-  <div class="photo-container">
-    <div class="photo-text" id="elogio"></div>
-    <div class="heart-photo">
-      <img id="foto">
-    </div>
+  <div class="photo-box">
+    <div class="photo-caption" id="caption"></div>
+    <img id="foto">
+    <button id="nextFoto">Avançar</button>
   </div>
 
-  <button onclick="nextPhoto()">Avançar</button>
+  <button id="btnTexto">Clique aqui, princesa</button>
+  <p id="texto" class="texto-grande"></p>
+  <button id="btnP3" class="hidden" onclick="go3()">Ainda não acabou bb</button>
 
-  <button id="btnTexto" onclick="startText()">Clique aqui, princesa 💜</button>
-  <div id="texto" class="texto-grande"></div>
+</section>
+
+<!-- PÁGINA 3 -->
+<section class="section hidden" id="p3">
+
+  <div class="photo-block">
+    <div class="photo-text">Você é meu lugar favorito.</div>
+    <div class="heart-photo"><img src="fotos/casal1.jpg"></div>
+  </div>
+  <div class="photo-block">
+    <div class="photo-text">Meu mundo faz sentido contigo.</div>
+    <div class="heart-photo"><img src="fotos/casal2.jpg"></div>
+  </div>
+  <div class="photo-block">
+    <div class="photo-text">Seu sorriso é meu abrigo.</div>
+    <div class="heart-photo"><img src="fotos/casal3.jpg"></div>
+  </div>
+  <div class="photo-block">
+    <div class="photo-text">Te escolher é natural.</div>
+    <div class="heart-photo"><img src="fotos/casal4.jpg"></div>
+  </div>
+  <div class="photo-block">
+    <div class="photo-text">Você é calma e desejo.</div>
+    <div class="heart-photo"><img src="fotos/casal5.jpg"></div>
+  </div>
+  <div class="photo-block">
+    <div class="photo-text">Meu futuro tem seu nome.</div>
+    <div class="heart-photo"><img src="fotos/casal6.jpg"></div>
+  </div>
+  <div class="photo-block">
+    <div class="photo-text">Sempre você.</div>
+    <div class="heart-photo"><img src="fotos/casal7.jpg"></div>
+  </div>
 
 </section>
 
 <script>
-/* ===== MÚSICA ===== */
+/* MÚSICA */
 const musica=document.getElementById("musica");
-function toggleMusic(){
-  musica.paused?musica.play():musica.pause();
-}
+document.getElementById("musicBtn").onclick=()=>{
+  if(musica.paused){musica.play();musicBtn.innerText="Pausar música ⏸️";}
+  else{musica.pause();musicBtn.innerText="Tocar música 🎵";}
+};
 
-/* ===== NAVEGAÇÃO ===== */
-function go(n){
-  document.getElementById("p1").classList.add("hidden");
-  document.getElementById("p2").classList.remove("hidden");
-}
+/* NAVEGAÇÃO */
+function go2(){p1.classList.add("hidden");p2.classList.remove("hidden")}
+function go3(){p2.classList.add("hidden");p3.classList.remove("hidden")}
 
-/* ===== FOTOS + ELOGIOS ===== */
+/* FOTOS 20 */
 const fotos=[...Array(20)].map((_,i)=>`fotos/foto${i+1}.jpg`);
 const elogios=[
-"Seu sorriso me desmonta completamente.",
-"Você é linda de um jeito que não se aprende.",
-"Seu olhar me prende sem pedir permissão.",
-"Você tem uma presença que ocupa tudo.",
-"Seu corpo é poesia em movimento.",
-"Você me provoca calma e desejo ao mesmo tempo.",
-"Te admirar é fácil demais.",
-"Seu jeito é perigosamente encantador.",
-"Você é intensidade na medida certa.",
-"Seu charme me desarma.",
-"Você é absurdamente linda.",
-"Seu toque mora no meu pensamento.",
-"Você é minha tentação favorita.",
-"Seu sorriso vale qualquer esforço.",
-"Você me deixa sem defesa.",
-"Você é arte viva.",
-"Te desejar é natural.",
-"Seu corpo e sua alma combinam.",
-"Você é linda por dentro e por fora.",
-"Você é meu ponto fraco."
+"Você é desejo em forma de olhar.",
+"Sua presença provoca.",
+"Existe arte em você.",
+"Seu corpo fala.",
+"Você marca.",
+"Seu sorriso seduz.",
+"Você hipnotiza.",
+"Sua beleza é real.",
+"Você encanta.",
+"Você é intensidade.",
+"Seu jeito é único.",
+"Você é inesquecível.",
+"Você domina o ambiente.",
+"Sua energia atrai.",
+"Você é fogo.",
+"Você é rara.",
+"Você impõe respeito.",
+"Você é poesia viva.",
+"Você é pura presença.",
+"Você é tudo isso."
 ];
-
-let i=0;
+let iFoto=0;
 const img=document.getElementById("foto");
-const el=document.getElementById("elogio");
-
-function showPhoto(){
+const cap=document.getElementById("caption");
+function showFoto(){
   img.style.opacity=0;
   setTimeout(()=>{
-    img.src=fotos[i];
-    el.innerText=elogios[i];
+    img.src=fotos[iFoto];
+    cap.innerText=elogios[iFoto];
     img.onload=()=>img.style.opacity=1;
-  },200);
+  },300);
 }
-showPhoto();
+showFoto();
+nextFoto.onclick=()=>{iFoto=(iFoto+1)%fotos.length;showFoto();};
 
-function nextPhoto(){
-  if(i<19){i++;showPhoto();}
-}
-
-/* ===== TEXTO LETRA POR LETRA ===== */
-const textoCompleto = `
-Hoje o tempo desacelera para reconhecer a raridade que é você.
+/* TEXTO LETRA POR LETRA */
+const textoCompleto=`Hoje o tempo desacelera para reconhecer a raridade que é você.
 Celebrar a sua existência não é apenas marcar uma data,
 é honrar tudo o que você é, tudo o que constrói
 e tudo o que silenciosamente transforma ao seu redor.
-
 Você possui uma beleza que vai além do que os olhos alcançam.
 Ela vive na maneira como você sorri,
 na forma como sente o mundo com intensidade,
 na delicadeza com que cuida de quem ama
 e na força com que enfrenta a vida, mesmo quando ninguém vê.
-
 Ao seu lado, aprendi que amor não é pressa,
 é presença.
 Não é exagero, é constância.
 Não é promessa vazia,
 é compromisso, respeito e admiração diária.
-
 Você me ensinou que um relacionamento verdadeiro
 não se sustenta apenas em sentimentos,
 mas em escolhas conscientes,
 em conversas sinceras,
 em confiança construída com o tempo
 e em carinho demonstrado nos pequenos gestos.
-
 Seu sorriso tem o poder de acalmar meus dias mais difíceis.
 Seu olhar carrega uma verdade que me prende,
 me desafia
 e me faz querer ser melhor.
-
 Seu abraço é o lugar onde o mundo perde o peso
 e tudo encontra sentido.
-
 Existe em você uma elegância natural,
 uma sensibilidade rara
 e uma intensidade que encanta sem esforço.
-
 Cada detalhe seu carrega autenticidade,
 cada palavra sua deixa marcas boas,
 cada momento ao seu lado se transforma em lembrança valiosa.
-
 Hoje, mais do que desejar felicidade,
 eu desejo que você continue sendo quem é.
+Que seus sonhos encontrem espaço para crescer.
+Que seus dias sejam preenchidos por paz.
+Que você nunca duvide do seu valor
+e jamais se esqueça do quanto é amada.
+Que a vida te retribua com leveza
+tudo aquilo que você entrega com o coração.
+E que, em meio a todas as mudanças do mundo,
+você sempre tenha um lugar seguro
+onde possa ser inteira, livre e verdadeira.
+Eu não prometo perfeição,
+mas prometo cuidado.
+Não prometo caminhos fáceis,
+mas prometo caminhar ao seu lado.
+Prometo respeito, verdade, admiração
+e um amor que cresce, amadurece
+e se fortalece com o tempo.
+Você é presença,
+é abrigo,
+é escolha.
+E se eu tivesse que resumir tudo em uma única frase,
+ela seria simples, mas sincera:
+Você é meu lugar favorito.
+Feliz aniversário.
+Com todo o carinho,
+com todo o amor,
+com tudo o que sou.
+Eu te amo. 💜`;
 
-Eu te amo. 💜
-`;
-
-let t=0;
-function startText(){
-  document.getElementById("btnTexto").style.display="none";
-  const box=document.getElementById("texto");
+btnTexto.onclick=()=>{
+  btnTexto.style.display="none";
+  let i=0;
+  const t=document.getElementById("texto");
   const interval=setInterval(()=>{
-    box.innerHTML+=textoCompleto.charAt(t);
-    t++;
-    if(t>=textoCompleto.length) clearInterval(interval);
+    t.innerHTML+=textoCompleto.charAt(i);
+    i++;
+    if(i>=textoCompleto.length){
+      clearInterval(interval);
+      btnP3.classList.remove("hidden");
+    }
   },35);
-}
+};
 
-/* ===== CORAÇÕES ===== */
+/* CORAÇÕES */
 setInterval(()=>{
   const h=document.createElement("div");
   h.className="flying-heart";
@@ -252,4 +308,4 @@ setInterval(()=>{
 </script>
 
 </body>
-</html>
+  </html>
