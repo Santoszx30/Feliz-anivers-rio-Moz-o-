@@ -2,305 +2,269 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Para Você 💜</title>
 
 <style>
-/* ===== RESET ===== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{
+  width:100%;
+  height:100%;
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(135deg,#12001f,#2b0040,#3a005f);
+  color:white;
+  overflow-x:hidden;
 }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  font-family: 'Poppins', Arial, sans-serif;
+.section{
+  min-height:100vh;
+  padding:60px 20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
 }
 
-/* ===== GRADIENTE GLOBAL ===== */
-body {
-  background: linear-gradient(135deg, #12001f, #2b0040, #3a005f);
-  color: white;
+.hidden{display:none}
+
+h1{font-size:2.2rem;margin-bottom:40px}
+
+.texto-grande{
+  max-width:900px;
+  font-size:1.4rem;
+  line-height:2;
+  margin-top:30px;
 }
 
-/* ===== SEÇÕES ===== */
-.section {
-  min-height: 100vh;
-  padding: 80px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+button{
+  padding:15px 40px;
+  font-size:1.1rem;
+  border-radius:40px;
+  border:none;
+  background:#a855f7;
+  color:white;
+  cursor:pointer;
+  margin-top:40px;
 }
 
-.hidden {
-  display: none;
+button:active{transform:scale(0.96)}
+
+#musicBtn{
+  margin-bottom:30px;
 }
 
-/* ===== BOTÃO MÚSICA ===== */
-#musicBtn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
-  padding: 12px 26px;
-  border-radius: 30px;
-  border: none;
-  background: #a855f7;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
+/* fotos elogios */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:20px;
+  width:100%;
+  max-width:900px;
 }
 
-/* ===== TEXTO ===== */
-.texto-grande {
-  max-width: 900px;
-  font-size: 1.4rem;
-  line-height: 2;
-  text-align: center;
-  margin-top: 30px;
+.grid img{
+  width:100%;
+  border-radius:20px;
 }
 
-/* ===== BOTÕES ===== */
-button {
-  margin-top: 40px;
-  padding: 15px 40px;
-  font-size: 1.1rem;
-  border-radius: 30px;
-  border: none;
-  background: #a855f7;
-  color: white;
-  cursor: pointer;
+/* coração */
+.heart-photo{
+  width:260px;
+  height:240px;
+  clip-path:path("M130 230 C-40 150 40 -20 130 60 C220 -20 300 150 130 230 Z");
+  overflow:hidden;
+  margin:20px auto;
 }
 
-/* ===== CORAÇÕES VOANDO ===== */
-.flying-heart {
-  position: fixed;
-  bottom: -60px;
-  font-size: 32px;
-  opacity: 0.35;
-  animation: subir 10s linear forwards;
-  pointer-events: none;
+.heart-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
-@keyframes subir {
-  to {
-    transform: translateY(-120vh);
-  }
+.photo-text{
+  font-size:1.2rem;
+  margin-top:10px;
 }
 
-/* ===== FOTOS EM CORAÇÃO ===== */
-.photo-block {
-  margin: 60px 0;
-  text-align: center;
+/* corações voando */
+.flying-heart{
+  position:fixed;
+  bottom:-40px;
+  font-size:26px;
+  opacity:.35;
+  animation:subir 10s linear forwards;
 }
 
-.photo-text {
-  font-size: 1.25rem;
-  margin-bottom: 20px;
-}
-
-.heart-photo {
-  width: 280px;
-  height: 260px;
-  margin: auto;
-  clip-path: path("M140 250 C-40 160 40 -30 140 70 C240 -30 320 160 140 250 Z");
-  overflow: hidden;
-}
-
-.heart-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ===== TEXTO FINAL ===== */
-.mensagem-final {
-  max-width: 900px;
-  font-size: 1.45rem;
-  line-height: 2.1;
-  text-align: center;
-  margin: 100px auto;
+@keyframes subir{
+  to{transform:translateY(-120vh)}
 }
 </style>
 </head>
 
 <body>
 
-<!-- ===== BOTÃO MÚSICA ===== -->
-<button id="musicBtn">▶️ Tocar música</button>
-
-<!-- ===== ÁUDIO ===== -->
 <audio id="musica" loop>
-  <source src="musica.mp3" type="audio/mpeg">
+  <source src="poesia13.mp3" type="audio/mpeg">
 </audio>
 
-<!-- ===== PÁGINA 1 ===== -->
-<section class="section" id="pagina1">
+<!-- PÁGINA 1 -->
+<section class="section" id="p1">
   <h1>Tenho algo pra você 💜</h1>
-  <button onclick="irParaPagina2()">Começar</button>
+  <button onclick="ir(2)">Começar</button>
 </section>
 
-<!-- ===== PÁGINA 2 ===== -->
-<section class="section hidden" id="pagina2">
+<!-- PÁGINA 2 -->
+<section class="section hidden" id="p2">
+
+  <button id="musicBtn">🎵 Tocar música</button>
+
   <button id="btnTexto">Clique aqui</button>
   <p id="textoAnimado" class="texto-grande"></p>
-  <button id="btnPagina3" class="hidden" onclick="irParaPagina3()">Ainda não acabou bb</button>
+
+  <button id="btnP3" class="hidden" onclick="ir(3)">Ainda não acabou</button>
 </section>
 
-<!-- ===== PÁGINA 3 ===== -->
-<section class="section hidden" id="pagina3">
+<!-- PÁGINA 3 -->
+<section class="section hidden" id="p3">
 
-  <div class="photo-block">
-    <div class="photo-text">Você é meu lugar favorito.</div>
-    <div class="heart-photo"><img src="final/casal1.jpg"></div>
-  </div>
+<h1>Feliz aniversário 💜</h1>
 
-  <div class="photo-block">
-    <div class="photo-text">Seu sorriso muda o meu mundo.</div>
-    <div class="heart-photo"><img src="final/casal2.jpg"></div>
-  </div>
+<div class="grid">
+  <img src="fotos/foto1.jpg">
+  <img src="fotos/foto2.jpg">
+  <img src="fotos/foto3.jpg">
+  <img src="fotos/foto4.jpg">
+  <img src="fotos/foto5.jpg">
+  <img src="fotos/foto6.jpg">
+  <img src="fotos/foto7.jpg">
+  <img src="fotos/foto8.jpg">
+  <img src="fotos/foto9.jpg">
+  <img src="fotos/foto10.jpg">
+  <img src="fotos/foto11.jpg">
+  <img src="fotos/foto12.jpg">
+  <img src="fotos/foto13.jpg">
+  <img src="fotos/foto14.jpg">
+  <img src="fotos/foto15.jpg">
+  <img src="fotos/foto16.jpg">
+  <img src="fotos/foto17.jpg">
+  <img src="fotos/foto18.jpg">
+  <img src="fotos/foto19.jpg">
+  <img src="fotos/foto20.jpg">
+</div>
 
-  <div class="photo-block">
-    <div class="photo-text">Cada momento contigo é casa.</div>
-    <div class="heart-photo"><img src="final/casal3.jpg"></div>
-  </div>
+<div class="photo-text">Você é meu lugar favorito.</div>
+<div class="heart-photo"><img src="fotos/casal1.jpg"></div>
 
-  <div class="photo-block">
-    <div class="photo-text">Você é calma e desejo.</div>
-    <div class="heart-photo"><img src="final/casal4.jpg"></div>
-  </div>
+<div class="photo-text">Seu sorriso muda o meu mundo.</div>
+<div class="heart-photo"><img src="fotos/casal2.jpg"></div>
 
-  <div class="photo-block">
-    <div class="photo-text">Meu futuro tem seu nome.</div>
-    <div class="heart-photo"><img src="final/casal5.jpg"></div>
-  </div>
+<div class="photo-text">Você é calma e desejo.</div>
+<div class="heart-photo"><img src="fotos/casal3.jpg"></div>
 
-  <div class="photo-block">
-    <div class="photo-text">Te escolher é fácil.</div>
-    <div class="heart-photo"><img src="final/casal6.jpg"></div>
-  </div>
+<div class="photo-text">Meu futuro tem seu nome.</div>
+<div class="heart-photo"><img src="fotos/casal4.jpg"></div>
 
-  <div class="photo-block">
-    <div class="photo-text">Sempre você.</div>
-    <div class="heart-photo"><img src="final/casal7.jpg"></div>
-  </div>
+<div class="photo-text">Sempre você.</div>
+<div class="heart-photo"><img src="fotos/casal5.jpg"></div>
 
-  <section class="mensagem-final">
-    <p>
-      <strong>Feliz aniversário, meu amor.</strong><br><br>
+<div class="photo-text">Te escolher é fácil.</div>
+<div class="heart-photo"><img src="fotos/casal6.jpg"></div>
 
-      Hoje não é só o dia em que você nasceu.<br>
-      É o dia em que o mundo ficou mais bonito sem perceber.<br><br>
+<div class="photo-text">Eu te amo.</div>
+<div class="heart-photo"><img src="fotos/casal7.jpg"></div>
 
-      Você carrega uma presença que acalma e provoca ao mesmo tempo.<br>
-      Um olhar que prende.<br>
-      Um sorriso que desmonta qualquer defesa.<br><br>
+<p class="texto-grande" style="margin-top:60px">
+<strong>Feliz aniversário, meu amor.</strong><br><br>
 
-      Estar com você é sentir o tempo desacelerar,<br>
-      como se tudo fizesse sentido exatamente ali.<br><br>
-
-      Seu toque é delicado,<br>
-      mas carrega um desejo que fica.<br>
-      Que marca.<br><br>
-
-      Você é intensidade sem esforço.<br>
-      Beleza sem exagero.<br>
-      Verdade sem medo.<br><br>
-
-      Cada detalhe seu desperta algo em mim.<br>
-      Algo que não se explica — só se sente.<br><br>
-
-      Eu gosto do seu jeito.<br>
-      Do seu silêncio.<br>
-      Da sua risada.<br>
-      Do seu caos bonito.<br><br>
-
-      Gosto de quem você é quando está perto,<br>
-      e de quem eu me torno quando estou com você.<br><br>
-
-      Se existir um lugar onde eu me sinto inteiro,<br>
-      esse lugar é você.<br><br>
-
-      Que esse novo ano te abrace com leveza,<br>
-      te provoque sonhos grandes<br>
-      e te lembre todos os dias do quanto é desejada.<br><br>
-
-      <strong>Eu te amo.</strong><br>
-      Com vontade.<br>
-      Com verdade.<br>
-      Com tudo o que sou. 💜
-    </p>
-  </section>
+Hoje eu celebro você — não só pelo dia, mas por tudo que você é.<br><br>
+Você tem uma presença que acalma e provoca ao mesmo tempo.<br><br>
+Seu olhar carrega intenção, seu toque carrega verdade.<br><br>
+Você não passa despercebida, você marca.<br><br>
+Estar com você é sentir segurança e desejo coexistindo.<br><br>
+Você transforma momentos simples em memórias fortes.<br><br>
+Eu te admiro pelo que mostra e pelo que esconde.<br><br>
+Você é intensidade sem perder a delicadeza.<br><br>
+Meu futuro faz mais sentido quando penso em você nele.<br><br>
+Eu não te escolho por hábito — te escolho por vontade.<br><br>
+Com carinho. Com desejo. Com verdade.<br><br>
+<strong>Eu te amo.</strong>
+</p>
 
 </section>
 
 <script>
-/* ===== NAVEGAÇÃO ===== */
-function irParaPagina2() {
-  pagina1.classList.add("hidden");
-  pagina2.classList.remove("hidden");
+function ir(n){
+  document.getElementById('p1').classList.add('hidden')
+  document.getElementById('p2').classList.add('hidden')
+  document.getElementById('p3').classList.add('hidden')
+  document.getElementById('p'+n).classList.remove('hidden')
 }
 
-function irParaPagina3() {
-  pagina2.classList.add("hidden");
-  pagina3.classList.remove("hidden");
-}
+/* música */
+const musica=document.getElementById('musica')
+const musicBtn=document.getElementById('musicBtn')
+let tocando=false
 
-/* ===== TEXTO LETRA POR LETRA ===== */
-const texto = `Feliz aniversário, minha pretinha.
-
-Você não faz ideia do impacto que tem em mim.
-No jeito que fala, no jeito que olha,
-no silêncio que conforta e no toque que provoca.
-
-Eu te desejo.
-Te admiro.
-Te escolho.
-
-E escolher você é fácil,
-porque você é lar e fogo ao mesmo tempo.`;
-
-let i = 0;
-btnTexto.onclick = () => {
-  btnTexto.style.display = "none";
-  const intervalo = setInterval(() => {
-    textoAnimado.innerHTML += texto.charAt(i);
-    i++;
-    if (i >= texto.length) {
-      clearInterval(intervalo);
-      btnPagina3.classList.remove("hidden");
-    }
-  }, 45);
-};
-
-/* ===== MÚSICA ===== */
-let tocando = false;
-musicBtn.onclick = () => {
-  if (!tocando) {
-    musica.play();
-    musicBtn.innerText = "⏸️ Pausar música";
-    tocando = true;
-  } else {
-    musica.pause();
-    musicBtn.innerText = "▶️ Tocar música";
-    tocando = false;
+musicBtn.onclick=()=>{
+  if(!tocando){
+    musica.play()
+    musicBtn.innerText='⏸ Pausar música'
+  }else{
+    musica.pause()
+    musicBtn.innerText='🎵 Tocar música'
   }
-};
+  tocando=!tocando
+}
 
-/* ===== CORAÇÕES VOANDO ===== */
-setInterval(() => {
-  const h = document.createElement("div");
-  h.className = "flying-heart";
-  h.innerText = "💜";
-  h.style.left = Math.random() * 100 + "vw";
-  document.body.appendChild(h);
-  setTimeout(() => h.remove(), 10000);
-}, 600);
+/* texto letra por letra */
+const texto=`Feliz aniversário, meu amor.
+
+Hoje eu não celebro apenas o dia em que você nasceu,
+mas tudo o que você se tornou.
+
+Você é presença.
+Você é intensidade.
+Você é desejo e cuidado.
+
+Eu te admiro profundamente.
+Eu te quero com verdade.
+Eu te escolho sem dúvidas.
+
+Estar com você é casa e fogo.
+É paz e vontade.
+É certeza.
+
+Eu te amo.`
+
+let i=0
+const p=document.getElementById('textoAnimado')
+const btn=document.getElementById('btnTexto')
+const btnP3=document.getElementById('btnP3')
+
+btn.onclick=()=>{
+  btn.style.display='none'
+  const t=setInterval(()=>{
+    p.innerHTML+=texto.charAt(i)
+    i++
+    if(i>=texto.length){
+      clearInterval(t)
+      btnP3.classList.remove('hidden')
+    }
+  },45)
+}
+
+/* corações */
+setInterval(()=>{
+  const h=document.createElement('div')
+  h.className='flying-heart'
+  h.innerText='💜'
+  h.style.left=Math.random()*100+'vw'
+  document.body.appendChild(h)
+  setTimeout(()=>h.remove(),10000)
+},600)
 </script>
 
 </body>
-      </html>
+  </html>
