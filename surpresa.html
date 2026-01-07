@@ -2,9 +2,11 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Para Você 💜</title>
 
 <style>
+/* ===== RESET ===== */
 * {
   margin: 0;
   padding: 0;
@@ -13,12 +15,12 @@
 
 html, body {
   width: 100%;
-  min-height: 100%;
-  font-family: 'Poppins', sans-serif;
+  height: 100%;
   overflow-x: hidden;
+  font-family: 'Poppins', Arial, sans-serif;
 }
 
-/* ===== GRADIENTE ÚNICO E CONTÍNUO ===== */
+/* ===== GRADIENTE GLOBAL ===== */
 body {
   background: linear-gradient(135deg, #12001f, #2b0040, #3a005f);
   color: white;
@@ -27,10 +29,7 @@ body {
 /* ===== SEÇÕES ===== */
 .section {
   min-height: 100vh;
-  padding: 60px 20px;
-}
-
-.center {
+  padding: 80px 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -41,57 +40,67 @@ body {
   display: none;
 }
 
+/* ===== BOTÃO MÚSICA ===== */
+#musicBtn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  padding: 12px 26px;
+  border-radius: 30px;
+  border: none;
+  background: #a855f7;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
 /* ===== TEXTO ===== */
 .texto-grande {
   max-width: 900px;
-  font-size: 1.7rem;
-  line-height: 2.1;
+  font-size: 1.4rem;
+  line-height: 2;
   text-align: center;
-  margin-top: 40px;
-  white-space: pre-line;
+  margin-top: 30px;
 }
 
 /* ===== BOTÕES ===== */
 button {
   margin-top: 40px;
-  padding: 16px 40px;
-  font-size: 1.2rem;
-  border-radius: 40px;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  border-radius: 30px;
   border: none;
   background: #a855f7;
   color: white;
   cursor: pointer;
-  transition: transform 0.2s;
-}
-
-button:hover {
-  transform: scale(1.05);
 }
 
 /* ===== CORAÇÕES VOANDO ===== */
 .flying-heart {
   position: fixed;
   bottom: -60px;
-  font-size: 34px;
+  font-size: 32px;
   opacity: 0.35;
-  animation: subir 12s linear forwards;
+  animation: subir 10s linear forwards;
+  pointer-events: none;
 }
 
 @keyframes subir {
   to {
-    transform: translateY(-130vh);
+    transform: translateY(-120vh);
   }
 }
 
-/* ===== FOTOS CORAÇÃO ===== */
+/* ===== FOTOS EM CORAÇÃO ===== */
 .photo-block {
-  margin: 70px 0;
+  margin: 60px 0;
   text-align: center;
 }
 
 .photo-text {
-  font-size: 1.35rem;
-  margin-bottom: 25px;
+  font-size: 1.25rem;
+  margin-bottom: 20px;
 }
 
 .heart-photo {
@@ -106,35 +115,37 @@ button:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.15);
 }
 
-/* ===== MENSAGEM FINAL ===== */
+/* ===== TEXTO FINAL ===== */
 .mensagem-final {
   max-width: 900px;
-  font-size: 1.6rem;
-  line-height: 2.2;
+  font-size: 1.45rem;
+  line-height: 2.1;
   text-align: center;
-  margin: 120px auto 80px;
+  margin: 100px auto;
 }
 </style>
 </head>
 
 <body>
 
-<!-- ===== MÚSICA (CONTÍNUA) ===== -->
-<audio id="musica" autoplay loop>
+<!-- ===== BOTÃO MÚSICA ===== -->
+<button id="musicBtn">▶️ Tocar música</button>
+
+<!-- ===== ÁUDIO ===== -->
+<audio id="musica" loop>
   <source src="musica.mp3" type="audio/mpeg">
 </audio>
 
 <!-- ===== PÁGINA 1 ===== -->
-<section class="section center" id="pagina1">
+<section class="section" id="pagina1">
   <h1>Tenho algo pra você 💜</h1>
   <button onclick="irParaPagina2()">Começar</button>
 </section>
 
 <!-- ===== PÁGINA 2 ===== -->
-<section class="section center hidden" id="pagina2">
+<section class="section hidden" id="pagina2">
   <button id="btnTexto">Clique aqui</button>
   <p id="textoAnimado" class="texto-grande"></p>
   <button id="btnPagina3" class="hidden" onclick="irParaPagina3()">Ainda não acabou bb</button>
@@ -143,7 +154,6 @@ button:hover {
 <!-- ===== PÁGINA 3 ===== -->
 <section class="section hidden" id="pagina3">
 
-  <!-- FOTOS -->
   <div class="photo-block">
     <div class="photo-text">Você é meu lugar favorito.</div>
     <div class="heart-photo"><img src="final/casal1.jpg"></div>
@@ -179,38 +189,68 @@ button:hover {
     <div class="heart-photo"><img src="final/casal7.jpg"></div>
   </div>
 
-  <!-- TEXTO FINAL -->
   <section class="mensagem-final">
     <p>
       <strong>Feliz aniversário, meu amor.</strong><br><br>
 
-      Você é beleza que provoca e calma que envolve.<br>
-      É desejo que cresce no silêncio<br>
-      e carinho que permanece depois do toque.<br><br>
+      Hoje não é só o dia em que você nasceu.<br>
+      É o dia em que o mundo ficou mais bonito sem perceber.<br><br>
 
-      Eu te escolho com intenção.<br>
-      Com vontade.<br>
-      Com verdade.<br><br>
+      Você carrega uma presença que acalma e provoca ao mesmo tempo.<br>
+      Um olhar que prende.<br>
+      Um sorriso que desmonta qualquer defesa.<br><br>
+
+      Estar com você é sentir o tempo desacelerar,<br>
+      como se tudo fizesse sentido exatamente ali.<br><br>
+
+      Seu toque é delicado,<br>
+      mas carrega um desejo que fica.<br>
+      Que marca.<br><br>
+
+      Você é intensidade sem esforço.<br>
+      Beleza sem exagero.<br>
+      Verdade sem medo.<br><br>
+
+      Cada detalhe seu desperta algo em mim.<br>
+      Algo que não se explica — só se sente.<br><br>
+
+      Eu gosto do seu jeito.<br>
+      Do seu silêncio.<br>
+      Da sua risada.<br>
+      Do seu caos bonito.<br><br>
+
+      Gosto de quem você é quando está perto,<br>
+      e de quem eu me torno quando estou com você.<br><br>
+
+      Se existir um lugar onde eu me sinto inteiro,<br>
+      esse lugar é você.<br><br>
+
+      Que esse novo ano te abrace com leveza,<br>
+      te provoque sonhos grandes<br>
+      e te lembre todos os dias do quanto é desejada.<br><br>
 
       <strong>Eu te amo.</strong><br>
-      Inteiro. Profundo. Sem pausa. 💜
+      Com vontade.<br>
+      Com verdade.<br>
+      Com tudo o que sou. 💜
     </p>
   </section>
 
 </section>
 
 <script>
+/* ===== NAVEGAÇÃO ===== */
 function irParaPagina2() {
-  document.getElementById("pagina1").classList.add("hidden");
-  document.getElementById("pagina2").classList.remove("hidden");
+  pagina1.classList.add("hidden");
+  pagina2.classList.remove("hidden");
 }
 
 function irParaPagina3() {
-  document.getElementById("pagina2").classList.add("hidden");
-  document.getElementById("pagina3").classList.remove("hidden");
+  pagina2.classList.add("hidden");
+  pagina3.classList.remove("hidden");
 }
 
-/* TEXTO LETRA POR LETRA */
+/* ===== TEXTO LETRA POR LETRA ===== */
 const texto = `Feliz aniversário, minha pretinha.
 
 Você não faz ideia do impacto que tem em mim.
@@ -221,37 +261,46 @@ Eu te desejo.
 Te admiro.
 Te escolho.
 
-Porque você é lar
-e fogo
-ao mesmo tempo.`;
+E escolher você é fácil,
+porque você é lar e fogo ao mesmo tempo.`;
 
 let i = 0;
-const p = document.getElementById("textoAnimado");
-const btnTexto = document.getElementById("btnTexto");
-const btnPagina3 = document.getElementById("btnPagina3");
-
 btnTexto.onclick = () => {
   btnTexto.style.display = "none";
   const intervalo = setInterval(() => {
-    p.innerHTML += texto.charAt(i);
+    textoAnimado.innerHTML += texto.charAt(i);
     i++;
     if (i >= texto.length) {
       clearInterval(intervalo);
       btnPagina3.classList.remove("hidden");
     }
-  }, 50);
+  }, 45);
 };
 
-/* CORAÇÕES */
+/* ===== MÚSICA ===== */
+let tocando = false;
+musicBtn.onclick = () => {
+  if (!tocando) {
+    musica.play();
+    musicBtn.innerText = "⏸️ Pausar música";
+    tocando = true;
+  } else {
+    musica.pause();
+    musicBtn.innerText = "▶️ Tocar música";
+    tocando = false;
+  }
+};
+
+/* ===== CORAÇÕES VOANDO ===== */
 setInterval(() => {
   const h = document.createElement("div");
   h.className = "flying-heart";
   h.innerText = "💜";
   h.style.left = Math.random() * 100 + "vw";
   document.body.appendChild(h);
-  setTimeout(() => h.remove(), 12000);
-}, 500);
+  setTimeout(() => h.remove(), 10000);
+}, 600);
 </script>
 
 </body>
-    </html>
+      </html>
