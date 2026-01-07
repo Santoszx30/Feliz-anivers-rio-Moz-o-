@@ -5,7 +5,6 @@
 <title>Para Você 💜</title>
 
 <style>
-/* ===== RESET ===== */
 * {
   margin: 0;
   padding: 0;
@@ -14,21 +13,24 @@
 
 html, body {
   width: 100%;
-  height: 100%;
-  overflow-x: hidden;
+  min-height: 100%;
   font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
 }
 
-/* ===== GRADIENTE GLOBAL (NÃO QUEBRA) ===== */
+/* ===== GRADIENTE ÚNICO E CONTÍNUO ===== */
 body {
   background: linear-gradient(135deg, #12001f, #2b0040, #3a005f);
   color: white;
 }
 
-/* ===== PÁGINAS ===== */
+/* ===== SEÇÕES ===== */
 .section {
   min-height: 100vh;
   padding: 60px 20px;
+}
+
+.center {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -42,64 +44,61 @@ body {
 /* ===== TEXTO ===== */
 .texto-grande {
   max-width: 900px;
-  font-size: 1.3rem;
-  line-height: 1.9;
+  font-size: 1.7rem;
+  line-height: 2.1;
   text-align: center;
-  margin-top: 30px;
+  margin-top: 40px;
+  white-space: pre-line;
 }
 
 /* ===== BOTÕES ===== */
 button {
   margin-top: 40px;
-  padding: 15px 35px;
-  font-size: 1.1rem;
-  border-radius: 30px;
+  padding: 16px 40px;
+  font-size: 1.2rem;
+  border-radius: 40px;
   border: none;
   background: #a855f7;
   color: white;
   cursor: pointer;
-  transition: transform 0.2s, opacity 0.2s;
+  transition: transform 0.2s;
 }
 
 button:hover {
   transform: scale(1.05);
-  opacity: 0.9;
 }
 
 /* ===== CORAÇÕES VOANDO ===== */
 .flying-heart {
   position: fixed;
-  bottom: -50px;
-  font-size: 30px;
+  bottom: -60px;
+  font-size: 34px;
   opacity: 0.35;
-  animation: subir 10s linear forwards;
+  animation: subir 12s linear forwards;
 }
 
 @keyframes subir {
-  from {
-    transform: translateY(0);
-  }
   to {
-    transform: translateY(-120vh);
+    transform: translateY(-130vh);
   }
 }
 
-/* ===== PÁGINA 3 - FOTOS ===== */
+/* ===== FOTOS CORAÇÃO ===== */
 .photo-block {
-  margin: 50px 0;
+  margin: 70px 0;
   text-align: center;
 }
 
 .photo-text {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
+  font-size: 1.35rem;
+  margin-bottom: 25px;
 }
 
 .heart-photo {
-  width: 260px;
-  height: 240px;
+  width: 280px;
+  height: 260px;
   margin: auto;
-  clip-path: path("M130 230 C-40 150 40 -20 130 60 C220 -20 300 150 130 230 Z");
+  clip-path: path("M140 250 C-40 160 40 -30 140 70 C240 -30 320 160 140 250 Z");
   overflow: hidden;
 }
 
@@ -107,34 +106,35 @@ button:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scale(1.15);
 }
 
 /* ===== MENSAGEM FINAL ===== */
 .mensagem-final {
   max-width: 900px;
-  font-size: 1.35rem;
-  line-height: 2;
+  font-size: 1.6rem;
+  line-height: 2.2;
   text-align: center;
-  margin: 80px auto;
+  margin: 120px auto 80px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- ===== MÚSICA (NÃO CORTA) ===== -->
+<!-- ===== MÚSICA (CONTÍNUA) ===== -->
 <audio id="musica" autoplay loop>
   <source src="musica.mp3" type="audio/mpeg">
 </audio>
 
 <!-- ===== PÁGINA 1 ===== -->
-<section class="section" id="pagina1">
+<section class="section center" id="pagina1">
   <h1>Tenho algo pra você 💜</h1>
   <button onclick="irParaPagina2()">Começar</button>
 </section>
 
 <!-- ===== PÁGINA 2 ===== -->
-<section class="section hidden" id="pagina2">
+<section class="section center hidden" id="pagina2">
   <button id="btnTexto">Clique aqui</button>
   <p id="textoAnimado" class="texto-grande"></p>
   <button id="btnPagina3" class="hidden" onclick="irParaPagina3()">Ainda não acabou bb</button>
@@ -143,6 +143,7 @@ button:hover {
 <!-- ===== PÁGINA 3 ===== -->
 <section class="section hidden" id="pagina3">
 
+  <!-- FOTOS -->
   <div class="photo-block">
     <div class="photo-text">Você é meu lugar favorito.</div>
     <div class="heart-photo"><img src="final/casal1.jpg"></div>
@@ -178,26 +179,27 @@ button:hover {
     <div class="heart-photo"><img src="final/casal7.jpg"></div>
   </div>
 
+  <!-- TEXTO FINAL -->
   <section class="mensagem-final">
     <p>
       <strong>Feliz aniversário, meu amor.</strong><br><br>
 
-      Que sua vida seja sempre tocada pela beleza que você espalha sem perceber.
-      Que seus dias sejam leves, seus sonhos alcançáveis,
-      e que você nunca esqueça do quanto é desejada, admirada e amada.<br><br>
+      Você é beleza que provoca e calma que envolve.<br>
+      É desejo que cresce no silêncio<br>
+      e carinho que permanece depois do toque.<br><br>
 
-      Você não é apenas parte da minha história —
-      você é o capítulo que eu releria infinitas vezes.<br><br>
+      Eu te escolho com intenção.<br>
+      Com vontade.<br>
+      Com verdade.<br><br>
 
       <strong>Eu te amo.</strong><br>
-      Com intenção. Com desejo. Com verdade.
+      Inteiro. Profundo. Sem pausa. 💜
     </p>
   </section>
 
 </section>
 
 <script>
-/* ===== NAVEGAÇÃO ===== */
 function irParaPagina2() {
   document.getElementById("pagina1").classList.add("hidden");
   document.getElementById("pagina2").classList.remove("hidden");
@@ -208,7 +210,7 @@ function irParaPagina3() {
   document.getElementById("pagina3").classList.remove("hidden");
 }
 
-/* ===== TEXTO LETRA POR LETRA ===== */
+/* TEXTO LETRA POR LETRA */
 const texto = `Feliz aniversário, minha pretinha.
 
 Você não faz ideia do impacto que tem em mim.
@@ -219,8 +221,9 @@ Eu te desejo.
 Te admiro.
 Te escolho.
 
-E escolher você é fácil,
-porque você é lar e fogo ao mesmo tempo.`;
+Porque você é lar
+e fogo
+ao mesmo tempo.`;
 
 let i = 0;
 const p = document.getElementById("textoAnimado");
@@ -236,17 +239,17 @@ btnTexto.onclick = () => {
       clearInterval(intervalo);
       btnPagina3.classList.remove("hidden");
     }
-  }, 45);
+  }, 50);
 };
 
-/* ===== CORAÇÕES VOANDO ===== */
+/* CORAÇÕES */
 setInterval(() => {
   const h = document.createElement("div");
   h.className = "flying-heart";
   h.innerText = "💜";
   h.style.left = Math.random() * 100 + "vw";
   document.body.appendChild(h);
-  setTimeout(() => h.remove(), 10000);
+  setTimeout(() => h.remove(), 12000);
 }, 500);
 </script>
 
