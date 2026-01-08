@@ -6,6 +6,7 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+
 body{
   font-family:Poppins,Arial,sans-serif;
   background:linear-gradient(135deg,#12001f,#2b0040,#3a005f);
@@ -15,7 +16,7 @@ body{
 
 .section{
   min-height:100vh;
-  padding:60px 20px;
+  padding:70px 20px;
   display:none;
   flex-direction:column;
   align-items:center;
@@ -25,9 +26,9 @@ body{
 .section.active{display:flex}
 
 button{
-  padding:14px 32px;
+  padding:16px 36px;
   margin:25px;
-  font-size:1.05rem;
+  font-size:1.1rem;
   border:none;
   border-radius:30px;
   background:#a855f7;
@@ -36,9 +37,9 @@ button{
 }
 
 .texto-grande{
-  max-width:900px;
-  font-size:1.25rem;
-  line-height:1.9;
+  max-width:950px;
+  font-size:1.45rem; /* TEXTO MAIOR */
+  line-height:2;
   text-align:center;
 }
 
@@ -46,15 +47,15 @@ button{
 .galeria{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:20px;
-  max-width:900px;
-  margin-top:40px;
+  gap:22px;
+  max-width:950px;
+  margin-top:50px;
 }
 
 .card{
   opacity:0;
-  transform:translateY(20px);
-  transition:.8s;
+  transform:translateY(30px);
+  transition:1.6s ease; /* FADE MAIS LENTO */
   text-align:center;
 }
 
@@ -65,15 +66,23 @@ button{
 
 .card img{
   width:100%;
-  border-radius:18px;
+  border-radius:20px;
 }
 
-.card p{margin-top:8px}
+.card p{
+  margin-top:10px;
+  font-size:1.15rem; /* ELOGIOS MAIORES */
+}
 
 /* CORAÇÕES */
 .photo-block{
-  margin:40px 0;
+  margin:45px 0;
   text-align:center;
+}
+
+.photo-block p{
+  font-size:1.25rem;
+  margin-bottom:14px;
 }
 
 .heart-photo{
@@ -94,11 +103,10 @@ button{
 
 <body>
 
-<audio id="musica">
-  <source src="music/poesia13.mp3" type="audio/mpeg">
-</audio>
+<audio id="musica" src="music/poesia13.mp3"></audio>
 
-<button onclick="tocarMusica()">🎵 Música</button>
+<!-- BOTÃO DE MÚSICA -->
+<button onclick="musica.play()">🎵 Música</button>
 
 <section class="section active" id="p1">
   <h1>Tenho algo pra você 💜</h1>
@@ -176,35 +184,15 @@ Eu te amo. 💜
 </section>
 
 <section class="section" id="p3">
-<h2>Você & Eu 💜</h2>
-
-<script>
-const frases=[
-"Seu abraço é meu lar.","Ao seu lado tudo faz sentido.",
-"Você é minha melhor escolha.","Nosso amor é calmo e forte.",
-"Com você sou inteiro.","Seu sorriso é meu refúgio.",
-"Amar você é fácil."
-];
-
-for(let i=1;i<=7;i++){
-document.write(`
-<div class="photo-block">
-<p>${frases[i-1]}</p>
-<div class="heart-photo">
-<img src="fotos/casal${i}.jpg">
-</div>
-</div>
-`)
-}
-</script>
+  <h2>Você & Eu 💜</h2>
+  <div id="coracoes"></div>
 </section>
 
 <script>
 const musica=document.getElementById("musica");
-function tocarMusica(){musica.play();}
 
 function irPara2(){
-  tocarMusica();
+  musica.play();
   ir(2);
   escreverTexto();
 }
@@ -212,6 +200,7 @@ function irPara2(){
 function ir(n){
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById("p"+n).classList.add("active");
+  if(n===3) carregarCoracoes();
 }
 
 function escreverTexto(){
@@ -219,6 +208,7 @@ function escreverTexto(){
   const txt=el.innerHTML;
   el.innerHTML="";
   let i=0;
+
   function digitar(){
     if(i<txt.length){
       el.innerHTML+=txt.charAt(i++);
@@ -252,10 +242,34 @@ function mostrarFotos(){
     `;
     galeria.appendChild(div);
 
-    setTimeout(()=>div.classList.add("show"),i*300);
+    setTimeout(()=>div.classList.add("show"), i*500); // MAIS LENTO
+  }
+}
+
+function carregarCoracoes(){
+  const frases=[
+"Seu abraço é meu lar.","Ao seu lado tudo faz sentido.",
+"Você é minha melhor escolha.","Nosso amor é calmo e forte.",
+"Com você sou inteiro.","Seu sorriso é meu refúgio.",
+"Amar você é fácil."
+  ];
+
+  const container=document.getElementById("coracoes");
+  container.innerHTML="";
+
+  for(let i=1;i<=7;i++){
+    const bloco=document.createElement("div");
+    bloco.className="photo-block";
+    bloco.innerHTML=`
+      <p>${frases[i-1]}</p>
+      <div class="heart-photo">
+        <img src="fotos/casal${i}.jpg">
+      </div>
+    `;
+    container.appendChild(bloco);
   }
 }
 </script>
 
 </body>
-  </html>
+</html>
