@@ -2,154 +2,189 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Surpresa 💜</title>
+<title>Para Você 💜</title>
 
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Georgia', serif; }
-body { background: #0e0e0e; color: #fff; overflow-x: hidden; }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
 
-.page { display: none; min-height: 100vh; padding: 40px 20px; }
-.page.active { display: block; }
+body {
+  background: linear-gradient(135deg, #12001f, #2b0040, #3a005f);
+  color: white;
+  overflow-x: hidden;
+}
+
+.section {
+  min-height: 100vh;
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hidden {
+  display: none;
+}
+
+h1 {
+  font-size: 2.4rem;
+  text-align: center;
+}
 
 button {
-  padding: 14px 28px;
-  font-size: 18px;
-  border: none;
+  margin-top: 40px;
+  padding: 15px 40px;
+  font-size: 1.2rem;
   border-radius: 30px;
-  background: #7c4dff;
-  color: #fff;
+  border: none;
+  background: #a855f7;
+  color: white;
   cursor: pointer;
 }
 
-#musicBtn {
-  position: fixed;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9999;
+button:hover {
+  opacity: 0.9;
 }
 
-.center { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-
-#typedText {
-  font-size: 22px;
-  line-height: 1.8;
+/* ===== TEXTO ANIMADO ===== */
+.texto-grande {
   max-width: 900px;
-  margin: auto;
+  font-size: 1.55rem;
+  line-height: 2;
+  text-align: center;
+  margin-top: 30px;
+  white-space: pre-line;
 }
 
-.gallery {
+/* ===== FOTOS PÁGINA 2 ===== */
+.galeria {
   margin-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 60px;
 }
 
-.photo-box {
-  margin: 30px 0;
+.foto-box {
   opacity: 0;
-  transition: opacity 3s;
+  transition: opacity 2.5s;
   text-align: center;
 }
 
-.photo-box img {
-  width: 90%;
-  max-width: 500px;
+.foto-box.show {
+  opacity: 1;
+}
+
+.foto-box img {
+  width: 320px;
   border-radius: 20px;
 }
 
-.caption {
-  font-size: 26px;
+.foto-box p {
   margin-top: 20px;
+  font-size: 1.6rem;
+  font-weight: 500;
 }
 
-.heart {
-  width: 280px;
-  height: 250px;
-  background: red;
-  position: relative;
-  transform: rotate(-45deg);
-  margin: 60px auto 20px;
+/* ===== CORAÇÕES ===== */
+.photo-block {
+  margin: 70px 0;
+  text-align: center;
 }
 
-.heart:before,
-.heart:after {
-  content: "";
-  width: 280px;
-  height: 250px;
-  background: red;
-  border-radius: 50%;
-  position: absolute;
+.photo-text {
+  font-size: 1.6rem;
+  margin-bottom: 25px;
 }
 
-.heart:before { top: -140px; left: 0; }
-.heart:after { left: 140px; top: 0; }
+.heart-photo {
+  width: 320px;
+  height: 300px;
+  margin: auto;
+  clip-path: path("M160 290 C-60 180 40 -40 160 90 C280 -40 380 180 160 290 Z");
+  overflow: hidden;
+}
 
-.heart img {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 240px;
-  height: 210px;
+.heart-photo img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  transform: rotate(45deg);
-  border-radius: 20px;
 }
 
+/* ===== MENSAGEM FINAL ===== */
+.mensagem-final {
+  max-width: 900px;
+  font-size: 1.6rem;
+  line-height: 2;
+  text-align: center;
+  margin: 100px auto;
+}
 </style>
 </head>
 
 <body>
 
-<button id="musicBtn">🎵 Música</button>
-<audio id="music" src="music/poesia13.mp3" preload="auto"></audio>
+<!-- ===== PÁGINA 1 ===== -->
+<section class="section" id="pagina1">
+  <h1>Tenho algo pra você 💜</h1>
+  <button onclick="irParaPagina2()">Começar</button>
+</section>
 
-<!-- PÁGINA 1 -->
-<div id="page1" class="page active center">
-  <h1 style="font-size:40px;margin-bottom:40px;">💜</h1>
-  <button onclick="startExperience()">Começar</button>
-</div>
+<!-- ===== PÁGINA 2 ===== -->
+<section class="section hidden" id="pagina2">
+  <button id="btnTexto">Clique aqui princesa</button>
+  <p id="textoAnimado" class="texto-grande"></p>
 
-<!-- PÁGINA 2 -->
-<div id="page2" class="page">
-  <div id="typedText"></div>
+  <div class="galeria" id="galeria"></div>
 
-  <div class="gallery" id="gallery"></div>
+  <button id="btnPagina3" class="hidden" onclick="irParaPagina3()">Ainda não acabou</button>
+</section>
 
-  <div class="center" style="margin-top:60px;">
-    <button onclick="goPage3()">Ainda não acabou</button>
+<!-- ===== PÁGINA 3 ===== -->
+<section class="section hidden" id="pagina3">
+
+  <div class="photo-block">
+    <div class="photo-text">Você é meu lugar favorito.</div>
+    <div class="heart-photo"><img src="fotos/casal1.jpg"></div>
   </div>
-</div>
 
-<!-- PÁGINA 3 -->
-<div id="page3" class="page">
-  <div id="couples"></div>
-</div>
+  <div class="photo-block">
+    <div class="photo-text">Seu sorriso muda tudo.</div>
+    <div class="heart-photo"><img src="fotos/casal2.jpg"></div>
+  </div>
 
-<script>
-/* MÚSICA */
-const music = document.getElementById("music");
-const musicBtn = document.getElementById("musicBtn");
-musicBtn.onclick = () => {
-  if (music.paused) { music.play(); musicBtn.innerText = "⏸ Pausar"; }
-  else { music.pause(); musicBtn.innerText = "🎵 Música"; }
-};
+  <div class="photo-block">
+    <div class="photo-text">Meu mundo começa em você.</div>
+    <div class="heart-photo"><img src="fotos/casal3.jpg"></div>
+  </div>
 
-/* NAVEGAÇÃO */
-function startExperience() {
-  document.getElementById("page1").classList.remove("active");
-  document.getElementById("page2").classList.add("active");
-  typeText();
-}
+  <div class="photo-block">
+    <div class="photo-text">Você é desejo e calma.</div>
+    <div class="heart-photo"><img src="fotos/casal4.jpg"></div>
+  </div>
 
-function goPage3() {
-  document.getElementById("page2").classList.remove("active");
-  document.getElementById("page3").classList.add("active");
-  loadCouples();
-}
+  <div class="photo-block">
+    <div class="photo-text">Te escolher é natural.</div>
+    <div class="heart-photo"><img src="fotos/casal5.jpg"></div>
+  </div>
 
-/* TEXTO */
-const text = `Hoje o tempo desacelera para reconhecer a raridade que é você.
+  <div class="photo-block">
+    <div class="photo-text">Você é casa.</div>
+    <div class="heart-photo"><img src="fotos/casal6.jpg"></div>
+  </div>
+
+  <div class="photo-block">
+    <div class="photo-text">Sempre você.</div>
+    <div class="heart-photo"><img src="fotos/casal7.jpg"></div>
+  </div>
+
+  <section class="mensagem-final">
+Hoje o tempo desacelera para reconhecer a raridade que é você.
 Celebrar a sua existência não é apenas marcar uma data,
 é honrar tudo o que você é, tudo o que constrói
 e tudo o que silenciosamente transforma ao seu redor.
@@ -209,65 +244,67 @@ Feliz aniversário.
 Com todo o carinho,
 com todo o amor,
 com tudo o que sou.
-Eu te amo. 💜`;
+Eu te amo. 💜
+  </section>
+
+</section>
+
+<script>
+function irParaPagina2() {
+  document.getElementById("pagina1").classList.add("hidden");
+  document.getElementById("pagina2").classList.remove("hidden");
+}
+
+function irParaPagina3() {
+  document.getElementById("pagina2").classList.add("hidden");
+  document.getElementById("pagina3").classList.remove("hidden");
+}
+
+const texto = `Feliz aniversário, meu amor.`;
 
 let i = 0;
-function typeText() {
-  if (i < text.length) {
-    document.getElementById("typedText").innerHTML += text[i] === "\n" ? "<br>" : text[i];
-    i++;
-    setTimeout(typeText, 30);
-  } else {
-    loadPhotos();
-  }
-}
+const p = document.getElementById("textoAnimado");
+const btnTexto = document.getElementById("btnTexto");
+const btnPagina3 = document.getElementById("btnPagina3");
+const galeria = document.getElementById("galeria");
 
-/* FOTOS PÁGINA 2 */
-const praises = [
-  "Seu sorriso ilumina tudo.",
-  "Você é pura poesia viva.",
-  "Seu olhar acalma a alma.",
-  "Você transforma meus dias.",
-  "Seu amor é abrigo.",
-  "Você é delicadeza e força.",
-  "Você é minha certeza.",
-  "Seu jeito encanta.",
-  "Você é meu refúgio.",
+const elogios = [
+  "Você é simplesmente inesquecível.",
+  "Seu olhar me desmonta.",
+  "Seu sorriso é minha paz.",
   "Você é intensidade.",
-  "Você é luz.",
-  "Você é única.",
-  "Você é tudo.",
-  "Você é presença.",
-  "Você é calma.",
-  "Você é amor.",
+  "Você é desejo.",
   "Você é verdade.",
-  "Você é casa.",
-  "Você é escolha.",
-  "Você é meu lugar favorito."
+  "Você é amor."
 ];
 
-function loadPhotos() {
-  const g = document.getElementById("gallery");
-  for (let n = 1; n <= 20; n++) {
-    const box = document.createElement("div");
-    box.className = "photo-box";
-    box.innerHTML = `<img src="fotos/foto${n}.jpg"><div class="caption">${praises[n-1]}</div>`;
-    g.appendChild(box);
-    setTimeout(() => box.style.opacity = 1, n * 700);
-  }
-}
+btnTexto.onclick = () => {
+  btnTexto.style.display = "none";
+  const intervalo = setInterval(() => {
+    p.innerHTML += texto.charAt(i);
+    i++;
+    if (i >= texto.length) {
+      clearInterval(intervalo);
+      mostrarFotos();
+    }
+  }, 50);
+};
 
-/* PÁGINA 3 */
-function loadCouples() {
-  const c = document.getElementById("couples");
-  for (let n = 1; n <= 7; n++) {
-    c.innerHTML += `
-      <div class="heart"><img src="fotos/casal${n}.jpg"></div>
-      <div class="caption">${praises[n]}</div>
+function mostrarFotos() {
+  elogios.forEach((txt, index) => {
+    const box = document.createElement("div");
+    box.className = "foto-box";
+    box.innerHTML = `
+      <img src="fotos/foto${index + 1}.jpg">
+      <p>${txt}</p>
     `;
-  }
+    galeria.appendChild(box);
+    setTimeout(() => box.classList.add("show"), 600 * (index + 1));
+  });
+
+  setTimeout(() => btnPagina3.classList.remove("hidden"), 600 * elogios.length + 1000);
 }
 </script>
 
 </body>
-  </html>
+    </html>
