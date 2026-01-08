@@ -88,23 +88,6 @@ button{
 
 <body>
 
-<button id="musicBtn" style="
-position: fixed;
-top: 15px;
-left: 50%;
-transform: translateX(-50%);
-z-index: 9999;
-padding: 10px 25px;
-border-radius: 25px;
-border: none;
-background: #8a2be2;
-color: white;
-font-size: 16px;
-cursor: pointer;
-">
-▶️ Música
-</button>
-
 <audio id="musica">
   <source src="music/poesia13.mp3" type="audio/mpeg">
 </audio>
@@ -279,34 +262,63 @@ function nextFoto(){
   if(idx<19){idx++;showFoto()}
 }
 
-/* MUSICA */
-function toggleMusic(){
-  const m=document.getElementById("musica");
-  m.paused?m.play():m.pause();
-}
-</script>
+<!-- ===== BOTÃO FIXO DE MÚSICA ===== -->
+<button id="musicToggle"
+style="
+position: fixed;
+top: 15px;
+left: 50%;
+transform: translateX(-50%);
+z-index: 99999;
+padding: 12px 26px;
+border-radius: 30px;
+border: none;
+background: #8a2be2;
+color: white;
+font-size: 16px;
+cursor: pointer;
+">
+🎵 Tocar música
+</button>
+
+<!-- ===== PLAYER YOUTUBE INVISÍVEL ===== -->
+<div id="yt-music" style="width:0;height:0;overflow:hidden;"></div>
 
 <script>
-const musica = document.getElementById("musica");
-const botao = document.getElementById("musicBtn");
-
+let player;
 let tocando = false;
 
-botao.addEventListener("click", () => {
+/* Carrega API do YouTube */
+const tag = document.createElement("script");
+tag.src = "https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
+
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player("yt-music", {
+    height: "0",
+    width: "0",
+    videoId: "69-jnA4QLSM", // Poesia Acústica 13
+    playerVars: {
+      autoplay: 0,
+      loop: 1,
+      playlist: "69-jnA4QLSM"
+    }
+  });
+}
+
+const btn = document.getElementById("musicToggle");
+
+btn.addEventListener("click", () => {
+  if (!player) return;
+
   if (!tocando) {
-    musica.currentTime = 0;
-    musica.play()
-      .then(() => {
-        tocando = true;
-        botao.innerText = "⏸️ Pausar";
-      })
-      .catch(err => {
-        console.log("Bloqueio do navegador:", err);
-      });
+    player.playVideo();
+    btn.innerText = "⏸️ Pausar música";
+    tocando = true;
   } else {
-    musica.pause();
+    player.pauseVideo();
+    btn.innerText = "🎵 Tocar música";
     tocando = false;
-    botao.innerText = "▶️ Música";
   }
 });
 </script>
