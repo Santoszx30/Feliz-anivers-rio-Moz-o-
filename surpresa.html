@@ -9,104 +9,90 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  overflow-x: hidden;
 }
 
 body {
   background: linear-gradient(135deg, #12001f, #2b0040, #3a005f);
   color: white;
-  overflow-x: hidden;
 }
 
+/* ===== SEÇÕES ===== */
 .section {
   min-height: 100vh;
   padding: 60px 20px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
 .hidden {
   display: none;
 }
 
-h1 {
-  font-size: 2.4rem;
-  text-align: center;
-}
-
+/* ===== BOTÕES ===== */
 button {
-  margin-top: 40px;
-  padding: 15px 40px;
-  font-size: 1.2rem;
+  padding: 15px 35px;
   border-radius: 30px;
   border: none;
   background: #a855f7;
   color: white;
+  font-size: 1.1rem;
   cursor: pointer;
+  margin-top: 30px;
 }
 
-button:hover {
-  opacity: 0.9;
-}
-
-/* ===== TEXTO ANIMADO ===== */
+/* ===== TEXTO ===== */
 .texto-grande {
   max-width: 900px;
-  font-size: 1.55rem;
+  font-size: 1.6rem;
   line-height: 2;
   text-align: center;
   margin-top: 30px;
-  white-space: pre-line;
 }
 
-/* ===== FOTOS PÁGINA 2 ===== */
-.galeria {
-  margin-top: 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 60px;
-}
-
-.foto-box {
-  opacity: 0;
-  transition: opacity 2.5s;
+/* ===== FOTOS PAGINA 2 ===== */
+.photo-box {
+  margin-top: 60px;
   text-align: center;
 }
 
-.foto-box.show {
-  opacity: 1;
-}
-
-.foto-box img {
-  width: 320px;
+.photo-box img {
+  width: 80%;
+  max-width: 500px;
   border-radius: 20px;
+  opacity: 0;
+  transition: opacity 2.5s;
 }
 
-.foto-box p {
-  margin-top: 20px;
-  font-size: 1.6rem;
-  font-weight: 500;
+.photo-elogio {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
 }
 
-/* ===== CORAÇÕES ===== */
+/* ===== PAGINA 3 ===== */
 .photo-block {
   margin: 70px 0;
   text-align: center;
 }
 
 .photo-text {
-  font-size: 1.6rem;
-  margin-bottom: 25px;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
 }
 
 .heart-photo {
-  width: 320px;
-  height: 300px;
+  width: 300px;
+  height: 280px;
   margin: auto;
-  clip-path: path("M160 290 C-60 180 40 -40 160 90 C280 -40 380 180 160 290 Z");
+  clip-path: path("M150 260 C-50 160 50 -20 150 70 C250 -20 350 160 150 260 Z");
   overflow: hidden;
 }
 
@@ -115,76 +101,81 @@ button:hover {
   height: 100%;
   object-fit: cover;
 }
-
-/* ===== MENSAGEM FINAL ===== */
-.mensagem-final {
-  max-width: 900px;
-  font-size: 1.6rem;
-  line-height: 2;
-  text-align: center;
-  margin: 100px auto;
-}
 </style>
 </head>
 
 <body>
 
-<!-- ===== PÁGINA 1 ===== -->
-<section class="section" id="pagina1">
+<!-- ===== PAGINA 1 ===== -->
+<section class="section" id="p1">
   <h1>Tenho algo pra você 💜</h1>
-  <button onclick="irParaPagina2()">Começar</button>
+  <button onclick="goP2()">Começar</button>
 </section>
 
-<!-- ===== PÁGINA 2 ===== -->
-<section class="section hidden" id="pagina2">
-  <button id="btnTexto">Clique aqui princesa</button>
-  <p id="textoAnimado" class="texto-grande"></p>
+<!-- ===== PAGINA 2 ===== -->
+<section class="section hidden" id="p2">
 
-  <div class="galeria" id="galeria"></div>
+  <button id="btnTexto">Clique aqui princesa 💜</button>
+  <p id="texto" class="texto-grande"></p>
 
-  <button id="btnPagina3" class="hidden" onclick="irParaPagina3()">Ainda não acabou</button>
+  <div id="fotos" class="hidden"></div>
+
+  <button id="btnP3" class="hidden" onclick="goP3()">Ainda não acabou bb</button>
 </section>
 
-<!-- ===== PÁGINA 3 ===== -->
-<section class="section hidden" id="pagina3">
+<!-- ===== PAGINA 3 ===== -->
+<section class="section hidden" id="p3">
 
   <div class="photo-block">
     <div class="photo-text">Você é meu lugar favorito.</div>
-    <div class="heart-photo"><img src="fotos/casal1.jpg"></div>
+    <div class="heart-photo"><img src="final/casal1.jpg"></div>
   </div>
 
   <div class="photo-block">
-    <div class="photo-text">Seu sorriso muda tudo.</div>
-    <div class="heart-photo"><img src="fotos/casal2.jpg"></div>
+    <div class="photo-text">Seu sorriso do meu lado é casa.</div>
+    <div class="heart-photo"><img src="final/casal2.jpg"></div>
   </div>
 
   <div class="photo-block">
-    <div class="photo-text">Meu mundo começa em você.</div>
-    <div class="heart-photo"><img src="fotos/casal3.jpg"></div>
+    <div class="photo-text">Tudo com você é mais leve.</div>
+    <div class="heart-photo"><img src="final/casal3.jpg"></div>
   </div>
 
   <div class="photo-block">
-    <div class="photo-text">Você é desejo e calma.</div>
-    <div class="heart-photo"><img src="fotos/casal4.jpg"></div>
+    <div class="photo-text">Você é calma e desejo.</div>
+    <div class="heart-photo"><img src="final/casal4.jpg"></div>
+  </div>
+
+  <div class="photo-block">
+    <div class="photo-text">Meu futuro tem seu nome.</div>
+    <div class="heart-photo"><img src="final/casal5.jpg"></div>
   </div>
 
   <div class="photo-block">
     <div class="photo-text">Te escolher é natural.</div>
-    <div class="heart-photo"><img src="fotos/casal5.jpg"></div>
-  </div>
-
-  <div class="photo-block">
-    <div class="photo-text">Você é casa.</div>
-    <div class="heart-photo"><img src="fotos/casal6.jpg"></div>
+    <div class="heart-photo"><img src="final/casal6.jpg"></div>
   </div>
 
   <div class="photo-block">
     <div class="photo-text">Sempre você.</div>
-    <div class="heart-photo"><img src="fotos/casal7.jpg"></div>
+    <div class="heart-photo"><img src="final/casal7.jpg"></div>
   </div>
 
-  <section class="mensagem-final">
-Hoje o tempo desacelera para reconhecer a raridade que é você.
+</section>
+
+<script>
+function goP2(){
+  p1.classList.add("hidden");
+  p2.classList.remove("hidden");
+}
+
+function goP3(){
+  p2.classList.add("hidden");
+  p3.classList.remove("hidden");
+}
+
+/* ===== TEXTO LETRA POR LETRA ===== */
+const textoCompleto = `Hoje o tempo desacelera para reconhecer a raridade que é você.
 Celebrar a sua existência não é apenas marcar uma data,
 é honrar tudo o que você é, tudo o que constrói
 e tudo o que silenciosamente transforma ao seu redor.
@@ -205,106 +196,72 @@ em conversas sinceras,
 em confiança construída com o tempo
 e em carinho demonstrado nos pequenos gestos.
 Seu sorriso tem o poder de acalmar meus dias mais difíceis.
-Seu olhar carrega uma verdade que me prende,
-me desafia
-e me faz querer ser melhor.
-Seu abraço é o lugar onde o mundo perde o peso
-e tudo encontra sentido.
-Existe em você uma elegância natural,
-uma sensibilidade rara
-e uma intensidade que encanta sem esforço.
-Cada detalhe seu carrega autenticidade,
-cada palavra sua deixa marcas boas,
-cada momento ao seu lado se transforma em lembrança valiosa.
-Hoje, mais do que desejar felicidade,
-eu desejo que você continue sendo quem é.
-Que seus sonhos encontrem espaço para crescer.
-Que seus dias sejam preenchidos por paz.
-Que você nunca duvide do seu valor
-e jamais se esqueça do quanto é amada.
-Que a vida te retribua com leveza
-tudo aquilo que você entrega com o coração.
-E que, em meio a todas as mudanças do mundo,
-você sempre tenha um lugar seguro
-onde possa ser inteira, livre e verdadeira.
-Eu não prometo perfeição,
-mas prometo cuidado.
-Não prometo caminhos fáceis,
-mas prometo caminhar ao seu lado.
-Prometo respeito, verdade, admiração
-e um amor que cresce, amadurece
-e se fortalece com o tempo.
-Você é presença,
-é abrigo,
-é escolha.
-E se eu tivesse que resumir tudo em uma única frase,
-ela seria simples, mas sincera:
+Seu abraço é onde tudo faz sentido.
 Você é meu lugar favorito.
 Feliz aniversário.
-Com todo o carinho,
-com todo o amor,
-com tudo o que sou.
-Eu te amo. 💜
-  </section>
-
-</section>
-
-<script>
-function irParaPagina2() {
-  document.getElementById("pagina1").classList.add("hidden");
-  document.getElementById("pagina2").classList.remove("hidden");
-}
-
-function irParaPagina3() {
-  document.getElementById("pagina2").classList.add("hidden");
-  document.getElementById("pagina3").classList.remove("hidden");
-}
-
-const texto = `Feliz aniversário, meu amor.`;
+Eu te amo. 💜`;
 
 let i = 0;
-const p = document.getElementById("textoAnimado");
-const btnTexto = document.getElementById("btnTexto");
-const btnPagina3 = document.getElementById("btnPagina3");
-const galeria = document.getElementById("galeria");
-
-const elogios = [
-  "Você é simplesmente inesquecível.",
-  "Seu olhar me desmonta.",
-  "Seu sorriso é minha paz.",
-  "Você é intensidade.",
-  "Você é desejo.",
-  "Você é verdade.",
-  "Você é amor."
-];
-
 btnTexto.onclick = () => {
   btnTexto.style.display = "none";
-  const intervalo = setInterval(() => {
-    p.innerHTML += texto.charAt(i);
+  const interval = setInterval(()=>{
+    texto.innerHTML += textoCompleto.charAt(i);
     i++;
-    if (i >= texto.length) {
-      clearInterval(intervalo);
+    if(i >= textoCompleto.length){
+      clearInterval(interval);
       mostrarFotos();
     }
-  }, 50);
+  }, 35);
 };
 
-function mostrarFotos() {
-  elogios.forEach((txt, index) => {
-    const box = document.createElement("div");
-    box.className = "foto-box";
-    box.innerHTML = `
-      <img src="fotos/foto${index + 1}.jpg">
-      <p>${txt}</p>
-    `;
-    galeria.appendChild(box);
-    setTimeout(() => box.classList.add("show"), 600 * (index + 1));
-  });
+/* ===== FOTOS PAGINA 2 ===== */
+const elogios = [
+  "Seu olhar me prende.",
+  "Seu sorriso é abrigo.",
+  "Você ilumina tudo.",
+  "É impossível não te desejar.",
+  "Você é intensidade.",
+  "Seu corpo é poesia.",
+  "Você é única.",
+  "Tudo em você encanta.",
+  "Seu toque é calma.",
+  "Seu jeito me vicia.",
+  "Você é presença.",
+  "Você é verdade.",
+  "Seu riso é casa.",
+  "Você é força.",
+  "Você é beleza real.",
+  "Seu abraço cura.",
+  "Você é desejo.",
+  "Você é amor.",
+  "Você é escolha.",
+  "Você é tudo."
+];
 
-  setTimeout(() => btnPagina3.classList.remove("hidden"), 600 * elogios.length + 1000);
+function mostrarFotos(){
+  fotos.classList.remove("hidden");
+  let idx = 1;
+
+  function next(){
+    if(idx > 20){
+      btnP3.classList.remove("hidden");
+      return;
+    }
+    const box = document.createElement("div");
+    box.className = "photo-box";
+    box.innerHTML = `
+      <div class="photo-elogio">${elogios[idx-1]}</div>
+      <img src="fotos/foto${idx}.jpg">
+    `;
+    fotos.appendChild(box);
+    const img = box.querySelector("img");
+    setTimeout(()=> img.style.opacity = 1, 100);
+    idx++;
+    setTimeout(next, 2000);
+  }
+  next();
 }
 </script>
 
 </body>
-    </html>
+      </html>
