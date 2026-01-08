@@ -88,25 +88,26 @@ button{
 
 <body>
 
-  <audio id="musica" preload="auto" loop>
+<button id="musicBtn" style="
+position: fixed;
+top: 15px;
+left: 50%;
+transform: translateX(-50%);
+z-index: 9999;
+padding: 10px 25px;
+border-radius: 25px;
+border: none;
+background: #8a2be2;
+color: white;
+font-size: 16px;
+cursor: pointer;
+">
+▶️ Música
+</button>
+
+<audio id="musica">
   <source src="music/poesia13.mp3" type="audio/mpeg">
 </audio>
-
-<button id="botao-musica" style="
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  z-index: 9999;
-  background: rgba(168,85,247,0.9);
-  border: none;
-  color: white;
-  padding: 12px 18px;
-  border-radius: 25px;
-  font-size: 14px;
-  cursor: pointer;
-">
-  ▶️ Música
-</button>
 
 <audio id="musica">
   <source src="music/poesia13.mp3" type="audio/mpeg">
@@ -288,24 +289,25 @@ function toggleMusic(){
 
 <script>
 const musica = document.getElementById("musica");
-const botao = document.getElementById("botao-musica");
+const botao = document.getElementById("musicBtn");
 
-let liberado = false;
+let tocando = false;
 
 botao.addEventListener("click", () => {
-  if (!liberado) {
-    musica.play().then(() => {
-      liberado = true;
-      botao.innerText = "⏸️ Pausar";
-    }).catch(() => {});
+  if (!tocando) {
+    musica.currentTime = 0;
+    musica.play()
+      .then(() => {
+        tocando = true;
+        botao.innerText = "⏸️ Pausar";
+      })
+      .catch(err => {
+        console.log("Bloqueio do navegador:", err);
+      });
   } else {
-    if (musica.paused) {
-      musica.play();
-      botao.innerText = "⏸️ Pausar";
-    } else {
-      musica.pause();
-      botao.innerText = "▶️ Música";
-    }
+    musica.pause();
+    tocando = false;
+    botao.innerText = "▶️ Música";
   }
 });
 </script>
