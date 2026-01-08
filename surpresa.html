@@ -88,6 +88,26 @@ button{
 
 <body>
 
+  <audio id="musica" preload="auto" loop>
+  <source src="music/poesia13.mp3" type="audio/mpeg">
+</audio>
+
+<button id="botao-musica" style="
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 9999;
+  background: rgba(168,85,247,0.9);
+  border: none;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 25px;
+  font-size: 14px;
+  cursor: pointer;
+">
+  ▶️ Música
+</button>
+
 <audio id="musica">
   <source src="music/poesia13.mp3" type="audio/mpeg">
 </audio>
@@ -266,5 +286,29 @@ function toggleMusic(){
 }
 </script>
 
+<script>
+const musica = document.getElementById("musica");
+const botao = document.getElementById("botao-musica");
+
+let liberado = false;
+
+botao.addEventListener("click", () => {
+  if (!liberado) {
+    musica.play().then(() => {
+      liberado = true;
+      botao.innerText = "⏸️ Pausar";
+    }).catch(() => {});
+  } else {
+    if (musica.paused) {
+      musica.play();
+      botao.innerText = "⏸️ Pausar";
+    } else {
+      musica.pause();
+      botao.innerText = "▶️ Música";
+    }
+  }
+});
+</script>
+
 </body>
-                                                                                       </html>
+</html>
