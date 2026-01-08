@@ -3,116 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <title>Para Você 💜</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+*{margin:0;padding:0;box-sizing:border-box}
 body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background: radial-gradient(circle at top, #3a005f, #12001d);
-    color:#fff;
-    overflow-x:hidden;
+  font-family:Poppins,Arial,sans-serif;
+  background:linear-gradient(135deg,#12001f,#2b0040,#3a005f);
+  color:#fff;
+  overflow-x:hidden;
+}
+.section{
+  min-height:100vh;
+  padding:60px 20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.hidden{display:none}
+
+/* TEXTO */
+.texto-grande{
+  max-width:900px;
+  font-size:1.25rem;
+  line-height:1.9;
+  text-align:center;
 }
 
-.page{
-    display:none;
-    min-height:100vh;
-    padding:20px;
-    text-align:center;
-}
-
-.page.active{display:block}
-
+/* BOTÕES */
 button{
-    background:#9b59b6;
-    color:#fff;
-    border:none;
-    padding:14px 28px;
-    border-radius:30px;
-    font-size:16px;
-    cursor:pointer;
-    margin:25px auto;
+  margin:25px;
+  padding:14px 32px;
+  font-size:1.05rem;
+  border:none;
+  border-radius:30px;
+  background:#a855f7;
+  color:#fff;
+  cursor:pointer;
 }
+button:hover{opacity:.9}
 
-button:hover{background:#b97adf}
-
-.texto{
-    max-width:900px;
-    margin:30px auto;
-    line-height:1.7;
-    font-size:16px;
-}
-
-/* ---------- GRID 20 FOTOS ---------- */
-.grid20{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-    gap:22px;
-    margin-top:40px;
-}
-
-.grid20 img{
-    width:100%;
-    height:240px;
-    object-fit:cover;
-    border-radius:18px;
-}
-
-.caption{
-    margin-top:8px;
-    font-size:14px;
-    color:#f1d9ff;
-}
-
-/* ---------- CORAÇÕES ---------- */
-.heart-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-    gap:30px;
-    margin-top:40px;
-}
-
+/* CORAÇÕES VOANDO */
 .heart{
-    width:150px;
-    height:150px;
-    margin:auto;
-    clip-path:path("M75 135 C20 90, 0 60, 25 35 C45 15, 65 25, 75 40 C85 25,105 15,125 35 C150 60,130 90,75 135 Z");
-    overflow:hidden;
+  position:fixed;
+  bottom:-30px;
+  font-size:22px;
+  opacity:.35;
+  animation:subir 10s linear forwards;
+}
+@keyframes subir{
+  to{transform:translateY(-120vh)}
 }
 
-.heart img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
+/* GALERIA 20 FOTOS */
+.galeria{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+  max-width:900px;
+}
+.card{
+  text-align:center;
+}
+.card img{
+  width:100%;
+  border-radius:18px;
+}
+.card p{
+  margin-top:8px;
+  font-size:1rem;
 }
 
-.frase{
-    margin-top:10px;
-    font-size:14px;
-    color:#f5dcff;
+/* CORAÇÕES CASAL */
+.photo-block{
+  margin:50px 0;
+  text-align:center;
+}
+.photo-text{
+  font-size:1.2rem;
+  margin-bottom:18px;
+}
+.heart-photo{
+  width:300px;
+  height:280px;
+  margin:auto;
+  clip-path:path("M150 270 C-40 170 40 -20 150 80 C260 -20 340 170 150 270 Z");
+  overflow:hidden;
+}
+.heart-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
 }
 </style>
 </head>
 
 <body>
 
-<audio id="musica" preload="auto">
+<!-- MÚSICA -->
+<audio id="musica">
   <source src="music/poesia13.mp3" type="audio/mpeg">
 </audio>
-
-<button id="musicBtn">Tocar música ▶</button>
+<button id="btnMusica">▶ Tocar música</button>
 
 <!-- PÁGINA 1 -->
-<div class="page active" id="p1">
-  <img src="fotos/foto1.jpg" style="width:240px;border-radius:20px">
-  <p>Sua presença provoca.</p>
-  <button onclick="go(2)">Avançar</button>
-</div>
+<section class="section" id="pagina1">
+  <h1>Tenho algo pra você 💜</h1>
+  <button onclick="ir(2)">Começar</button>
+</section>
 
 <!-- PÁGINA 2 -->
-<div class="page" id="p2">
+<section class="section hidden" id="pagina2">
 
-<div class="texto">
+<div class="galeria">
+<!-- 20 FOTOS -->
+<script>
+for(let i=1;i<=20;i++){
+  document.write(`
+    <div class="card">
+      <img src="fotos/foto${i}.jpg">
+      <p>${[
+        "Você ilumina tudo.","Beleza que acalma.","Seu charme é natural.",
+        "Você é desejo e paz.","Seu jeito é único.","Você me inspira.",
+        "Seu toque fica.","Te admirar é fácil.","Você é verdade.",
+        "Seu olhar fala.","Você encanta.","Seu riso é casa.",
+        "Sua presença provoca.","Você é abrigo.","Você é calma.",
+        "Você é intensidade.","Você é escolha.","Você é lar.",
+        "Você é tudo.","Sempre você."
+      ][i-1]}</p>
+    </div>
+  `)
+}
+</script>
+</div>
+
+<button id="btnAvancar">Avançar</button>
+
+<p id="textoPrincipal" class="texto-grande">
 Hoje o tempo desacelera para reconhecer a raridade que é você.
 Celebrar a sua existência não é apenas marcar uma data,
 é honrar tudo o que você é, tudo o que constrói
@@ -174,69 +202,80 @@ Com todo o carinho,
 com todo o amor,
 com tudo o que sou.
 Eu te amo. 💜
-</div>
+</p>
 
-<!-- 20 FOTOS + ELOGIOS -->
-<div class="grid20">
-<div><img src="fotos/foto1.jpg"><div class="caption">Seu olhar me prende.</div></div>
-<div><img src="fotos/foto2.jpg"><div class="caption">Você é pura intensidade.</div></div>
-<div><img src="fotos/foto3.jpg"><div class="caption">Seu sorriso me desmonta.</div></div>
-<div><img src="fotos/foto4.jpg"><div class="caption">Você ilumina tudo.</div></div>
-<div><img src="fotos/foto5.jpg"><div class="caption">Beleza que acalma.</div></div>
-<div><img src="fotos/foto6.jpg"><div class="caption">Seu charme é natural.</div></div>
-<div><img src="fotos/foto7.jpg"><div class="caption">Você é desejo e paz.</div></div>
-<div><img src="fotos/foto8.jpg"><div class="caption">Seu jeito é único.</div></div>
-<div><img src="fotos/foto9.jpg"><div class="caption">Você me inspira.</div></div>
-<div><img src="fotos/foto10.jpg"><div class="caption">Seu toque fica.</div></div>
-<div><img src="fotos/foto11.jpg"><div class="caption">Te admirar é fácil.</div></div>
-<div><img src="fotos/foto12.jpg"><div class="caption">Você é verdade.</div></div>
-<div><img src="fotos/foto13.jpg"><div class="caption">Seu olhar fala.</div></div>
-<div><img src="fotos/foto14.jpg"><div class="caption">Você encanta.</div></div>
-<div><img src="fotos/foto15.jpg"><div class="caption">Seu riso é casa.</div></div>
-<div><img src="fotos/foto16.jpg"><div class="caption">Você é calma.</div></div>
-<div><img src="fotos/foto17.jpg"><div class="caption">Você é fogo.</div></div>
-<div><img src="fotos/foto18.jpg"><div class="caption">Você é presença.</div></div>
-<div><img src="fotos/foto19.jpg"><div class="caption">Você é escolha.</div></div>
-<div><img src="fotos/foto20.jpg"><div class="caption">Sempre você.</div></div>
-</div>
-
-<button onclick="go(3)">Ainda não acabou bb</button>
-</div>
+<button onclick="ir(3)">Ainda não acabou bb</button>
+</section>
 
 <!-- PÁGINA 3 -->
-<div class="page" id="p3">
+<section class="section hidden" id="pagina3">
 <h2>Você & Eu 💜</h2>
 
-<div class="heart-grid">
-<div><div class="heart"><img src="casal1.jpg"></div><div class="frase">Seu abraço é meu lar.</div></div>
-<div><div class="heart"><img src="casal2.jpg"></div><div class="frase">Ao seu lado, tudo faz sentido.</div></div>
-<div><div class="heart"><img src="casal3.jpg"></div><div class="frase">Você é minha melhor escolha.</div></div>
-<div><div class="heart"><img src="casal4.jpg"></div><div class="frase">Nosso amor é calmo e forte.</div></div>
-<div><div class="heart"><img src="casal5.jpg"></div><div class="frase">Com você, sou inteiro.</div></div>
-<div><div class="heart"><img src="casal6.jpg"></div><div class="frase">Seu sorriso é meu refúgio.</div></div>
-<div><div class="heart"><img src="casal7.jpg"></div><div class="frase">Amar você é fácil.</div></div>
+<script>
+const frases=[
+"Seu abraço é meu lar.","Ao seu lado tudo faz sentido.",
+"Você é minha melhor escolha.","Nosso amor é calmo e forte.",
+"Com você sou inteiro.","Seu sorriso é meu refúgio.",
+"Amar você é fácil."
+];
+for(let i=1;i<=7;i++){
+document.write(`
+<div class="photo-block">
+  <p class="photo-text">${frases[i-1]}</p>
+  <div class="heart-photo">
+    <img src="fotos/casal${i}.jpg">
+  </div>
 </div>
-</div>
+`)
+}
+</script>
+</section>
 
 <script>
-let musica=document.getElementById("musica");
-let btn=document.getElementById("musicBtn");
+/* NAVEGAÇÃO */
+function ir(n){
+  document.querySelectorAll(".section").forEach(s=>s.classList.add("hidden"));
+  document.getElementById("pagina"+n).classList.remove("hidden");
+}
 
+/* TEXTO LETRA POR LETRA */
+const textoEl=document.getElementById("textoPrincipal");
+const texto=textoEl.innerHTML;
+textoEl.innerHTML="";
+let i=0;
+document.getElementById("btnAvancar").onclick=()=>{
+  function escrever(){
+    if(i<texto.length){
+      textoEl.innerHTML+=texto.charAt(i++);
+      setTimeout(escrever,25);
+    }
+  }
+  escrever();
+};
+
+/* MÚSICA */
+const musica=document.getElementById("musica");
+const btn=document.getElementById("btnMusica");
 btn.onclick=()=>{
   if(musica.paused){
     musica.play();
-    btn.innerText="Pausar música ⏸";
+    btn.innerText="⏸ Pausar música";
   }else{
     musica.pause();
-    btn.innerText="Tocar música ▶";
+    btn.innerText="▶ Tocar música";
   }
 };
 
-function go(n){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById("p"+n).classList.add("active");
-}
+/* CORAÇÕES */
+setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="💜";
+  h.style.left=Math.random()*100+"vw";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),10000);
+},600);
 </script>
 
 </body>
-                                    </html>
+    </html>
