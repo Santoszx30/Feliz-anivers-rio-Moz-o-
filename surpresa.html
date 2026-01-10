@@ -595,5 +595,112 @@ document.querySelector("#vitoria button").onclick = () => {
   p5.classList.remove("hidden");
 };
 </script>
+  <!-- ===== PAGINA 6 - IMAGEM DE CORAÇÕES ===== -->
+<section class="section hidden" id="p6" style="position:relative; overflow:hidden;">
+
+<canvas id="heartCanvas"></canvas>
+
+<div id="fraseCoracao" style="
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:2.4rem;
+  font-weight:600;
+  color:white;
+  opacity:0;
+  transition: opacity 2.5s ease;
+  text-shadow:0 0 20px rgba(168,85,247,0.8);
+  pointer-events:none;
+  padding:40px;
+">
+  Mesmo em mil pedaços,<br>
+  eu ainda te escolheria.
+</div>
+
+</section>
+
+<script>
+const canvas = document.getElementById("heartCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const img = new Image();
+img.src = "coracao/amor1.jpg";
+
+const hearts = [];
+const heartCount = 8500;
+
+img.onload = () => {
+  gerarCoracoes();
+  animate();
+};
+
+function gerarCoracoes(){
+  const temp = document.createElement("canvas");
+  temp.width = img.width;
+  temp.height = img.height;
+  const tctx = temp.getContext("2d");
+  tctx.drawImage(img,0,0);
+
+  const data = tctx.getImageData(0,0,img.width,img.height).data;
+
+  for(let i=0;i<heartCount;i++){
+    let x,y,idx,alpha;
+    do{
+      x = Math.random()*img.width;
+      y = Math.random()*img.height;
+      idx = (Math.floor(y)*img.width + Math.floor(x))*4;
+      alpha = data[idx+3];
+    }while(alpha < 50);
+
+    const color = `hsl(${Math.random()*360},80%,60%)`;
+
+    hearts.push({
+      x: x/img.width * canvas.width,
+      y: y/img.height * canvas.height,
+      size: 4 + Math.random()*3,
+      color
+    });
+  }
+}
+
+let scale = 12;
+let targetScale = 1;
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.save();
+  ctx.translate(canvas.width/2, canvas.height/2);
+  ctx.scale(scale, scale);
+  ctx.translate(-canvas.width/2, -canvas.height/2);
+
+  hearts.forEach(h => {
+    ctx.fillStyle = h.color;
+    ctx.beginPath();
+    ctx.moveTo(h.x, h.y);
+    ctx.bezierCurveTo(h.x-3, h.y-3, h.x-6, h.y+3, h.x, h.y+6);
+    ctx.bezierCurveTo(h.x+6, h.y+3, h.x+3, h.y-3, h.x, h.y);
+    ctx.fill();
+  });
+
+  ctx.restore();
+}
+
+function animate(){
+  draw();
+  scale += (targetScale - scale) * 0.01;
+
+  if(scale < 1.05){
+    document.getElementById("fraseCoracao").style.opacity = 1;
+  }
+
+  requestAnimationFrame(animate);
+}
+</script>
 </body>
     </html>
