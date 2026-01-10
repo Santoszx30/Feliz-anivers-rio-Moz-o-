@@ -492,5 +492,175 @@ function efeitoAcerto(carta){
   }
 }
 </script>
+  <!-- ===== PAGINA 4 - JOGO DA MEMÓRIA ===== -->
+<section class="section hidden" id="p4">
+
+  <h2>Um joguinho pra você 💜</h2>
+  <p style="max-width:700px;text-align:center;font-size:1.3rem;line-height:1.9;margin-top:20px;">
+    Encontre os pares corretos.<br>
+    Cada foto combina com uma frase.<br>
+    Use a memória… e o coração 💜
+  </p>
+
+  <div id="memory-game" style="
+    margin-top:50px;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap:22px;
+    max-width:820px;
+    width:100%;
+  "></div>
+
+  <div id="erro-msg" style="
+    margin-top:30px;
+    font-size:2rem;
+    font-weight:bold;
+    color:red;
+    display:none;
+  ">MUITO BURRA!</div>
+
+  <div id="vitoria" style="display:none;text-align:center;margin-top:60px;">
+    <p style="font-size:1.8rem;line-height:2;max-width:800px;">
+      Você conseguiu 💜<br><br>
+      Cada combinação revela o óbvio:<br>
+      você é única, intensa e impossível de esquecer.<br><br>
+      Não é sobre memória.<br>
+      É sobre tudo o que fica.
+    </p>
+
+    <button style="margin-top:40px;">
+      Agora acabou!<br>Mentira, você merece muito mais!
+    </button>
+  </div>
+
+</section>
+
+<script>
+/* ===== BOTÃO DA PAGINA 3 PARA 4 ===== */
+const btnFinal = document.createElement("button");
+btnFinal.innerText = "Mais uma surpresa 💜";
+btnFinal.style.margin = "60px auto";
+btnFinal.onclick = () => {
+  p3.classList.add("hidden");
+  p4.classList.remove("hidden");
+};
+p3.appendChild(btnFinal);
+
+/* ===== FRASES ===== */
+const frasesMemoria = [
+  "Seu cuidado com a própria beleza é arte.",
+  "Suas brincadeiras deixam tudo mais leve.",
+  "Seu sorriso muda qualquer dia.",
+  "Seu corpo é presença e desejo.",
+  "Sua fofura desarma qualquer defesa.",
+  "Seus cachos são pura identidade.",
+  "Sua aleatoriedade é o que mais encanta.",
+  "Seu estilo fala antes das palavras.",
+  "Minha Spidergirl 🕷️🕸️❤️",
+  "Seu olhar me hipnotiza."
+];
+
+/* ===== CRIA CARTAS ===== */
+let cartas = [];
+frasesMemoria.forEach((frase, i) => {
+  cartas.push({ tipo:"img", valor:`Jogo/memoria${i+1}.jpg`, id:i });
+  cartas.push({ tipo:"txt", valor:frase, id:i });
+});
+cartas.sort(() => Math.random() - 0.5);
+
+const game = document.getElementById("memory-game");
+let primeira = null;
+let bloqueio = false;
+let acertos = 0;
+
+cartas.forEach(item => {
+  const carta = document.createElement("div");
+  carta.style.cssText = `
+    background:#1f0033;
+    border-radius:18px;
+    height:150px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.1rem;
+    text-align:center;
+    cursor:pointer;
+    padding:12px;
+    position:relative;
+  `;
+  carta.dataset.id = item.id;
+  carta.dataset.tipo = item.tipo;
+  carta.dataset.valor = item.valor;
+  carta.innerText = "💜";
+
+  carta.onclick = () => {
+    if(bloqueio || carta.classList.contains("aberta")) return;
+    carta.classList.add("aberta");
+    revelar(carta);
+
+    if(!primeira){
+      primeira = carta;
+    } else {
+      bloquear();
+      setTimeout(() => verificar(carta), 900);
+    }
+  };
+
+  game.appendChild(carta);
+});
+
+function revelar(carta){
+  if(carta.dataset.tipo === "img"){
+    carta.innerHTML = `<img src="${carta.dataset.valor}" style="width:100%;height:100%;object-fit:cover;border-radius:14px;">`;
+  } else {
+    carta.innerText = carta.dataset.valor;
+  }
+}
+
+function esconder(carta){
+  carta.classList.remove("aberta");
+  carta.innerText = "💜";
+}
+
+function verificar(segunda){
+  const erro = document.getElementById("erro-msg");
+
+  if(primeira.dataset.id === segunda.dataset.id){
+    efeitoAcerto(primeira);
+    efeitoAcerto(segunda);
+    acertos++;
+    if(acertos === frasesMemoria.length){
+      document.getElementById("vitoria").style.display = "block";
+    }
+  } else {
+    erro.style.display = "block";
+    setTimeout(()=> erro.style.display="none", 1200);
+    esconder(primeira);
+    esconder(segunda);
+  }
+
+  primeira = null;
+  bloqueio = false;
+}
+
+function bloquear(){
+  bloqueio = true;
+}
+
+/* ===== EFEITO BONITO AO ACERTAR ===== */
+function efeitoAcerto(carta){
+  for(let i=0;i<12;i++){
+    const p = document.createElement("span");
+    p.innerText = "💜";
+    p.style.position = "absolute";
+    p.style.left = "50%";
+    p.style.top = "50%";
+    p.style.transform = `translate(-50%,-50%) translate(${Math.random()*120-60}px,${Math.random()*120-60}px)`;
+    p.style.opacity = "0.8";
+    carta.appendChild(p);
+    setTimeout(()=>p.remove(),700);
+  }
+}
+</script>
 </body>
       </html>
