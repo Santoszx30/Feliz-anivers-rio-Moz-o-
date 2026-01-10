@@ -120,7 +120,7 @@ button {
 
   <div id="fotos" class="hidden"></div>
 
-  <button id="btnP3" class="hidden" onclick="goP3()">Ainda não acabou bb</button>
+  <button id="btnP3" class="hidden" onclick="goP4()">Ainda não acabou bb</button>
 </section>
 
 <!-- ===== PAGINA 3 ===== -->
@@ -166,7 +166,7 @@ button {
 <script>
 function goP2(){
   p1.classList.add("hidden");
-  p2.classList.remove("hidden");
+  P2.classList.remove("hidden");
 }
 
 function goP3(){
@@ -496,31 +496,31 @@ function efeitoAcerto(carta){
 <section class="section hidden" id="p4">
 
   <h2>Um joguinho pra você 💜</h2>
-  <p style="max-width:700px;text-align:center;font-size:1.3rem;line-height:1.9;margin-top:20px;">
+  <p style="max-width:800px;text-align:center;font-size:1.4rem;line-height:2;margin-top:20px;">
     Encontre os pares corretos.<br>
     Cada foto combina com uma frase.<br>
     Use a memória… e o coração 💜
   </p>
 
   <div id="memory-game" style="
-    margin-top:50px;
+    margin-top:60px;
     display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap:22px;
-    max-width:820px;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap:30px;
+    max-width:1000px;
     width:100%;
   "></div>
 
   <div id="erro-msg" style="
-    margin-top:30px;
-    font-size:2rem;
+    margin-top:35px;
+    font-size:2.2rem;
     font-weight:bold;
     color:red;
     display:none;
   ">MUITO BURRA!</div>
 
-  <div id="vitoria" style="display:none;text-align:center;margin-top:60px;">
-    <p style="font-size:1.8rem;line-height:2;max-width:800px;">
+  <div id="vitoria" style="display:none;text-align:center;margin-top:70px;">
+    <p style="font-size:1.9rem;line-height:2.1;max-width:850px;">
       Você conseguiu 💜<br><br>
       Cada combinação revela o óbvio:<br>
       você é única, intensa e impossível de esquecer.<br><br>
@@ -528,12 +528,26 @@ function efeitoAcerto(carta){
       É sobre tudo o que fica.
     </p>
 
-    <button style="margin-top:40px;">
+    <button style="margin-top:45px;">
       Agora acabou!<br>Mentira, você merece muito mais!
     </button>
   </div>
 
 </section>
+
+<style>
+/* ===== CORAÇÃO PULSANDO ===== */
+.pulse {
+  font-size:3rem;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity:0.8; }
+  50% { transform: scale(1.25); opacity:1; }
+  100% { transform: scale(1); opacity:0.8; }
+}
+</style>
 
 <script>
 /* ===== BOTÃO DA PAGINA 3 PARA 4 ===== */
@@ -577,21 +591,21 @@ cartas.forEach(item => {
   const carta = document.createElement("div");
   carta.style.cssText = `
     background:#1f0033;
-    border-radius:18px;
-    height:150px;
+    border-radius:22px;
+    height:190px;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:1.1rem;
+    font-size:1.25rem;
     text-align:center;
     cursor:pointer;
-    padding:12px;
+    padding:14px;
     position:relative;
   `;
   carta.dataset.id = item.id;
   carta.dataset.tipo = item.tipo;
   carta.dataset.valor = item.valor;
-  carta.innerText = "💜";
+  carta.innerHTML = `<span class="pulse">💜</span>`;
 
   carta.onclick = () => {
     if(bloqueio || carta.classList.contains("aberta")) return;
@@ -610,8 +624,9 @@ cartas.forEach(item => {
 });
 
 function revelar(carta){
+  carta.innerHTML = "";
   if(carta.dataset.tipo === "img"){
-    carta.innerHTML = `<img src="${carta.dataset.valor}" style="width:100%;height:100%;object-fit:cover;border-radius:14px;">`;
+    carta.innerHTML = `<img src="${carta.dataset.valor}" style="width:100%;height:100%;object-fit:cover;border-radius:18px;">`;
   } else {
     carta.innerText = carta.dataset.valor;
   }
@@ -619,7 +634,7 @@ function revelar(carta){
 
 function esconder(carta){
   carta.classList.remove("aberta");
-  carta.innerText = "💜";
+  carta.innerHTML = `<span class="pulse">💜</span>`;
 }
 
 function verificar(segunda){
@@ -649,18 +664,19 @@ function bloquear(){
 
 /* ===== EFEITO BONITO AO ACERTAR ===== */
 function efeitoAcerto(carta){
-  for(let i=0;i<12;i++){
+  for(let i=0;i<18;i++){
     const p = document.createElement("span");
     p.innerText = "💜";
     p.style.position = "absolute";
     p.style.left = "50%";
     p.style.top = "50%";
-    p.style.transform = `translate(-50%,-50%) translate(${Math.random()*120-60}px,${Math.random()*120-60}px)`;
-    p.style.opacity = "0.8";
+    p.style.fontSize = "1.8rem";
+    p.style.transform = `translate(-50%,-50%) translate(${Math.random()*180-90}px,${Math.random()*180-90}px)`;
+    p.style.opacity = "0.9";
     carta.appendChild(p);
-    setTimeout(()=>p.remove(),700);
+    setTimeout(()=>p.remove(),800);
   }
 }
-</script>
+</script>  
 </body>
       </html>
