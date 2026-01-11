@@ -600,126 +600,136 @@ document.querySelector("#vitoria button").onclick = () => {
 };
 </script>
   <!-- ===== PAGINA 6 ===== -->
-<section class="section hidden" id="p6" style="background:black; overflow:hidden;">
-  <canvas id="heartCanvas" style="
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-"></canvas>
+<section class="section hidden" id="p6" style="overflow:hidden;">
+  <h2 style="font-size:2rem;margin-bottom:20px;">Pinte minha visão de você 💜</h2>
 
-  <div id="finalText" style="
-    position:absolute;
-    bottom:60px;
-    max-width:800px;
-    font-size:1.8rem;
-    text-align:center;
-    line-height:2;
+  <p style="max-width:800px;text-align:center;font-size:1.2rem;line-height:1.8;">
+    Passe o dedo pela tela e revele a imagem.<br>
+    Cada toque seu colore um pedacinho do que eu vejo em você.
+  </p>
+
+  <canvas id="paintCanvas" style="
+    margin-top:30px;
+    border-radius:18px;
+    background:#12001f;
+    touch-action:none;
+  "></canvas>
+
+  <div id="textoFinalP6" style="
     opacity:0;
-    transition:opacity 3s;
-    padding:30px;
-    color:white;
+    transition:2s;
+    margin-top:40px;
+    font-size:1.4rem;
+    line-height:2;
+    max-width:800px;
+    text-align:center;
   ">
-    Mesmo que isso esteja em milhares de corações,<br>
-    não representa o tamanho do amor que tenho por você 💜
+    Cada quadrado que você pinta revela um detalhe da sua beleza.<br>
+    Assim como na vida, ela aparece aos poucos, mas nunca passa despercebida.<br>
+    Você é arte, mesmo sem tentar ser.<br>
+    É impossível olhar para você e não querer ficar.<br>
+    No meu coração, você sempre será a obra mais bonita.
   </div>
+
+  <button id="btnP7" style="display:none;margin-top:50px;">
+    mais outra surpresinha pra você minha neném
+  </button>
 </section>
 
 <script>
-const btnToP6 = document.getElementById("btnToP6");
-const p5 = document.getElementById("p5");
-const p6 = document.getElementById("p6");
+/* ===== BOTÃO DA PAGINA 5 PARA 6 ===== */
+if(typeof btnToP6 !== "undefined"){
+  btnToP6.onclick = () => {
+    p5.classList.add("hidden");
+    p6.classList.remove("hidden");
+    iniciarPintura();
+  };
+}
 
-btnToP6.onclick = () => {
-  p5.classList.add("hidden");
-  p6.classList.remove("hidden");
-  iniciarCoracoes();
-};
+/* ===== CANVAS ===== */
+const canvas = document.getElementById("paintCanvas");
+const ctx = canvas.getContext("2d");
 
-function iniciarCoracoes(){
-  const canvas = document.getElementById("heartCanvas");
-  const ctx = canvas.getContext("2d");
+const gridSize = 100;
+let imgData = null;
+let revealed = new Set();
+let totalPixels = gridSize * gridSize;
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+function iniciarPintura(){
+  document.body.style.overflow = "hidden";
+
+  const size = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.6);
+  canvas.width = size;
+  canvas.height = size;
 
   const img = new Image();
   img.src = "coracao/amor1.jpg";
-
-  img.onload = () => {
-    gerarCoracoes(img, ctx, canvas);
-  };
+  img.onload = () => prepararImagem(img);
 }
-function gerarCoracoes(img, ctx, canvas){
-  const w = 180;
-  const h = (img.height / img.width) * w;
 
+function prepararImagem(img){
   const temp = document.createElement("canvas");
-  temp.width = w;
-  temp.height = h;
+  temp.width = gridSize;
+  temp.height = gridSize;
   const tctx = temp.getContext("2d");
-  tctx.drawImage(img, 0, 0, w, h);
+  tctx.drawImage(img, 0, 0, gridSize, gridSize);
+  imgData = tctx.getImageData(0,0,gridSize,gridSize).data;
 
-  const data = tctx.getImageData(0, 0, w, h).data;
+  desenharGrade();
+}
 
-  const hearts = [];
-  const density = 4; // controla 8000~9000 corações
+function desenharGrade(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const cell = canvas.width / gridSize;
 
-  for(let y=0;y<h;y+=density){
-    for(let x=0;x<w;x+=density){
-      const i = (y*w + x)*4;
-      const r = data[i];
-      const g = data[i+1];
-      const b = data[i+2];
-      const a = data[i+3];
+  for(let y=0;y<gridSize;y++){
+    for(let x=0;x<gridSize;x++){
+      const i = (y*gridSize + x)*4;
+      const r = imgData[i];
+      const g = imgData[i+1];
+      const b = imgData[i+2];
+      const a = imgData[i+3];
 
-      if(a > 40){
-        hearts.push({
-          x:x,
-          y:y,
-          color: `rgb(${r},${g},${b})`
-        });
+      if(revealed.has(y*gridSize + x)){
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+      } else {
+        ctx.fillStyle = "#1f0033";
       }
+      ctx.fillRect(x*cell, y*cell, cell, cell);
     }
   }
+}
 
-  let scale = 400; // começa MUITO aproximado
-let targetScale = Math.min(canvas.width / w, canvas.height / h) * 0.9;
+/* ===== PINTURA COM O DEDO ===== */
+canvas.addEventListener("pointermove", e => {
+  if(e.buttons !== 1) return;
 
-  function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+  const rect = canvas.getBoundingClientRect();
+  const x = Math.floor((e.clientX - rect.left) / (canvas.width / gridSize));
+  const y = Math.floor((e.clientY - rect.top) / (canvas.height / gridSize));
 
-    ctx.save();
-    ctx.translate(canvas.width/2, canvas.height/2);
-ctx.scale(scale, scale);
-ctx.translate(-w/2, -h/2);
+  const index = y * gridSize + x;
 
-    hearts.forEach(h=>{
-      ctx.fillStyle = h.color;
-      drawHeart(ctx, h.x, h.y, 1.1);
-    });
-
-    ctx.restore();
-
-    if(scale > targetScale){
-  scale *= 0.800; // afasta (zoom out)
-  requestAnimationFrame(animate);
-  } else {
-      document.getElementById("finalText").style.opacity = 1;
-    }
+  if(!revealed.has(index)){
+    revealed.add(index);
+    desenharGrade();
+    verificarFim();
   }
+});
 
-  animate();
+function verificarFim(){
+  if(revealed.size > totalPixels * 0.6){
+    document.getElementById("textoFinalP6").style.opacity = 1;
+    document.getElementById("btnP7").style.display = "block";
+    document.body.style.overflow = "";
+  }
 }
 
-function drawHeart(ctx, x, y, s){
-  ctx.beginPath();
-  ctx.moveTo(x, y + s);
-  ctx.bezierCurveTo(x - s, y - s, x - 2*s, y + s, x, y + 2*s);
-  ctx.bezierCurveTo(x + 2*s, y + s, x + s, y - s, x, y + s);
-  ctx.fill();
-}
+/* ===== BOTÃO PARA PAGINA 7 ===== */
+btnP7.onclick = () => {
+  p6.classList.add("hidden");
+  // p7.classList.remove("hidden"); // você ligará quando criar a página 7
+};
 </script>
 </body>
     </html>
