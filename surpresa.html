@@ -684,7 +684,7 @@ function gerarCoracoes(img, ctx, canvas){
     }
   }
 
-  let scale = 8; // começa MUITO aproximado
+  let scale = 125; // começa MUITO aproximado
 let targetScale = Math.min(canvas.width / w, canvas.height / h) * 0.9;
 
   function animate(){
@@ -703,7 +703,7 @@ ctx.translate(-w/2, -h/2);
     ctx.restore();
 
     if(scale > targetScale){
-  scale *= 0.96; // afasta (zoom out)
+  scale *= 0.985; // afasta (zoom out)
   requestAnimationFrame(animate);
   } else {
       document.getElementById("finalText").style.opacity = 1;
