@@ -601,7 +601,13 @@ document.querySelector("#vitoria button").onclick = () => {
 </script>
   <!-- ===== PAGINA 6 ===== -->
 <section class="section hidden" id="p6" style="background:black; overflow:hidden;">
-  <canvas id="heartCanvas"></canvas>
+  <canvas id="heartCanvas" style="
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+"></canvas>
 
   <div id="finalText" style="
     position:absolute;
@@ -658,7 +664,7 @@ function gerarCoracoes(img, ctx, canvas){
   const data = tctx.getImageData(0, 0, w, h).data;
 
   const hearts = [];
-  const density = 2; // controla 8000~9000 corações
+  const density = 4; // controla 8000~9000 corações
 
   for(let y=0;y<h;y+=density){
     for(let x=0;x<w;x+=density){
