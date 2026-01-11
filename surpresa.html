@@ -632,7 +632,7 @@ btnToP6.onclick = () => {
 };
 
 function iniciarCoracoes(){
-  const canvas = document.getElementById("fraseFinal");
+  const canvas = document.getElementById("heartCanvas");
   const ctx = canvas.getContext("2d");
 
   canvas.width = window.innerWidth;
@@ -672,7 +672,7 @@ function gerarCoracoes(img, ctx, canvas){
         hearts.push({
           x:x,
           y:y,
-          color:`rgb(${r},${g},${b})`
+          color: `rgb(${r},${g},${b})`
         });
       }
     }
