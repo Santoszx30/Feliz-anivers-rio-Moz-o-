@@ -650,7 +650,7 @@ if(typeof btnToP6 !== "undefined"){
 const canvas = document.getElementById("paintCanvas");
 const ctx = canvas.getContext("2d");
 
-const gridSize = 70;
+const gridSize = 90;
 let imgData = null;
 let revealed = new Set();
 let totalPixels = gridSize * gridSize;
@@ -727,10 +727,9 @@ canvas.addEventListener("pointermove", e => {
 });
 
 function verificarFim(){
-  if(revealed.size > totalPixels * 0.45){
-    document.getElementById("textoFinalP6").style.opacity = 1;
-    document.getElementById("btnP7").style.display = "block";
-    document.body.style.overflow = "";
+  if(revealed.size >= totalPixels){
+    document.getElementById("fraseFinal").style.opacity = 1;
+    document.getElementById("btnToP7").style.opacity = 1;
   }
 }
 
