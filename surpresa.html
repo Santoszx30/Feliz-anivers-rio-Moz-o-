@@ -831,5 +831,288 @@ btnP7.onclick = () => {
   // futuramente p7.classList.remove("hidden");
 };
 </script>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Damas da Giovanna</title>
+<style>
+body{
+  margin:0;
+  overflow:hidden;
+  font-family: 'Arial', sans-serif;
+  background: radial-gradient(circle at top, #1b0033, #000010);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  color:white;
+}
+
+#gameContainer{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+#board{
+  display:grid;
+  grid-template-columns: repeat(8, 70px);
+  grid-template-rows: repeat(8, 70px);
+  gap:2px;
+  box-shadow: 0 0 30px #8f00ff;
+  position:relative;
+}
+
+.cell{
+  width:70px;
+  height:70px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.cell.dark{
+  background: linear-gradient(135deg,#3a00ff,#8f00ff);
+}
+.cell.light{
+  background: linear-gradient(135deg,#0ff,#0088ff);
+}
+
+.piece{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  background:black;
+  box-shadow:0 0 10px #fff;
+  cursor:pointer;
+}
+
+.player{ background:#fff; box-shadow:0 0 15px #fff; }
+.ai{ background:#000; }
+
+.king{
+  border:3px solid gold;
+  box-shadow:0 0 20px gold;
+}
+
+.selected{
+  outline:3px solid yellow;
+}
+
+#cardOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+}
+
+#card{
+  background:linear-gradient(135deg,#6a00ff,#00c3ff);
+  padding:40px;
+  border-radius:20px;
+  width:70%;
+  max-width:500px;
+  text-align:center;
+  font-size:20px;
+  animation:pop 0.5s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(0);}
+  to{transform:scale(1);}
+}
+
+#finalScreen{
+  position:fixed;
+  inset:0;
+  background:black;
+  color:white;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  font-size:40px;
+  text-align:center;
+  padding:40px;
+}
+</style>
+</head>
+<body>
+
+<div id="gameContainer">
+  <h2>Damas da Giovanna 💜</h2>
+  <div id="board"></div>
+</div>
+
+<div id="cardOverlay">
+  <div id="card"></div>
+</div>
+
+<div id="finalScreen">
+Mesmo em todas as jogadas da vida,<br>
+eu escolherei você sempre.
+</div>
+
+<script>
+const messages = [
+"Seu sorriso, ele reflete a felicidade do meu dia 💜",
+"Seus olhos, eu vejo no reflexo deles um homem extremamente feliz por ter você 💜",
+"Seu corpo me traz desejo e fascinação 💜",
+"Seus cachos enrolam meu sentimento de amor em você 💜",
+"O seu jeito me traz paz e risadas 💜",
+"Sua personalidade de mulher forte é única 💜",
+"Seu toque me alegra de todas as formas 💜🫦",
+"Seu cheiro me leva às alturas 💜"
+];
+
+const kingMessage = "No coração de um homem, sempre habita uma menina.\nE dentro de um tabuleiro, um rei sempre precisa de sua rainha.";
+
+let board = [];
+let selected = null;
+const boardDiv = document.getElementById("board");
+
+function createBoard(){
+  boardDiv.innerHTML="";
+  board=[];
+  for(let y=0;y<8;y++){
+    board[y]=[];
+    for(let x=0;x<8;x++){
+      const cell=document.createElement("div");
+      cell.className="cell "+((x+y)%2?"dark":"light");
+      cell.dataset.x=x;
+      cell.dataset.y=y;
+      boardDiv.appendChild(cell);
+      board[y][x]=null;
+    }
+  }
+
+  for(let y=0;y<3;y++){
+    for(let x=0;x<8;x++){
+      if((x+y)%2){
+        spawn(x,y,"ai");
+      }
+    }
+  }
+
+  for(let y=5;y<8;y++){
+    for(let x=0;x<8;x++){
+      if((x+y)%2){
+        spawn(x,y,"player");
+      }
+    }
+  }
+}
+
+function spawn(x,y,type){
+  const piece=document.createElement("div");
+  piece.className="piece "+type;
+  piece.onclick=()=>select(piece);
+  board[y][x]={el:piece,type,king:false};
+  getCell(x,y).appendChild(piece);
+}
+
+function getCell(x,y){
+  return document.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
+}
+
+function select(piece){
+  if(!piece.classList.contains("player"))return;
+  if(selected)selected.classList.remove("selected");
+  selected=piece;
+  piece.classList.add("selected");
+}
+
+boardDiv.onclick=e=>{
+  if(!selected)return;
+  if(!e.target.classList.contains("cell"))return;
+
+  const x=parseInt(e.target.dataset.x);
+  const y=parseInt(e.target.dataset.y);
+
+  movePlayer(x,y);
+};
+
+function movePlayer(x,y){
+  const pos=find(selected);
+  if(!pos)return;
+
+  const dx=x-pos.x;
+  const dy=y-pos.y;
+
+  if(Math.abs(dx)==1 && Math.abs(dy)==1 && !board[y][x]){
+    move(pos.x,pos.y,x,y);
+    aiMove();
+  }
+  if(Math.abs(dx)==2 && Math.abs(dy)==2){
+    const mx=pos.x+dx/2;
+    const my=pos.y+dy/2;
+    if(board[my][mx] && board[my][mx].type=="ai"){
+      capture(mx,my);
+      move(pos.x,pos.y,x,y);
+      showCard();
+      aiMove();
+    }
+  }
+}
+
+function move(x1,y1,x2,y2){
+  const p=board[y1][x1];
+  board[y2][x2]=p;
+  board[y1][x1]=null;
+  getCell(x2,y2).appendChild(p.el);
+
+  if(p.type=="player" && y2==0 && !p.king){
+    p.king=true;
+    p.el.classList.add("king");
+    showCard(true);
+  }
+}
+
+function capture(x,y){
+  getCell(x,y).innerHTML="";
+  board[y][x]=null;
+}
+
+function find(el){
+  for(let y=0;y<8;y++)
+    for(let x=0;x<8;x++)
+      if(board[y][x] && board[y][x].el===el)
+        return {x,y};
+}
+
+function showCard(king=false){
+  const overlay=document.getElementById("cardOverlay");
+  const card=document.getElementById("card");
+  overlay.style.display="flex";
+  card.innerText=king?kingMessage:messages[Math.floor(Math.random()*messages.length)];
+  overlay.onclick=()=>overlay.style.display="none";
+}
+
+function aiMove(){
+  setTimeout(()=>{
+    let pieces=[];
+    for(let y=0;y<8;y++)
+      for(let x=0;x<8;x++)
+        if(board[y][x] && board[y][x].type=="ai")
+          pieces.push({x,y});
+    if(pieces.length==0){
+      document.getElementById("finalScreen").style.display="flex";
+      return;
+    }
+    const p=pieces[Math.floor(Math.random()*pieces.length)];
+    const dir=Math.random()<0.5?-1:1;
+    const nx=p.x+dir;
+    const ny=p.y+1;
+    if(nx>=0&&nx<8&&ny<8&&!board[ny][nx]){
+      move(p.x,p.y,nx,ny);
+    }
+  },600);
+}
+
+createBoard();
+</script>
 </body>
-    </html>
+  </html>
