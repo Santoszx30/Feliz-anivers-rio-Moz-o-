@@ -851,25 +851,28 @@ eu escolherei você sempre 💜
 </div>
 
 <style>
-#board{
-  margin-top:40px;
-  width:360px;
-  height:360px;
-  display:grid;
-  grid-template-columns:repeat(8,1fr);
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 0 40px rgba(168,85,247,.6);
-}
-.cell{
+#board {
+  width: min(90vw, 90vh);
+  height: min(90vw, 90vh);
+  max-width: 520px;
+  max-height: 520px;
+  aspect-ratio: 1 / 1;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(160, 80, 255, 0.6);
+  }
+.square{
   width:100%;
   height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
 }
-.cell.dark{ background:#4c1d95; }
-.cell.light{ background:#0ea5e9; }
+.square.dark{ background:#4c1d95; }
+.square.light{ background:#0ea5e9; }
 
 .piece{
   width:80%;
@@ -928,6 +931,10 @@ eu escolherei você sempre 💜
   transition:2s;
   z-index:1000;
 }
+  .piece.selected {
+  outline: 3px solid white;
+  box-shadow: 0 0 10px white;
+  }
 </style>
 
 <script>
@@ -946,27 +953,71 @@ let board=[];
 let selected=null;
 let turn="player";
 
-function init(){
-  board=[];
-  const el=document.getElementById("board");
-  el.innerHTML="";
-  for(let y=0;y<8;y++){
-    for(let x=0;x<8;x++){
-      const c=document.createElement("div");
-      c.className="cell "+((x+y)%2?"dark":"light");
-      c.dataset.x=x;c.dataset.y=y;
-      el.appendChild(c);
-      board.push(null);
+  let selectedPiece = null;
+
+function onSquareClick(row, col) {
+  const square = document.querySelector(
+    `.square[data-row='${row}'][data-col='${col}']`
+  );
+
+  // Se clicar numa peça
+  const piece = square.querySelector(".piece");
+
+  if (piece) {
+    // Selecionar peça
+    if (selectedPiece) {
+      selectedPiece.classList.remove("selected");
     }
+
+    selectedPiece = piece;
+    piece.classList.add("selected");
+    return;
   }
 
-  for(let i=0;i<8;i++){
-    place(i,1,"ai");
-    place(i,2,"ai");
-    place(i,6,"player");
-    place(i,7,"player");
+  // Se clicou numa casa vazia e existe peça selecionada
+  if (selectedPiece) {
+    square.appendChild(selectedPiece);
+    selectedPiece.classList.remove("selected");
+    selectedPiece = null;
   }
 }
+
+function createInitialBoard() {
+  board.innerHTML = "";
+  pieces = [];
+
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+
+      const square = document.createElement("div");
+square.className = "square";
+square.dataset.row = row;
+square.dataset.col = col;
+
+square.addEventListener("click", () => {
+  onSquareClick(row, col);
+});
+
+      if ((row + col) % 2 === 0) {
+        square.classList.add("blue");
+      } else {
+        square.classList.add("purple");
+      }
+
+      board.appendChild(square);
+
+      // Peças pretas (topo)
+      if ((row + col) % 2 !== 0 && row < 3) {
+        createPiece(square, "black", row, col);
+      }
+
+      // Peças rosas (jogadora)
+      if ((row + col) % 2 !== 0 && row > 4) {
+        createPiece(square, "pink", row, col);
+      }
+    }
+  }
+  }
 
 function place(x,y,type){
   const idx=y*8+x;
@@ -983,10 +1034,10 @@ function clickPiece(p,x,y){
 }
 
 document.getElementById("board").onclick=e=>{
-  if(!selected)return;
-  const cell=e.target.closest(".cell");
-  if(!cell)return;
-  const x=cell.dataset.x,y=cell.dataset.y;
+  if(!square)return;
+  const square=e.target.closest(".square");
+  if(!square)return;
+  const x=square.dataset.x,y=square.dataset.y;
   move(selected.x,selected.y,x,y,true);
 };
 
@@ -1008,7 +1059,7 @@ function move(x1,y1,x2,y2,isPlayer){
   const piece=board[i1];
   board[i1]=null;
   board[i2]=piece;
-  document.querySelectorAll(".cell")[i2].appendChild(piece.el);
+  document.querySelectorAll(".square")[i2].appendChild(piece.el);
 
   if(isPlayer)turn="ai",setTimeout(aiMove,600);
 }
