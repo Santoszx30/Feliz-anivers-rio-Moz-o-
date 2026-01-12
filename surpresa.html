@@ -824,6 +824,11 @@ function verificarFim(){
     document.getElementById("btnP7").style.display = "block";
   }
 }
+  document.getElementById("btnP7").onclick = () => {
+  p6.classList.add("hidden");
+  p7.classList.remove("hidden");
+  iniciarJogoDamas(); // inicia o jogo da página 7
+};
 </script>
   <!-- ================= PÁGINA 7 – DAMAS DO AMOR ================= -->
 <section class="section hidden" id="p7">
