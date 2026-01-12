@@ -839,7 +839,9 @@ Toda jogada sua muda meu mundo.<br>
 Toda escolha sua… eu escolho também.
 </p>
 
-<div id="board"></div>
+<div class="game-wrapper">
+  <div id="board"></div>
+</div>
 
 <div id="cardPopup">
   <div id="cardContent"></div>
@@ -858,18 +860,28 @@ eu escolherei você sempre 💜
   align-items:center;
   margin-top:30px;
 }
+  #p7 {
+  justify-content: flex-start;
+  padding-top: 40px;
+}
 
-#board{
-  width:90vw;
-  max-width:420px;
-  aspect-ratio:1;
-  display:grid;
-  grid-template-columns:repeat(8,1fr);
-  grid-template-rows:repeat(8,1fr);
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:0 0 40px rgba(200,0,255,0.6);
+#p7 .game-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
   }
+
+#board {
+  width: min(90vw, 90vh);
+  height: min(90vw, 90vh);
+  max-width: 520px;
+  max-height: 520px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  border-radius: 16px;
+}
 
 /* As casas */
 .square{
