@@ -851,17 +851,25 @@ eu escolherei você sempre 💜
 </div>
 
 <style>
-#board{
-  width: min(90vw, 420px);
-  height: min(90vw, 420px);
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(8, 1fr);
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 0 30px rgba(200, 0, 255, 0.5);
-  margin: 0 auto;
+.game-wrapper{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-top:30px;
 }
+
+#board{
+  width:90vw;
+  max-width:420px;
+  aspect-ratio:1;
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  grid-template-rows:repeat(8,1fr);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(200,0,255,0.6);
+  }
 
 /* As casas */
 .square{
