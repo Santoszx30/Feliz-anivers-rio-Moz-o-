@@ -649,33 +649,22 @@ document.querySelector("#vitoria button").onclick = () => {
 </script>
   <!-- ===== PAGINA 6 ===== -->
 <section class="section hidden" id="p6" style="overflow:hidden;">
+
   <h2 style="font-size:2rem;margin-bottom:20px;">Pinte minha visão de você 💜</h2>
 
   <p style="max-width:800px;text-align:center;font-size:1.2rem;line-height:1.8;">
     Passe o dedo pela tela e revele a imagem.<br>
     Cada toque seu colore um pedacinho do que eu vejo em você.
   </p>
-  
-  <div id="contadorPixels">
-  0 / 0 quadrados preenchidos
-  </div>
 
-  <canvas id="paintCanvas" style="
-    margin-top:30px;
-    border-radius:18px;
-    background:#12001f;
-    touch-action:none;
-  "></canvas>
+  <!-- CONTADOR -->
+  <div id="contadorPixels">0 / 0 quadrados preenchidos</div>
 
-  <div id="textoFinalP6" style="
-    opacity:0;
-    transition:2s;
-    margin-top:40px;
-    font-size:1.4rem;
-    line-height:2;
-    max-width:800px;
-    text-align:center;
-  ">
+  <!-- CANVAS -->
+  <canvas id="paintCanvas"></canvas>
+
+  <!-- TEXTO FINAL -->
+  <div id="textoFinalP6">
     Cada quadrado que você pinta revela um detalhe da sua beleza.<br>
     Assim como na vida, ela aparece aos poucos, mas nunca passa despercebida.<br>
     Você é arte, mesmo sem tentar ser.<br>
@@ -683,22 +672,54 @@ document.querySelector("#vitoria button").onclick = () => {
     No meu coração, você sempre será a obra mais bonita.
   </div>
 
-  <button id="btnP7" style="display:none;margin-top:50px;">
-    mais outra surpresinha pra você minha neném
-  </button>
+  <!-- BOTÃO PARA PAGINA 7 -->
+  <button id="btnP7">mais outra surpresinha pra você minha neném</button>
+
 </section>
+
+<style>
+#paintCanvas{
+  margin-top:30px;
+  border-radius:18px;
+  background:#12001f;
+  touch-action:none;
+}
+
+#contadorPixels{
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 20px;
+  z-index: 100;
+}
+
+#textoFinalP6{
+  opacity:0;
+  transition:2s;
+  margin-top:40px;
+  font-size:1.4rem;
+  line-height:2;
+  max-width:800px;
+  text-align:center;
+}
+
+#btnP7{
+  display:none;
+  margin-top:50px;
+}
+</style>
 
 <script>
 /* ===== BOTÃO DA PAGINA 5 PARA 6 ===== */
-if(typeof btnToP6 !== "undefined"){
-  btnToP6.onclick = () => {
-    p5.classList.add("hidden");
-    p6.classList.remove("hidden");
-    iniciarPintura();
-  };
-}
+btnToP6.onclick = () => {
+  p5.classList.add("hidden");
+  p6.classList.remove("hidden");
+  iniciarPintura();
+};
 
-/* ===== CANVAS ===== */
+/* ===== VARIÁVEIS ===== */
 const canvas = document.getElementById("paintCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -706,24 +727,28 @@ const gridSize = 90;
 let imgData = null;
 let revealed = new Set();
 let totalPixels = gridSize * gridSize;
-  let paintedCount = 0;
+let paintedCount = 0;
 
+/* ===== CONTADOR ===== */
+function atualizarContador(){
+  document.getElementById("contadorPixels").innerText =
+    `${paintedCount} / ${totalPixels} quadrados preenchidos`;
+}
+
+/* ===== INICIAR ===== */
 function iniciarPintura(){
-  document.body.style.overflow = "hidden";
-
   const size = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.6);
   canvas.width = size;
   canvas.height = size;
-  function atualizarContador(){
-  document.getElementById("contadorPixels").innerText =
-    `${paintedCount} / ${totalPixels} quadrados preenchidos`;
-  }
+
+  atualizarContador();
 
   const img = new Image();
   img.src = "coracao/amor1.jpg";
   img.onload = () => prepararImagem(img);
 }
 
+/* ===== PREPARA IMAGEM ===== */
 function prepararImagem(img){
   const temp = document.createElement("canvas");
   temp.width = gridSize;
@@ -735,6 +760,7 @@ function prepararImagem(img){
   desenharGrade();
 }
 
+/* ===== DESENHAR ===== */
 function desenharGrade(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   const cell = canvas.width / gridSize;
@@ -745,19 +771,19 @@ function desenharGrade(){
       const r = imgData[i];
       const g = imgData[i+1];
       const b = imgData[i+2];
-      const a = imgData[i+3];
 
       if(revealed.has(y*gridSize + x)){
         ctx.fillStyle = `rgb(${r},${g},${b})`;
       } else {
         ctx.fillStyle = "#1f0033";
       }
+
       ctx.fillRect(x*cell, y*cell, cell, cell);
     }
   }
 }
 
-/* ===== PINTURA COM O DEDO ===== */
+/* ===== PINTAR ===== */
 canvas.addEventListener("pointermove", e => {
   if(e.buttons !== 1) return;
 
@@ -765,34 +791,41 @@ canvas.addEventListener("pointermove", e => {
   const gx = Math.floor((e.clientX - rect.left) / (canvas.width / gridSize));
   const gy = Math.floor((e.clientY - rect.top) / (canvas.height / gridSize));
 
-  const brush = 2; // tamanho do pincel (2 = pinta 5x5 pixels)
+  const brush = 2;
 
-  for(let y = -brush; y <= brush; y++){
-    for(let x = -brush; x <= brush; x++){
+  for(let y=-brush; y<=brush; y++){
+    for(let x=-brush; x<=brush; x++){
       const px = gx + x;
       const py = gy + y;
 
-      if(px < 0 || py < 0 || px >= gridSize || py >= gridSize) continue;
+      if(px<0 || py<0 || px>=gridSize || py>=gridSize) continue;
 
-      const index = py * gridSize + px;
+      const index = py*gridSize + px;
+
       if(!revealed.has(index)){
-  revealed.add(index);
-  paintedCount++;
-  atualizarContador();
-  verificarFim();
+        revealed.add(index);
+        paintedCount++;
+        atualizarContador();
+        verificarFim();
       }
+    }
+  }
 
+  desenharGrade();
+});
+
+/* ===== FIM ===== */
 function verificarFim(){
-  if(revealed.size >= totalPixels){
-    document.getElementById("fraseFinal").style.opacity = 1;
-    document.getElementById("btnToP7").style.opacity = 1;
+  if(paintedCount >= totalPixels){
+    document.getElementById("textoFinalP6").style.opacity = 1;
+    document.getElementById("btnP7").style.display = "block";
   }
 }
 
-/* ===== BOTÃO PARA PAGINA 7 ===== */
+/* ===== BOTÃO PAGINA 7 ===== */
 btnP7.onclick = () => {
   p6.classList.add("hidden");
-  // p7.classList.remove("hidden"); // você ligará quando criar a página 7
+  // futuramente p7.classList.remove("hidden");
 };
 </script>
 </body>
