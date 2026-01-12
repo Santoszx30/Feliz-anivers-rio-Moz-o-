@@ -590,6 +590,54 @@ Amar você é ter um lugar seguro dentro de mim.
   text-align:center;
   max-width:800px;
 }
+
+  #paintCanvas{
+  position: absolute;
+  inset: 0;
+  touch-action: none;
+}
+
+#counter{
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 20px;
+  font-family: Arial, sans-serif;
+  z-index: 10;
+}
+
+#finalText{
+  position: absolute;
+  bottom: 120px;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  line-height: 1.6;
+  opacity: 0;
+  transition: 1.5s;
+  z-index: 10;
+}
+
+#nextBtn{
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 25px;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(45deg, #ff4b7d, #ff9acb);
+  color: white;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: 1.5s;
+  z-index: 10;
+  }
 </style>
 
 <script>
@@ -607,6 +655,10 @@ document.querySelector("#vitoria button").onclick = () => {
     Passe o dedo pela tela e revele a imagem.<br>
     Cada toque seu colore um pedacinho do que eu vejo em você.
   </p>
+  
+  <div id="contadorPixels">
+  0 / 0 quadrados preenchidos
+  </div>
 
   <canvas id="paintCanvas" style="
     margin-top:30px;
@@ -654,6 +706,7 @@ const gridSize = 90;
 let imgData = null;
 let revealed = new Set();
 let totalPixels = gridSize * gridSize;
+  let paintedCount = 0;
 
 function iniciarPintura(){
   document.body.style.overflow = "hidden";
@@ -661,6 +714,10 @@ function iniciarPintura(){
   const size = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.6);
   canvas.width = size;
   canvas.height = size;
+  function atualizarContador(){
+  document.getElementById("contadorPixels").innerText =
+    `${paintedCount} / ${totalPixels} quadrados preenchidos`;
+  }
 
   const img = new Image();
   img.src = "coracao/amor1.jpg";
@@ -718,13 +775,12 @@ canvas.addEventListener("pointermove", e => {
       if(px < 0 || py < 0 || px >= gridSize || py >= gridSize) continue;
 
       const index = py * gridSize + px;
-      revealed.add(index);
-    }
-  }
-
-  desenharGrade();
+      if(!revealed.has(index)){
+  revealed.add(index);
+  paintedCount++;
+  atualizarContador();
   verificarFim();
-});
+      }
 
 function verificarFim(){
   if(revealed.size >= totalPixels){
