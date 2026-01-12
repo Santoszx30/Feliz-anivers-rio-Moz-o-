@@ -851,37 +851,51 @@ eu escolherei você sempre 💜
 </div>
 
 <style>
-#board {
-  width: min(90vw, 90vh);
-  height: min(90vw, 90vh);
-  max-width: 520px;
-  max-height: 520px;
-  aspect-ratio: 1 / 1;
+#board{
+  width: min(90vw, 420px);
+  height: min(90vw, 420px);
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
   border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 0 40px rgba(160, 80, 255, 0.6);
-  }
-.square{
-  width:100%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  box-shadow: 0 0 30px rgba(200, 0, 255, 0.5);
+  margin: 0 auto;
 }
-.square.dark{ background:#4c1d95; }
-.square.light{ background:#0ea5e9; }
 
-.piece{
-  width:80%;
-  height:80%;
-  border-radius:50%;
-  background:black;
-  cursor:pointer;
-  position:relative;
+/* As casas */
+.square{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+/* Cores do tabuleiro */
+.square.blue{
+  background: #3a8dde;
+}
+.square.purple{
+  background: #5b1a7a;
+}
+
+/* Peças */
+.piece{
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+.piece.black{
+  background: radial-gradient(circle at 30% 30%, #444, #000);
+}
+
+.piece.pink{
+  background: radial-gradient(circle at 30% 30%, #ff8fd8, #ff3ba7);
+  }
 .player{ background:#ff4b7d; }
 .ai{ background:black; }
 .king::after{
