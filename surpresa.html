@@ -650,7 +650,7 @@ if(typeof btnToP6 !== "undefined"){
 const canvas = document.getElementById("paintCanvas");
 const ctx = canvas.getContext("2d");
 
-const gridSize = 100;
+const gridSize = 70;
 let imgData = null;
 let revealed = new Set();
 let totalPixels = gridSize * gridSize;
@@ -705,20 +705,29 @@ canvas.addEventListener("pointermove", e => {
   if(e.buttons !== 1) return;
 
   const rect = canvas.getBoundingClientRect();
-  const x = Math.floor((e.clientX - rect.left) / (canvas.width / gridSize));
-  const y = Math.floor((e.clientY - rect.top) / (canvas.height / gridSize));
+  const gx = Math.floor((e.clientX - rect.left) / (canvas.width / gridSize));
+  const gy = Math.floor((e.clientY - rect.top) / (canvas.height / gridSize));
 
-  const index = y * gridSize + x;
+  const brush = 2; // tamanho do pincel (2 = pinta 5x5 pixels)
 
-  if(!revealed.has(index)){
-    revealed.add(index);
-    desenharGrade();
-    verificarFim();
+  for(let y = -brush; y <= brush; y++){
+    for(let x = -brush; x <= brush; x++){
+      const px = gx + x;
+      const py = gy + y;
+
+      if(px < 0 || py < 0 || px >= gridSize || py >= gridSize) continue;
+
+      const index = py * gridSize + px;
+      revealed.add(index);
+    }
   }
+
+  desenharGrade();
+  verificarFim();
 });
 
 function verificarFim(){
-  if(revealed.size > totalPixels * 0.6){
+  if(revealed.size > totalPixels * 0.45){
     document.getElementById("textoFinalP6").style.opacity = 1;
     document.getElementById("btnP7").style.display = "block";
     document.body.style.overflow = "";
