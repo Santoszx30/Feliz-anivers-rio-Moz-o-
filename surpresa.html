@@ -824,295 +824,221 @@ function verificarFim(){
     document.getElementById("btnP7").style.display = "block";
   }
 }
-
-/* ===== BOTÃO PAGINA 7 ===== */
-btnP7.onclick = () => {
-  p6.classList.add("hidden");
-  // futuramente p7.classList.remove("hidden");
-};
 </script>
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>Damas da Giovanna</title>
+  <!-- ================= PÁGINA 7 – DAMAS DO AMOR ================= -->
+<section class="section hidden" id="p7">
+
+<h2 style="font-size:2.2rem;margin-bottom:20px;">Nosso jogo 💜</h2>
+<p style="max-width:700px;text-align:center;font-size:1.3rem;line-height:1.8;">
+Toda jogada sua muda meu mundo.<br>
+Toda escolha sua… eu escolho também.
+</p>
+
+<div id="board"></div>
+
+<div id="cardPopup">
+  <div id="cardContent"></div>
+</div>
+
+<div id="winText">
+Mesmo em todas as jogadas da vida,<br>
+eu escolherei você sempre 💜
+</div>
+
 <style>
-body{
-  margin:0;
-  overflow:hidden;
-  font-family: 'Arial', sans-serif;
-  background: radial-gradient(circle at top, #1b0033, #000010);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  color:white;
-}
-
-#gameContainer{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-
 #board{
+  margin-top:40px;
+  width:360px;
+  height:360px;
   display:grid;
-  grid-template-columns: repeat(8, 70px);
-  grid-template-rows: repeat(8, 70px);
-  gap:2px;
-  box-shadow: 0 0 30px #8f00ff;
-  position:relative;
+  grid-template-columns:repeat(8,1fr);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(168,85,247,.6);
 }
-
 .cell{
-  width:70px;
-  height:70px;
+  width:100%;
+  height:100%;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
 }
-
-.cell.dark{
-  background: linear-gradient(135deg,#3a00ff,#8f00ff);
-}
-.cell.light{
-  background: linear-gradient(135deg,#0ff,#0088ff);
-}
+.cell.dark{ background:#4c1d95; }
+.cell.light{ background:#0ea5e9; }
 
 .piece{
-  width:50px;
-  height:50px;
+  width:80%;
+  height:80%;
   border-radius:50%;
   background:black;
-  box-shadow:0 0 10px #fff;
   cursor:pointer;
+  position:relative;
+}
+.player{ background:#ff4b7d; }
+.ai{ background:black; }
+.king::after{
+  content:"👑";
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
 }
 
-.player{ background:#fff; box-shadow:0 0 15px #fff; }
-.ai{ background:#000; }
-
-.king{
-  border:3px solid gold;
-  box-shadow:0 0 20px gold;
-}
-
-.selected{
-  outline:3px solid yellow;
-}
-
-#cardOverlay{
+#cardPopup{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.8);
+  background:rgba(0,0,0,.7);
   display:none;
-  justify-content:center;
   align-items:center;
-  z-index:10;
+  justify-content:center;
+  z-index:999;
 }
-
-#card{
-  background:linear-gradient(135deg,#6a00ff,#00c3ff);
+#cardContent{
+  background:linear-gradient(135deg,#ff4b7d,#a855f7);
   padding:40px;
   border-radius:20px;
-  width:70%;
-  max-width:500px;
+  max-width:80%;
   text-align:center;
-  font-size:20px;
-  animation:pop 0.5s ease;
+  font-size:1.5rem;
+  animation:zoom .6s;
+}
+@keyframes zoom{
+  from{transform:scale(.2);opacity:0}
+  to{transform:scale(1);opacity:1}
 }
 
-@keyframes pop{
-  from{transform:scale(0);}
-  to{transform:scale(1);}
-}
-
-#finalScreen{
+#winText{
   position:fixed;
   inset:0;
   background:black;
   color:white;
-  display:none;
-  justify-content:center;
+  display:flex;
   align-items:center;
-  font-size:40px;
+  justify-content:center;
   text-align:center;
-  padding:40px;
+  font-size:2rem;
+  line-height:2;
+  opacity:0;
+  pointer-events:none;
+  transition:2s;
+  z-index:1000;
 }
 </style>
-</head>
-<body>
-
-<div id="gameContainer">
-  <h2>Damas da Giovanna 💜</h2>
-  <div id="board"></div>
-</div>
-
-<div id="cardOverlay">
-  <div id="card"></div>
-</div>
-
-<div id="finalScreen">
-Mesmo em todas as jogadas da vida,<br>
-eu escolherei você sempre.
-</div>
 
 <script>
-const messages = [
-"Seu sorriso, ele reflete a felicidade do meu dia 💜",
-"Seus olhos, eu vejo no reflexo deles um homem extremamente feliz por ter você 💜",
-"Seu corpo me traz desejo e fascinação 💜",
-"Seus cachos enrolam meu sentimento de amor em você 💜",
-"O seu jeito me traz paz e risadas 💜",
-"Sua personalidade de mulher forte é única 💜",
-"Seu toque me alegra de todas as formas 💜🫦",
-"Seu cheiro me leva às alturas 💜"
+const texts=[
+"Seu sorriso reflete a felicidade do meu dia 💜",
+"Seus olhos mostram o homem mais feliz do mundo 💜",
+"Seu corpo me deixa completamente encantado 💜",
+"Seus cachos enrolam meu amor em você 💜",
+"Seu jeito me traz paz e risadas 💜",
+"Sua força faz você única 💜",
+"Seu toque me faz flutuar 💜",
+"Seu cheiro é o perfume da minha vida 💜"
 ];
 
-const kingMessage = "No coração de um homem, sempre habita uma menina.\nE dentro de um tabuleiro, um rei sempre precisa de sua rainha.";
+let board=[];
+let selected=null;
+let turn="player";
 
-let board = [];
-let selected = null;
-const boardDiv = document.getElementById("board");
-
-function createBoard(){
-  boardDiv.innerHTML="";
+function init(){
   board=[];
+  const el=document.getElementById("board");
+  el.innerHTML="";
   for(let y=0;y<8;y++){
-    board[y]=[];
     for(let x=0;x<8;x++){
-      const cell=document.createElement("div");
-      cell.className="cell "+((x+y)%2?"dark":"light");
-      cell.dataset.x=x;
-      cell.dataset.y=y;
-      boardDiv.appendChild(cell);
-      board[y][x]=null;
+      const c=document.createElement("div");
+      c.className="cell "+((x+y)%2?"dark":"light");
+      c.dataset.x=x;c.dataset.y=y;
+      el.appendChild(c);
+      board.push(null);
     }
   }
 
-  for(let y=0;y<3;y++){
-    for(let x=0;x<8;x++){
-      if((x+y)%2){
-        spawn(x,y,"ai");
-      }
-    }
-  }
-
-  for(let y=5;y<8;y++){
-    for(let x=0;x<8;x++){
-      if((x+y)%2){
-        spawn(x,y,"player");
-      }
-    }
+  for(let i=0;i<8;i++){
+    place(i,1,"ai");
+    place(i,2,"ai");
+    place(i,6,"player");
+    place(i,7,"player");
   }
 }
 
-function spawn(x,y,type){
-  const piece=document.createElement("div");
-  piece.className="piece "+type;
-  piece.onclick=()=>select(piece);
-  board[y][x]={el:piece,type,king:false};
-  getCell(x,y).appendChild(piece);
+function place(x,y,type){
+  const idx=y*8+x;
+  const d=document.createElement("div");
+  d.className="piece "+type;
+  d.onclick=()=>clickPiece(d,x,y);
+  board[idx]={type,king:false,el:d};
+  document.querySelectorAll(".cell")[idx].appendChild(d);
 }
 
-function getCell(x,y){
-  return document.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
+function clickPiece(p,x,y){
+  if(turn!=="player")return;
+  selected={x,y,p};
 }
 
-function select(piece){
-  if(!piece.classList.contains("player"))return;
-  if(selected)selected.classList.remove("selected");
-  selected=piece;
-  piece.classList.add("selected");
-}
-
-boardDiv.onclick=e=>{
+document.getElementById("board").onclick=e=>{
   if(!selected)return;
-  if(!e.target.classList.contains("cell"))return;
-
-  const x=parseInt(e.target.dataset.x);
-  const y=parseInt(e.target.dataset.y);
-
-  movePlayer(x,y);
+  const cell=e.target.closest(".cell");
+  if(!cell)return;
+  const x=cell.dataset.x,y=cell.dataset.y;
+  move(selected.x,selected.y,x,y,true);
 };
 
-function movePlayer(x,y){
-  const pos=find(selected);
-  if(!pos)return;
+function move(x1,y1,x2,y2,isPlayer){
+  const i1=y1*8+x1,i2=y2*8+x2;
+  if(board[i2])return;
 
-  const dx=x-pos.x;
-  const dy=y-pos.y;
-
-  if(Math.abs(dx)==1 && Math.abs(dy)==1 && !board[y][x]){
-    move(pos.x,pos.y,x,y);
-    aiMove();
-  }
-  if(Math.abs(dx)==2 && Math.abs(dy)==2){
-    const mx=pos.x+dx/2;
-    const my=pos.y+dy/2;
-    if(board[my][mx] && board[my][mx].type=="ai"){
-      capture(mx,my);
-      move(pos.x,pos.y,x,y);
-      showCard();
-      aiMove();
+  const dx=x2-x1,dy=y2-y1;
+  if(Math.abs(dx)==2){
+    const mx=x1+dx/2,my=y1+dy/2;
+    const mi=my*8+mx;
+    if(board[mi]){
+      if(isPlayer)showCard();
+      board[mi].el.remove();
+      board[mi]=null;
     }
   }
-}
 
-function move(x1,y1,x2,y2){
-  const p=board[y1][x1];
-  board[y2][x2]=p;
-  board[y1][x1]=null;
-  getCell(x2,y2).appendChild(p.el);
+  const piece=board[i1];
+  board[i1]=null;
+  board[i2]=piece;
+  document.querySelectorAll(".cell")[i2].appendChild(piece.el);
 
-  if(p.type=="player" && y2==0 && !p.king){
-    p.king=true;
-    p.el.classList.add("king");
-    showCard(true);
-  }
-}
-
-function capture(x,y){
-  getCell(x,y).innerHTML="";
-  board[y][x]=null;
-}
-
-function find(el){
-  for(let y=0;y<8;y++)
-    for(let x=0;x<8;x++)
-      if(board[y][x] && board[y][x].el===el)
-        return {x,y};
-}
-
-function showCard(king=false){
-  const overlay=document.getElementById("cardOverlay");
-  const card=document.getElementById("card");
-  overlay.style.display="flex";
-  card.innerText=king?kingMessage:messages[Math.floor(Math.random()*messages.length)];
-  overlay.onclick=()=>overlay.style.display="none";
+  if(isPlayer)turn="ai",setTimeout(aiMove,600);
 }
 
 function aiMove(){
-  setTimeout(()=>{
-    let pieces=[];
-    for(let y=0;y<8;y++)
-      for(let x=0;x<8;x++)
-        if(board[y][x] && board[y][x].type=="ai")
-          pieces.push({x,y});
-    if(pieces.length==0){
-      document.getElementById("finalScreen").style.display="flex";
-      return;
+  let moves=[];
+  board.forEach((p,i)=>{
+    if(p&&p.type==="ai"){
+      const x=i%8,y=Math.floor(i/8);
+      [[-1,1],[1,1]].forEach(d=>{
+        const nx=x+d[0],ny=y+d[1];
+        if(nx>=0&&ny<8){
+          if(!board[ny*8+nx])moves.push([x,y,nx,ny]);
+        }
+      });
     }
-    const p=pieces[Math.floor(Math.random()*pieces.length)];
-    const dir=Math.random()<0.5?-1:1;
-    const nx=p.x+dir;
-    const ny=p.y+1;
-    if(nx>=0&&nx<8&&ny<8&&!board[ny][nx]){
-      move(p.x,p.y,nx,ny);
-    }
-  },600);
+  });
+  if(moves.length){
+    const m=moves[Math.floor(Math.random()*moves.length)];
+    move(...m,false);
+  }
+  turn="player";
 }
 
-createBoard();
+function showCard(){
+  const p=document.getElementById("cardPopup");
+  const c=document.getElementById("cardContent");
+  c.innerText=texts.shift()||"Você é tudo 💜";
+  p.style.display="flex";
+  setTimeout(()=>p.style.display="none",1800);
+}
+
+init();
 </script>
+
+</section>
 </body>
   </html>
