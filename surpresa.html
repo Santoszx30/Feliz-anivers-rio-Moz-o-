@@ -831,36 +831,7 @@ function verificarFim(){
 };
 </script>
   <!-- ================= PÁGINA 7 – DAMAS DO AMOR ================= -->
-  <style>
-.game-wrapper{
-  width:100%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin-top:30px;
-}
-  #p7 {
-  justify-content: flex-start;
-  padding-top: 40px;
-}
-
-#p7 .game-wrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
-  }
-
-#board {
-  width: min(90vw, 90vh);
-  height: min(90vw, 90vh);
-  max-width: 520px;
-  max-height: 520px;
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(8, 1fr);
-  border-radius: 16px;
-  }
+  
 <section class="section hidden" id="p7">
 
 <h2 style="font-size:2.2rem;margin-bottom:20px;">Nosso jogo 💜</h2>
@@ -882,95 +853,7 @@ Mesmo em todas as jogadas da vida,<br>
 eu escolherei você sempre 💜
 </div>
 
-
-
-/* As casas */
-.square{
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Cores do tabuleiro */
-.square.blue{
-  background: #3a8dde;
-}
-.square.purple{
-  background: #5b1a7a;
-}
-
-/* Peças */
-.piece{
-  width: 80%;
-  height: 80%;
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
-}
-
-.piece.black{
-  background: radial-gradient(circle at 30% 30%, #444, #000);
-}
-
-.piece.pink{
-  background: radial-gradient(circle at 30% 30%, #ff8fd8, #ff3ba7);
-  }
-.player{ background:#ff4b7d; }
-.ai{ background:black; }
-.king::after{
-  content:"👑";
-  position:absolute;
-  top:-10px;
-  left:50%;
-  transform:translateX(-50%);
-}
-
-#cardPopup{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.7);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:999;
-}
-#cardContent{
-  background:linear-gradient(135deg,#ff4b7d,#a855f7);
-  padding:40px;
-  border-radius:20px;
-  max-width:80%;
-  text-align:center;
-  font-size:1.5rem;
-  animation:zoom .6s;
-}
-@keyframes zoom{
-  from{transform:scale(.2);opacity:0}
-  to{transform:scale(1);opacity:1}
-}
-
-#winText{
-  position:fixed;
-  inset:0;
-  background:black;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:2rem;
-  line-height:2;
-  opacity:0;
-  pointer-events:none;
-  transition:2s;
-  z-index:1000;
-}
-  .piece.selected {
-  outline: 3px solid white;
-  box-shadow: 0 0 10px white;
-  }
-</style>
+</section>
 
 <script>
 const texts=[
@@ -1131,5 +1014,125 @@ init();
 </script>
 
 </section>
+  <style>
+.game-wrapper{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-top:30px;
+}
+  #p7 {
+  justify-content: flex-start;
+  padding-top: 40px;
+}
+
+#p7 .game-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  }
+
+#board {
+  width: min(90vw, 90vh);
+  height: min(90vw, 90vh);
+  max-width: 520px;
+  max-height: 520px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  border-radius: 16px;
+  }
+    
+/* As casas */
+.square{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Cores do tabuleiro */
+.square.blue{
+  background: #3a8dde;
+}
+.square.purple{
+  background: #5b1a7a;
+}
+
+/* Peças */
+.piece{
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+.piece.black{
+  background: radial-gradient(circle at 30% 30%, #444, #000);
+}
+
+.piece.pink{
+  background: radial-gradient(circle at 30% 30%, #ff8fd8, #ff3ba7);
+  }
+.player{ background:#ff4b7d; }
+.ai{ background:black; }
+.king::after{
+  content:"👑";
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+#cardPopup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+#cardContent{
+  background:linear-gradient(135deg,#ff4b7d,#a855f7);
+  padding:40px;
+  border-radius:20px;
+  max-width:80%;
+  text-align:center;
+  font-size:1.5rem;
+  animation:zoom .6s;
+}
+@keyframes zoom{
+  from{transform:scale(.2);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+#winText{
+  position:fixed;
+  inset:0;
+  background:black;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:2rem;
+  line-height:2;
+  opacity:0;
+  pointer-events:none;
+  transition:2s;
+  z-index:1000;
+}
+  .piece.selected {
+  outline: 3px solid white;
+  box-shadow: 0 0 10px white;
+    }
+    </style>
+
+</script>
 </body>
   </html>
