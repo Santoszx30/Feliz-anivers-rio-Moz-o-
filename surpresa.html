@@ -1012,78 +1012,88 @@ function showCard(){
 
 init();
 </script>
+<section class="section hidden" id="p7">
 
-</section>
-  <style>
+<h2 style="font-size:2.3rem;margin-bottom:10px;">Nosso jogo 💜</h2>
+<p style="max-width:720px;text-align:center;font-size:1.25rem;line-height:1.7;">
+Toda jogada sua muda meu mundo.<br>
+Toda escolha sua… eu escolho também.
+</p>
+
+<div class="game-wrapper">
+  <div id="board"></div>
+</div>
+
+<div id="cardPopup">
+  <div id="cardContent"></div>
+</div>
+
+<div id="winText">
+Mesmo em todas as jogadas da vida,<br>
+eu escolherei você sempre 💜
+</div>
+
+<style>
+#p7{
+  justify-content:flex-start;
+  padding-top:40px;
+}
+
 .game-wrapper{
   width:100%;
   display:flex;
   justify-content:center;
-  align-items:center;
   margin-top:30px;
 }
-  #p7 {
-  justify-content: flex-start;
-  padding-top: 40px;
+
+#board{
+  width:min(90vw, 80vh);
+  max-width:520px;
+  aspect-ratio:1;
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 0 25px rgba(168,85,247,.6);
 }
 
-#p7 .game-wrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
-  }
-
-#board {
-  width: min(90vw, 90vh);
-  height: min(90vw, 90vh);
-  max-width: 520px;
-  max-height: 520px;
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(8, 1fr);
-  border-radius: 16px;
-  }
-    
-/* As casas */
 .square{
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-/* Cores do tabuleiro */
-.square.blue{
-  background: #3a8dde;
-}
-.square.purple{
-  background: #5b1a7a;
-}
+.square.blue{ background:#3a8dde; }
+.square.purple{ background:#5b1a7a; }
 
-/* Peças */
 .piece{
-  width: 80%;
-  height: 80%;
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
-}
-
-.piece.black{
-  background: radial-gradient(circle at 30% 30%, #444, #000);
+  width:78%;
+  height:78%;
+  border-radius:50%;
+  cursor:pointer;
+  box-shadow:0 0 12px rgba(0,0,0,.6);
+  position:relative;
 }
 
 .piece.pink{
-  background: radial-gradient(circle at 30% 30%, #ff8fd8, #ff3ba7);
-  }
-.player{ background:#ff4b7d; }
-.ai{ background:black; }
+  background:radial-gradient(circle at 30% 30%, #ff9ad5, #ff3ba7);
+}
+
+.piece.black{
+  background:radial-gradient(circle at 30% 30%, #444, #000);
+}
+
+.piece.selected{
+  outline:3px solid white;
+  box-shadow:0 0 15px white;
+}
+
 .king::after{
   content:"👑";
   position:absolute;
-  top:-10px;
+  top:-14px;
   left:50%;
   transform:translateX(-50%);
 }
@@ -1091,23 +1101,25 @@ init();
 #cardPopup{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.7);
+  background:rgba(0,0,0,.75);
   display:none;
   align-items:center;
   justify-content:center;
-  z-index:999;
+  z-index:1000;
 }
+
 #cardContent{
   background:linear-gradient(135deg,#ff4b7d,#a855f7);
   padding:40px;
-  border-radius:20px;
+  border-radius:22px;
   max-width:80%;
   text-align:center;
   font-size:1.5rem;
   animation:zoom .6s;
 }
+
 @keyframes zoom{
-  from{transform:scale(.2);opacity:0}
+  from{transform:scale(.3);opacity:0}
   to{transform:scale(1);opacity:1}
 }
 
@@ -1125,14 +1137,95 @@ init();
   opacity:0;
   pointer-events:none;
   transition:2s;
-  z-index:1000;
+  z-index:2000;
 }
-  .piece.selected {
-  outline: 3px solid white;
-  box-shadow: 0 0 10px white;
-    }
-    </style>
+</style>
 
+<script>
+const board = document.getElementById("board");
+let selectedPiece = null;
+let pieces = [];
+
+const captureTexts = [
+"Seu sorriso reflete a felicidade do meu dia 💜",
+"Seus olhos mostram um homem feliz por ter você 💜",
+"Seu corpo me deixa completamente encantado 💜",
+"Seus cachos enrolam meu coração 💜",
+"Seu jeito me traz paz e risadas 💜",
+"Sua força como mulher é única 💜",
+"Seu toque me arrepia 💜",
+"Seu cheiro é o perfume da minha vida 💜"
+];
+
+const queenText = "No coração de um homem, sempre habita uma menina.<br>E num tabuleiro, um rei sempre precisa da sua rainha.";
+
+function showCard(text){
+  const popup = document.getElementById("cardPopup");
+  const content = document.getElementById("cardContent");
+  content.innerHTML = text;
+  popup.style.display="flex";
+  setTimeout(()=>popup.style.display="none",2500);
+}
+
+function createInitialBoard(){
+  board.innerHTML="";
+  pieces=[];
+  for(let r=0;r<8;r++){
+    for(let c=0;c<8;c++){
+      const sq = document.createElement("div");
+      sq.className="square "+((r+c)%2==0?"blue":"purple");
+      sq.dataset.row=r;
+      sq.dataset.col=c;
+      board.appendChild(sq);
+
+      if((r+c)%2 && r<3) createPiece(sq,"black");
+      if((r+c)%2 && r>4) createPiece(sq,"pink");
+    }
+  }
+}
+
+function createPiece(square,color){
+  const p=document.createElement("div");
+  p.className="piece "+color;
+  p.onclick=()=>selectPiece(p);
+  square.appendChild(p);
+  pieces.push(p);
+}
+
+function selectPiece(p){
+  if(p.classList.contains("black")) return;
+  if(selectedPiece) selectedPiece.classList.remove("selected");
+  selectedPiece=p;
+  p.classList.add("selected");
+}
+
+board.onclick=e=>{
+  if(!selectedPiece) return;
+  const target=e.target.closest(".square");
+  if(!target) return;
+
+  target.appendChild(selectedPiece);
+  selectedPiece.classList.remove("selected");
+  selectedPiece=null;
+
+  setTimeout(aiMove,600);
+};
+
+function aiMove(){
+  const ai=pieces.filter(p=>p.classList.contains("black"));
+  if(ai.length==0){
+    document.getElementById("winText").style.opacity=1;
+    return;
+  }
+  const move=ai[Math.floor(Math.random()*ai.length)];
+  const sqs=[...document.querySelectorAll(".square")];
+  const target=sqs[Math.floor(Math.random()*sqs.length)];
+  target.appendChild(move);
+}
+
+createInitialBoard();
 </script>
+
+</section>
 </body>
   </html>
