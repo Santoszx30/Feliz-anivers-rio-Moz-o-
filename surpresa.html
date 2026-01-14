@@ -675,7 +675,86 @@ document.querySelector("#vitoria button").onclick = () => {
     No meu coração, você sempre será a obra mais bonita.
   </div>
 
-    temp.width = gridSize;
+  <!-- BOTÃO PARA PAGINA 7 -->
+  <button id="btnP7">mais outra surpresinha pra você minha neném</button>
+
+</section>
+
+<style>
+#paintCanvas{
+  margin-top:30px;
+  border-radius:18px;
+  background:#12001f;
+  touch-action:none;
+}
+
+#contadorPixels{
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 20px;
+  z-index: 100;
+}
+
+#textoFinalP6{
+  opacity:0;
+  transition:2s;
+  margin-top:40px;
+  font-size:1.4rem;
+  line-height:2;
+  max-width:800px;
+  text-align:center;
+}
+
+#btnP7{
+  display:none;
+  margin-top:50px;
+}
+</style>
+
+<script>
+/* ===== BOTÃO DA PAGINA 5 PARA 6 ===== */
+btnToP6.onclick = () => {
+  p5.classList.add("hidden");
+  p6.classList.remove("hidden");
+  iniciarPintura();
+};
+
+/* ===== VARIÁVEIS ===== */
+const canvas = document.getElementById("paintCanvas");
+const ctx = canvas.getContext("2d");
+
+const gridSize = 90;
+let imgData = null;
+let revealed = new Set();
+let totalPixels = gridSize * gridSize;
+let paintedCount = 0;
+
+/* ===== CONTADOR ===== */
+function atualizarContador(){
+  document.getElementById("contadorPixels").innerText =
+    `${paintedCount} / ${totalPixels} quadrados preenchidos`;
+}
+
+/* ===== INICIAR ===== */
+function iniciarPintura(){
+  const size = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.6);
+  canvas.width = size;
+  canvas.height = size;
+
+  atualizarContador();
+
+  const img = new Image();
+  img.src = "coracao/amor1.jpg";
+  img.onload = () => prepararImagem(img);
+}
+
+/* ===== PREPARA IMAGEM ===== */
+function prepararImagem(img){
+  const temp = document.createElement("canvas");
+  temp.width = gridSize;
   temp.height = gridSize;
   const tctx = temp.getContext("2d");
   tctx.drawImage(img, 0, 0, gridSize, gridSize);
@@ -744,145 +823,13 @@ function verificarFim(){
     document.getElementById("textoFinalP6").style.opacity = 1;
     document.getElementById("btnP7").style.display = "block";
   }
-  }
+}
+
+/* ===== BOTÃO PAGINA 7 ===== */
+btnP7.onclick = () => {
+  p6.classList.add("hidden");
+  // futuramente p7.classList.remove("hidden");
+};
 </script>
-<section class="section hidden" id="p7" style="background: linear-gradient(135deg,#12001f,#2b0040,#12001f); display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; overflow:hidden;">
-
-<h1 style="margin-bottom:10px; font-size:28px; text-align:center;">
-💖 Jogo do Amor 💖
-</h1>
-
-<p style="margin-bottom:15px; opacity:0.8; text-align:center;">
-Derrote seu oponente e revele mensagens escondidas em cada peça 💌
-</p>
-
-<div id="board" style="width:320px; height:320px; display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); border-radius:12px; overflow:hidden; box-shadow:0 0 25px rgba(255,0,100,.5);"></div>
-
-<div id="overlayText" style="position:absolute; inset:0; background:rgba(0,0,0,.85); display:flex; align-items:center; justify-content:center; text-align:center; font-size:22px; padding:30px; opacity:0; pointer-events:none; transition:.6s; z-index:10;"></div>
-
-<div id="winScreen" style="position:absolute; inset:0; background:black; display:flex; align-items:center; justify-content:center; flex-direction:column; font-size:28px; opacity:0; pointer-events:none; transition:1s; z-index:20;">
-<div id="crack" style="width:100%; height:4px; background:red; animation:crack 1s infinite;"></div>
-<p style="margin-top:40px;">Mesmo em todas as jogadas da vida,<br>eu escolherei você sempre 💖</p>
-</div>
-
-<style>
-.cell{
-display:flex;
-align-items:center;
-justify-content:center;
-}
-
-.blue{background:#00aaff;}
-.purple{background:#6a00ff;}
-
-.piece{
-width:32px;
-height:32px;
-border-radius:50%;
-background:black;
-box-shadow:0 0 10px red;
-cursor:pointer;
-transition:.3s;
-}
-
-.player{background:red;}
-.enemy{background:black;}
-
-@keyframes crack{
-0%{transform:scaleX(0);}
-100%{transform:scaleX(1);}
-}
-</style>
-
-<script>
-const board=document.getElementById("board");
-const overlay=document.getElementById("overlayText");
-const win=document.getElementById("winScreen");
-
-const messages=[
-"Seu sorriso é mais forte que qualquer magia ✨",
-"Você é a parte mais bonita dos meus dias 💕",
-"Te amar é a melhor jogada da minha vida ♟️",
-"Seu jeito ilumina tudo 🌸",
-"Você é meu lugar seguro 💖",
-"Eu escolheria você em qualquer vida ❤️"
-];
-
-let pieces=[];
-
-for(let y=0;y<8;y++){
-for(let x=0;x<8;x++){
-const cell=document.createElement("div");
-cell.className="cell "+((x+y)%2==0?"blue":"purple");
-board.appendChild(cell);
-
-if(y<3 && (x+y)%2==1){
-const p=createPiece("enemy");
-cell.appendChild(p);
-}
-if(y>4 && (x+y)%2==1){
-const p=createPiece("player");
-cell.appendChild(p);
-}
-}
-}
-
-function createPiece(type){
-const d=document.createElement("div");
-d.className="piece "+type;
-d.onclick=()=>playerMove(d);
-return d;
-}
-
-function playerMove(piece){
-const parent=piece.parentElement;
-const index=[...board.children].indexOf(parent);
-const target=index-9;
-if(target>=0){
-const targetCell=board.children[target];
-if(targetCell.children.length==0){
-targetCell.appendChild(piece);
-enemyMove();
-}
-else{
-capture(targetCell.children[0]);
-targetCell.innerHTML="";
-targetCell.appendChild(piece);
-enemyMove();
-}
-}
-}
-
-function capture(p){
-p.style.transform="scale(4)";
-setTimeout(()=>{
-overlay.innerText=messages[Math.floor(Math.random()*messages.length)];
-overlay.style.opacity=1;
-setTimeout(()=>overlay.style.opacity=0,2500);
-p.remove();
-},300);
-}
-
-function enemyMove(){
-const enemies=[...document.querySelectorAll(".enemy")];
-if(enemies.length==0){
-win.style.opacity=1;
-win.style.pointerEvents="all";
-return;
-}
-const e=enemies[Math.floor(Math.random()*enemies.length)];
-const parent=e.parentElement;
-const index=[...board.children].indexOf(parent);
-const target=index+9;
-if(target<64){
-const targetCell=board.children[target];
-if(targetCell.children.length==0){
-targetCell.appendChild(e);
-}
-}
-}
-</script>
-
-  </section> 
 </body>
   </html>
