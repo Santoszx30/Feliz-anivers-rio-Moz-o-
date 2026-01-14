@@ -671,8 +671,7 @@ document.querySelector("#vitoria button").onclick = () => {
   <div id="contadorPixels">0 / 0 quadrados preenchidos</div>
 
   <!-- CANVAS -->
-  <canvas id="paintCanvas" style="display:none;"></canvas>
-
+<canvas id="paintCanvas" style="display:none; pointer-events:none;"></canvas>
   <!-- TEXTO FINAL -->
   <div id="textoFinalP6">
     Cada quadrado que você pinta revela um detalhe da sua beleza.<br>
@@ -683,17 +682,25 @@ document.querySelector("#vitoria button").onclick = () => {
   </div>
 
   <!-- BOTÃO PARA PAGINA 7 -->
-  <button id="btnP7">mais outra surpresinha pra você minha neném</button>
+  <button id="btnToP7">mais outra surpresinha pra você minha neném</button>
 
 </section>
 
 <style>
 #paintCanvas{
-  margin-top:30px;
-  border-radius:18px;
-  background:#12001f;
-  touch-action:none;
-}
+  position: fixed;
+  inset: 0;
+  margin: auto;
+
+  border-radius: 18px;
+  background: #12001f;
+
+  touch-action: none;
+
+  display: none;          /* começa invisível */
+  pointer-events: none;  /* não bloqueia cliques */
+  z-index: 1;
+  }
 
 #contadorPixels{
   position: fixed;
@@ -732,7 +739,9 @@ btnToP6.onclick = () => {
   p6.classList.remove("hidden");
 
   const canvas = document.getElementById("paintCanvas");
-  canvas.style.display = "block"; // ← isso resolve o bug dos cliques
+
+  canvas.style.display = "block";
+  canvas.style.pointerEvents = "auto"; // 🔥 ESSENCIAL
 
   iniciarPintura();
 };
