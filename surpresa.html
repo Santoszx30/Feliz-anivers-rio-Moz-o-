@@ -675,86 +675,7 @@ document.querySelector("#vitoria button").onclick = () => {
     No meu coração, você sempre será a obra mais bonita.
   </div>
 
-  <!-- BOTÃO PARA PAGINA 7 -->
-  <button id="btnP7">mais outra surpresinha pra você minha neném</button>
-
-</section>
-
-<style>
-#paintCanvas{
-  margin-top:30px;
-  border-radius:18px;
-  background:#12001f;
-  touch-action:none;
-}
-
-#contadorPixels{
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: white;
-  font-size: 20px;
-  z-index: 100;
-}
-
-#textoFinalP6{
-  opacity:0;
-  transition:2s;
-  margin-top:40px;
-  font-size:1.4rem;
-  line-height:2;
-  max-width:800px;
-  text-align:center;
-}
-
-#btnP7{
-  display:none;
-  margin-top:50px;
-}
-</style>
-
-<script>
-/* ===== BOTÃO DA PAGINA 5 PARA 6 ===== */
-btnToP6.onclick = () => {
-  p5.classList.add("hidden");
-  p6.classList.remove("hidden");
-  iniciarPintura();
-};
-
-/* ===== VARIÁVEIS ===== */
-const canvas = document.getElementById("paintCanvas");
-const ctx = canvas.getContext("2d");
-
-const gridSize = 90;
-let imgData = null;
-let revealed = new Set();
-let totalPixels = gridSize * gridSize;
-let paintedCount = 0;
-
-/* ===== CONTADOR ===== */
-function atualizarContador(){
-  document.getElementById("contadorPixels").innerText =
-    `${paintedCount} / ${totalPixels} quadrados preenchidos`;
-}
-
-/* ===== INICIAR ===== */
-function iniciarPintura(){
-  const size = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.6);
-  canvas.width = size;
-  canvas.height = size;
-
-  atualizarContador();
-
-  const img = new Image();
-  img.src = "coracao/amor1.jpg";
-  img.onload = () => prepararImagem(img);
-}
-
-/* ===== PREPARA IMAGEM ===== */
-function prepararImagem(img){
-  const temp = document.createElement("canvas");
-  temp.width = gridSize;
+    temp.width = gridSize;
   temp.height = gridSize;
   const tctx = temp.getContext("2d");
   tctx.drawImage(img, 0, 0, gridSize, gridSize);
@@ -823,227 +744,145 @@ function verificarFim(){
     document.getElementById("textoFinalP6").style.opacity = 1;
     document.getElementById("btnP7").style.display = "block";
   }
-}
-  document.getElementById("btnP7").onclick = () => {
-  p6.classList.add("hidden");
-  p7.classList.remove("hidden");
-  iniciarJogoDamas(); // inicia o jogo da página 7
-};
+  }
 </script>
-<!-- ==================== PÁGINA 7 ==================== -->
-<section class="section hidden" id="p7">
+<section class="section hidden" id="p7" style="background: linear-gradient(135deg,#12001f,#2b0040,#12001f); display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; overflow:hidden;">
 
-<h2 style="font-size:2.3rem;margin-bottom:15px;">Nosso jogo 💜</h2>
-<p style="max-width:700px;text-align:center;font-size:1.3rem;line-height:1.7;">
-Toda jogada sua muda meu mundo.<br>
-Toda escolha sua… eu escolho também.
+<h1 style="margin-bottom:10px; font-size:28px; text-align:center;">
+💖 Jogo do Amor 💖
+</h1>
+
+<p style="margin-bottom:15px; opacity:0.8; text-align:center;">
+Derrote seu oponente e revele mensagens escondidas em cada peça 💌
 </p>
 
-<div class="game-wrapper">
-  <div id="board"></div>
-</div>
+<div id="board" style="width:320px; height:320px; display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); border-radius:12px; overflow:hidden; box-shadow:0 0 25px rgba(255,0,100,.5);"></div>
 
-<div id="cardPopup">
-  <div id="cardContent"></div>
-</div>
+<div id="overlayText" style="position:absolute; inset:0; background:rgba(0,0,0,.85); display:flex; align-items:center; justify-content:center; text-align:center; font-size:22px; padding:30px; opacity:0; pointer-events:none; transition:.6s; z-index:10;"></div>
 
-<div id="winText">
-Mesmo em todas as jogadas da vida,<br>
-eu escolherei você sempre 💜
+<div id="winScreen" style="position:absolute; inset:0; background:black; display:flex; align-items:center; justify-content:center; flex-direction:column; font-size:28px; opacity:0; pointer-events:none; transition:1s; z-index:20;">
+<div id="crack" style="width:100%; height:4px; background:red; animation:crack 1s infinite;"></div>
+<p style="margin-top:40px;">Mesmo em todas as jogadas da vida,<br>eu escolherei você sempre 💖</p>
 </div>
 
 <style>
-#p7{
-  justify-content:flex-start;
-  padding-top:40px;
+.cell{
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
-.game-wrapper{
-  width:100%;
-  display:flex;
-  justify-content:center;
-  margin-top:30px;
-}
-
-#board{
-  width:min(90vw,80vh);
-  max-width:520px;
-  aspect-ratio:1;
-  display:grid;
-  grid-template-columns:repeat(8,1fr);
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 0 30px rgba(168,85,247,.7);
-}
-
-.square{
-  width:100%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.square.blue{ background:#3a8dde; }
-.square.purple{ background:#5b1a7a; }
+.blue{background:#00aaff;}
+.purple{background:#6a00ff;}
 
 .piece{
-  width:75%;
-  height:75%;
-  border-radius:50%;
-  cursor:pointer;
-  position:relative;
-  box-shadow:0 0 12px rgba(0,0,0,.6);
+width:32px;
+height:32px;
+border-radius:50%;
+background:black;
+box-shadow:0 0 10px red;
+cursor:pointer;
+transition:.3s;
 }
 
-.piece.pink{
-  background:radial-gradient(circle at 30% 30%, #ff9ad5, #ff3ba7);
-}
-.piece.black{
-  background:radial-gradient(circle at 30% 30%, #444, #000);
-}
-.piece.selected{
-  outline:3px solid white;
-  box-shadow:0 0 15px white;
-}
+.player{background:red;}
+.enemy{background:black;}
 
-.king::after{
-  content:"👑";
-  position:absolute;
-  top:-12px;
-  left:50%;
-  transform:translateX(-50%);
-}
-
-#cardPopup{
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.75);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:2000;
-}
-
-#cardContent{
-  background:linear-gradient(135deg,#ff4b7d,#a855f7);
-  padding:40px;
-  border-radius:20px;
-  max-width:80%;
-  text-align:center;
-  font-size:1.5rem;
-  animation:zoom .6s;
-}
-
-@keyframes zoom{
-  from{transform:scale(.3);opacity:0}
-  to{transform:scale(1);opacity:1}
-}
-
-#winText{
-  position:absolute;
-  inset:0;
-  background:black;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:2rem;
-  line-height:2;
-  opacity:0;
-  pointer-events:none;
-  transition:2s;
-  z-index:3000;
+@keyframes crack{
+0%{transform:scaleX(0);}
+100%{transform:scaleX(1);}
 }
 </style>
 
 <script>
-const texts = [
-"Seu sorriso, ele reflete a felicidade do meu dia 💜",
-"Seus olhos… neles eu vejo um homem feliz por ter você 💜",
-"Seu corpo me traz desejo e encanto 💜",
-"Seus cachos enrolam meu amor em você 💜",
-"Seu jeito me traz paz e risadas 💜",
-"Sua personalidade é única 💜",
-"Seu toque me alegra por completo 💜",
-"Seu cheiro é o perfume da minha vida 💜"
+const board=document.getElementById("board");
+const overlay=document.getElementById("overlayText");
+const win=document.getElementById("winScreen");
+
+const messages=[
+"Seu sorriso é mais forte que qualquer magia ✨",
+"Você é a parte mais bonita dos meus dias 💕",
+"Te amar é a melhor jogada da minha vida ♟️",
+"Seu jeito ilumina tudo 🌸",
+"Você é meu lugar seguro 💖",
+"Eu escolheria você em qualquer vida ❤️"
 ];
 
-const kingText = "No coração de um homem sempre habita uma menina… e um rei sempre precisa da sua rainha 💜";
+let pieces=[];
 
-let board, selected = null, pieces = [];
+for(let y=0;y<8;y++){
+for(let x=0;x<8;x++){
+const cell=document.createElement("div");
+cell.className="cell "+((x+y)%2==0?"blue":"purple");
+board.appendChild(cell);
 
-function createInitialBoard(){
-  board = document.getElementById("board");
-  board.innerHTML = "";
-  pieces = [];
-
-  for(let r=0;r<8;r++){
-    for(let c=0;c<8;c++){
-      const sq = document.createElement("div");
-      sq.className = "square " + ((r+c)%2===0?"blue":"purple");
-      sq.dataset.row = r;
-      sq.dataset.col = c;
-      board.appendChild(sq);
-
-      if((r+c)%2!==0 && r<3) createPiece(sq,"black");
-      if((r+c)%2!==0 && r>4) createPiece(sq,"pink");
-    }
-  }
+if(y<3 && (x+y)%2==1){
+const p=createPiece("enemy");
+cell.appendChild(p);
+}
+if(y>4 && (x+y)%2==1){
+const p=createPiece("player");
+cell.appendChild(p);
+}
+}
 }
 
-function createPiece(square,color){
-  const p = document.createElement("div");
-  p.className = "piece "+color;
-  p.onclick = ()=>selectPiece(p);
-  square.appendChild(p);
-  pieces.push(p);
+function createPiece(type){
+const d=document.createElement("div");
+d.className="piece "+type;
+d.onclick=()=>playerMove(d);
+return d;
 }
 
-function selectPiece(p){
-  if(!p.classList.contains("pink")) return;
-  document.querySelectorAll(".piece").forEach(x=>x.classList.remove("selected"));
-  p.classList.add("selected");
-  selected = p;
+function playerMove(piece){
+const parent=piece.parentElement;
+const index=[...board.children].indexOf(parent);
+const target=index-9;
+if(target>=0){
+const targetCell=board.children[target];
+if(targetCell.children.length==0){
+targetCell.appendChild(piece);
+enemyMove();
+}
+else{
+capture(targetCell.children[0]);
+targetCell.innerHTML="";
+targetCell.appendChild(piece);
+enemyMove();
+}
+}
 }
 
-document.getElementById("board").addEventListener("click", e=>{
-  if(!selected) return;
-  const square = e.target.closest(".square");
-  if(!square) return;
-  if(square.children.length===0){
-    square.appendChild(selected);
-    selected.classList.remove("selected");
-    selected=null;
-    setTimeout(aiMove,500);
-  }
-});
-
-function aiMove(){
-  const ai = [...document.querySelectorAll(".piece.black")];
-  if(ai.length===0) winGame();
-  const p = ai[Math.floor(Math.random()*ai.length)];
-  const moves = [...document.querySelectorAll(".square")].filter(s=>s.children.length===0);
-  if(moves.length>0) moves[Math.floor(Math.random()*moves.length)].appendChild(p);
+function capture(p){
+p.style.transform="scale(4)";
+setTimeout(()=>{
+overlay.innerText=messages[Math.floor(Math.random()*messages.length)];
+overlay.style.opacity=1;
+setTimeout(()=>overlay.style.opacity=0,2500);
+p.remove();
+},300);
 }
 
-function winGame(){
-  const w = document.getElementById("winText");
-  w.style.opacity=1;
+function enemyMove(){
+const enemies=[...document.querySelectorAll(".enemy")];
+if(enemies.length==0){
+win.style.opacity=1;
+win.style.pointerEvents="all";
+return;
 }
-
-const observer = new MutationObserver(()=>{
-  const p7 = document.getElementById("p7");
-  if(!p7.classList.contains("hidden") && !p7.dataset.loaded){
-    p7.dataset.loaded="true";
-    createInitialBoard();
-  }
-});
-observer.observe(document.getElementById("p7"),{attributes:true});
+const e=enemies[Math.floor(Math.random()*enemies.length)];
+const parent=e.parentElement;
+const index=[...board.children].indexOf(parent);
+const target=index+9;
+if(target<64){
+const targetCell=board.children[target];
+if(targetCell.children.length==0){
+targetCell.appendChild(e);
+}
+}
+}
 </script>
 
-</section>
-<!-- ==================== FIM DA PÁGINA 7 ==================== -->
+  </section> 
 </body>
   </html>
