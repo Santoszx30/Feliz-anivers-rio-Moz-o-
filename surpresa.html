@@ -811,6 +811,46 @@ canvas.addEventListener("pointermove", e => {
       const px = gx + x;
       const py = gy + y;
 
+      if(px < 0 || py < 0 || px >= gridSize || py >= gridSize) continue;
+
+      const id = py * gridSize + px;
+      if(!revealed.has(id)){
+        revealed.add(id);
+        paintedCount++;
+      }
+    }
+  }
+
+  desenharGrade();
+  atualizarContador();
+
+  if(paintedCount >= totalPixels){
+    document.getElementById("textoFinalP6").style.opacity = 1;
+    document.getElementById("btnP7").style.display = "block";
+  }
+});
+</script>
+
+      if(px < 0 || py < 0 || px >= gridSize || py >= gridSize) continue;
+
+      const id = py * gridSize + px;
+      if(!revealed.has(id)){
+        revealed.add(id);
+        paintedCount++;
+      }
+    }
+  }
+
+  desenharGrade();
+  atualizarContador();
+
+  if(paintedCount >= totalPixels){
+    document.getElementById("textoFinalP6").style.opacity = 1;
+    document.getElementById("btnP7").style.display = "block";
+  }
+});
+</script>
+
       if(px<0 || py<0 || px>=gridSize || py>=gridSize) continue;
 
       const index = py*gridSize + px;
