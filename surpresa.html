@@ -34,7 +34,8 @@ body {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
+  pointer-events: none !important;
 }
 
 /* ===== BOTÕES ===== */
@@ -670,7 +671,7 @@ document.querySelector("#vitoria button").onclick = () => {
   <div id="contadorPixels">0 / 0 quadrados preenchidos</div>
 
   <!-- CANVAS -->
-  <canvas id="paintCanvas"></canvas>
+  <canvas id="paintCanvas" style="display:none;"></canvas>
 
   <!-- TEXTO FINAL -->
   <div id="textoFinalP6">
@@ -729,6 +730,10 @@ const p6 = document.getElementById("p6");
 btnToP6.onclick = () => {
   p5.classList.add("hidden");
   p6.classList.remove("hidden");
+
+  const canvas = document.getElementById("paintCanvas");
+  canvas.style.display = "block"; // ← isso resolve o bug dos cliques
+
   iniciarPintura();
 };
 
@@ -829,7 +834,6 @@ canvas.addEventListener("pointermove", e => {
     document.getElementById("btnP7").style.display = "block";
   }
 });
-</script>
 
       if(px < 0 || py < 0 || px >= gridSize || py >= gridSize) continue;
 
@@ -849,7 +853,6 @@ canvas.addEventListener("pointermove", e => {
     document.getElementById("btnP7").style.display = "block";
   }
 });
-</script>
 
       if(px<0 || py<0 || px>=gridSize || py>=gridSize) continue;
 
