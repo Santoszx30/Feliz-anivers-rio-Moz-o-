@@ -44,12 +44,12 @@ body{
   background:#111;
 }
 
-.screen img{
+#screen img{
   width:100%;
   height:100%;
   object-fit:cover;
-  opacity:0;
-  animation: fadeIn 1.2s forwards;
+  transition: opacity 0.25s ease-in-out;
+}
 }
 
 @keyframes fadeIn{
@@ -130,61 +130,74 @@ body{
 <div class="bar"><span></span></div>
 
 <script>
+/* ===== CONFIG ===== */
+const TOTAL_FOTOS = 20;
+const TEMPO_FOTO = 650; // ms (mais rápido)
+const TEMPO_TOTAL = TOTAL_FOTOS * TEMPO_FOTO;
+
 /* ===== FOTOS ===== */
 const fotos = [];
-for(let i=1;i<=20;i++){
+for(let i=1;i<=TOTAL_FOTOS;i++){
   fotos.push(`fotos/foto${i}.jpg`);
 }
-
-const elogios = [
-  "Princesa","Linda","Maravilhosa","Perfeita","Cheirosa",
-  "Gostosa","Delícia","Cacheada","Pretinha","Pequena",
-  "Pitica","Hello Kittyzinha","Buxinn","Meu amor",
-  "Meu tudo","Minha vida","Coisinha linda","Neném",
-  "Minha paz","Meu lar"
-];
-
-const cores = ["#ff7ac8","#b44cff","#5aa7ff"];
 
 let index = 0;
 const screen = document.getElementById("screen");
 
 function trocarFoto(){
   if(index >= fotos.length) return;
-  screen.innerHTML = `<img src="${fotos[index]}">`;
+
+  const img = document.createElement("img");
+  img.src = fotos[index];
+  img.style.opacity = 0;
+  screen.innerHTML = "";
+  screen.appendChild(img);
+
+  setTimeout(()=>img.style.opacity = 1, 50);
+
   index++;
-  setTimeout(trocarFoto, 1200);
+  setTimeout(trocarFoto, TEMPO_FOTO);
 }
 trocarFoto();
 
-/* ===== ELOGIOS (MAIS FREQUENTES) ===== */
+/* ===== ELOGIOS ===== */
+const elogios = [
+  "Princesa","Linda","Maravilhosa","Perfeita","Cheirosa",
+  "Gostosa","Delícia","Cacheada","Pretinha","Pequena",
+  "Pitica","Hello Kittyzinha","Buxinn","Meu amor",
+  "Meu tudo","Minha vida","Neném","Minha paz",
+  "Coisinha linda","Meu lar"
+];
+
+const cores = ["#ff7ac8","#b44cff","#5aa7ff"];
+
 setInterval(()=>{
-  for(let i=0;i<2;i++){ // cria mais de um por vez
+  for(let i=0;i<4;i++){ // MAIS elogios
     const e = document.createElement("div");
     e.className = "elogio";
     e.innerText = elogios[Math.floor(Math.random()*elogios.length)];
-    e.style.left = Math.random()*85 + "%";
-    e.style.top = Math.random()*85 + "%";
+    e.style.left = Math.random()*80 + "%";
+    e.style.top = Math.random()*80 + "%";
     e.style.color = cores[Math.floor(Math.random()*cores.length)];
     document.body.appendChild(e);
-    setTimeout(()=>e.remove(),6500);
+    setTimeout(()=>e.remove(),5000);
   }
-},700);
+},500);
 
-/* ===== CORAÇÕES (BEM MAIS) ===== */
+/* ===== CORAÇÕES ===== */
 setInterval(()=>{
-  for(let i=0;i<3;i++){
+  for(let i=0;i<5;i++){ // MUITOS corações
     const h = document.createElement("div");
     h.className = "heart";
     h.innerText = "💜";
     h.style.left = Math.random()*100 + "vw";
-    h.style.animationDuration = (5 + Math.random()*5) + "s";
-    h.style.fontSize = (14 + Math.random()*10) + "px";
+    h.style.animationDuration = (3 + Math.random()*3) + "s";
+    h.style.fontSize = (16 + Math.random()*12) + "px";
     document.body.appendChild(h);
-    setTimeout(()=>h.remove(),9000);
+    setTimeout(()=>h.remove(),7000);
   }
-},500);
-    </script>
+},350);
+</script>
 
 </body>
 </html>
