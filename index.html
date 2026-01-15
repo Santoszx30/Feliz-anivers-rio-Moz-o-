@@ -3,130 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carregando sua beleza</title>
+<title>Carregando sua beleza 💜</title>
 
 <style>
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: 'Arial', sans-serif;
+  font-family: Arial, sans-serif;
 }
 
 body{
+  width:100vw;
   height:100vh;
   overflow:hidden;
-  background: linear-gradient(135deg, #2a003f, #1b0033, #050010);
+  background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
   display:flex;
   align-items:center;
   justify-content:center;
   color:white;
 }
 
-/* CELULAR */
+/* ===== CELULAR ===== */
 .phone{
-  width:260px;
-  height:520px;
-  border-radius:32px;
+  width:220px;
+  height:420px;
   background:#000;
+  border-radius:28px;
+  padding:12px;
+  box-shadow: 0 0 40px rgba(170,85,255,0.6);
   position:relative;
-  box-shadow:0 0 40px rgba(160,60,255,0.5);
-  overflow:hidden;
+  z-index:2;
 }
 
 .screen{
   width:100%;
   height:100%;
-  background:linear-gradient(160deg,#3b0066,#12001f);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
+  border-radius:20px;
+  overflow:hidden;
+  background:#111;
 }
 
-/* FOTO CENTRAL */
-.phone img{
-  max-width:85%;
-  max-height:85%;
-  border-radius:18px;
+.screen img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
   opacity:0;
-  position:absolute;
-  transition:opacity 1s ease;
+  animation: fadeIn 1.2s forwards;
 }
 
-/* TEXTO */
+@keyframes fadeIn{
+  to{opacity:1;}
+}
+
+/* ===== TEXTO CARREGAMENTO ===== */
 .loading-text{
   position:absolute;
   bottom:110px;
-  width:100%;
-  text-align:center;
-  font-size:14px;
-  opacity:0.9;
+  font-size:1.1rem;
+  color:#d6b3ff;
 }
 
-/* BARRA */
-.progress{
+/* ===== BARRA ===== */
+.bar{
   position:absolute;
   bottom:70px;
-  left:50%;
-  transform:translateX(-50%);
-  width:70%;
-  height:8px;
-  background:#1a0030;
-  border-radius:20px;
+  width:220px;
+  height:6px;
+  background:rgba(255,255,255,0.15);
+  border-radius:6px;
   overflow:hidden;
 }
 
-.progress span{
+.bar span{
   display:block;
   height:100%;
   width:0%;
-  background:linear-gradient(90deg,#b14cff,#6a00ff);
-  transition:width 0.4s linear;
+  background:linear-gradient(90deg,#a855f7,#ec4899);
+  animation: load 14s linear forwards;
 }
 
-/* ELOGIOS */
-.word{
+@keyframes load{
+  to{width:100%;}
+}
+
+/* ===== ELOGIOS ===== */
+.elogio{
   position:absolute;
-  font-size:18px;
+  font-size:1.3rem;
   font-weight:bold;
-  color:#e6c3ff;
-  animation:floatWord linear forwards;
-  pointer-events:none;
+  opacity:0;
+  animation: fly 6s ease-in-out forwards;
 }
 
-/* CORAÇÃO */
+@keyframes fly{
+  0%{opacity:0; transform:translateY(30px);}
+  20%{opacity:1;}
+  80%{opacity:1;}
+  100%{opacity:0; transform:translateY(-80px);}
+}
+
+/* ===== CORAÇÕES ===== */
 .heart{
   position:absolute;
-  font-size:16px;
-  color:#b14cff;
-  animation:floatHeart linear forwards;
-  pointer-events:none;
+  font-size:1.2rem;
+  color:#b44cff;
+  animation: float 8s linear forwards;
+  opacity:0.8;
 }
 
-@keyframes floatWord{
-  from{
-    transform:translateY(40px);
-    opacity:0;
-  }
-  10%{opacity:1;}
-  90%{opacity:1;}
-  to{
-    transform:translateY(-120px);
-    opacity:0;
-  }
-}
-
-@keyframes floatHeart{
-  from{
-    transform:translateY(0) scale(0.8);
-    opacity:0;
-  }
-  20%{opacity:1;}
-  to{
-    transform:translateY(-160px) scale(1.3);
-    opacity:0;
-  }
+@keyframes float{
+  from{transform:translateY(100vh) rotate(0deg);}
+  to{transform:translateY(-20vh) rotate(360deg);}
 }
 </style>
 </head>
@@ -134,75 +122,66 @@ body{
 <body>
 
 <div class="phone">
-  <div class="screen">
-    <img id="photo">
-    <div class="loading-text">carregando sua beleza</div>
-    <div class="progress"><span id="bar"></span></div>
-  </div>
+  <div class="screen" id="screen"></div>
 </div>
 
+<div class="loading-text">Carregando sua beleza…</div>
+
+<div class="bar"><span></span></div>
+
 <script>
-const photos = ["fotos/1.jpg","fotos/2.jpg","fotos/3.jpg","fotos/4.jpg"];
-const compliments = [
-  "Princesa","Linda","Maravilhosa","Perfeita","Cheirosa",
-  "Delícia","Cacheada","Pretinha","Pitica","Hello Kittyzinha","Buxinn"
+const fotos = [
+  "fotos/foto1.jpg",
+  "fotos/foto2.jpg",
+  "fotos/foto3.jpg",
+  "fotos/foto4.jpg",
+  "fotos/foto5.jpg",
+  "fotos/foto6.jpg"
 ];
 
-const img = document.getElementById("photo");
-const bar = document.getElementById("bar");
-let photoIndex = 0;
-let progress = 0;
+const elogios = [
+  "Princesa", "Linda", "Maravilhosa", "Perfeita",
+  "Cheirosa", "Gostosa", "Delícia", "Cacheada",
+  "Pretinha", "Pequena", "Pitica",
+  "Hello Kittyzinha", "Buxinn"
+];
 
-/* TROCA DE FOTOS */
-function showPhoto(){
-  img.style.opacity = 0;
-  setTimeout(()=>{
-    img.src = photos[photoIndex % photos.length];
-    img.style.opacity = 1;
-    photoIndex++;
-  },500);
+const cores = ["#ff7ac8","#b44cff","#5aa7ff"];
+
+let index = 0;
+const screen = document.getElementById("screen");
+
+function trocarFoto(){
+  if(index >= fotos.length) return;
+  screen.innerHTML = `<img src="${fotos[index]}">`;
+  index++;
+  setTimeout(trocarFoto, 2200);
 }
-showPhoto();
-setInterval(showPhoto, 1800);
+trocarFoto();
 
-/* BARRA */
-const loadingInterval = setInterval(()=>{
-  progress += 3;
-  bar.style.width = progress + "%";
-  if(progress >= 100){
-    clearInterval(loadingInterval);
-  }
-}, 250);
-
-/* ELOGIOS VOANDO */
-function spawnWord(){
-  const word = document.createElement("div");
-  word.className = "word";
-  word.textContent = compliments[Math.floor(Math.random()*compliments.length)];
-  word.style.left = Math.random()*80 + "%";
-  word.style.top = Math.random()*80 + "%";
-  word.style.animationDuration = (3 + Math.random()*3) + "s";
-  document.body.appendChild(word);
-
-  setTimeout(()=>word.remove(),6000);
-}
+/* ELOGIOS */
+setInterval(()=>{
+  const e = document.createElement("div");
+  e.className = "elogio";
+  e.innerText = elogios[Math.floor(Math.random()*elogios.length)];
+  e.style.left = Math.random()*80 + "%";
+  e.style.top = Math.random()*80 + "%";
+  e.style.color = cores[Math.floor(Math.random()*cores.length)];
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),6000);
+},1200);
 
 /* CORAÇÕES */
-function spawnHeart(){
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  heart.textContent = "💜";
-  heart.style.left = Math.random()*100 + "%";
-  heart.style.top = "90%";
-  heart.style.animationDuration = (2 + Math.random()*2) + "s";
-  document.body.appendChild(heart);
-
-  setTimeout(()=>heart.remove(),5000);
-}
-
-setInterval(spawnWord, 900);
-setInterval(spawnHeart, 400);
+setInterval(()=>{
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.innerText = "💜";
+  h.style.left = Math.random()*100 + "vw";
+  h.style.animationDuration = (6 + Math.random()*4) + "s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),9000);
+},700);
 </script>
 
 </body>
-  </html>
+</html>
