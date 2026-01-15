@@ -105,17 +105,29 @@ body{
 
 /* ===== CORAÇÕES ===== */
 .heart{
-  position:absolute;
-  font-size:1.2rem;
-  color:#b44cff;
-  animation: float 8s linear forwards;
-  opacity:0.8;
+  position: fixed;
+  bottom: -30px;
+  animation: subir 5s linear forwards;
+  pointer-events: none;
+  opacity: 1;
 }
 
-@keyframes float{
-  from{transform:translateY(100vh) rotate(0deg);}
-  to{transform:translateY(-20vh) rotate(360deg);}
-}
+@keyframes subir{
+  0%{
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10%{
+    opacity: 1;
+  }
+  80%{
+    opacity: 1;
+  }
+  100%{
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
+  }
 </style>
 </head>
 
@@ -191,7 +203,7 @@ setInterval(()=>{
     h.className = "heart";
     h.innerText = "💜";
     h.style.left = Math.random()*100 + "vw";
-    h.style.animationDuration = (3 + Math.random()*3) + "s";
+    h.style.animationDuration = (4 + Math.random()*3) + "s";
     h.style.fontSize = (16 + Math.random()*12) + "px";
     document.body.appendChild(h);
     setTimeout(()=>h.remove(),7000);
