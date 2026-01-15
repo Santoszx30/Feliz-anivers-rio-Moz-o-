@@ -931,46 +931,26 @@ btnP7.onclick = () => {
 };
 </script>
   <script>
-document.addEventListener("DOMContentLoaded", () => {
+const p1 = document.getElementById("p1");
+const p2 = document.getElementById("p2");
+const p3 = document.getElementById("p3");
+const p4 = document.getElementById("p4");
+const p5 = document.getElementById("p5");
+const p6 = document.getElementById("p6");
 
-  const p1 = document.getElementById("p1");
-  const p2 = document.getElementById("p2");
-  const p3 = document.getElementById("p3");
-  const p4 = document.getElementById("p4");
-  const p5 = document.getElementById("p5");
-  const p6 = document.getElementById("p6");
+function show(page){
+  [p1,p2,p3,p4,p5,p6].forEach(p => p.classList.add("hidden"));
+  page.classList.remove("hidden");
+}
 
-  // Página 1 → 2
-  window.goP2 = () => {
-    p1.classList.add("hidden");
-    p2.classList.remove("hidden");
-  };
-
-  // Página 2 → 3
-  window.goP3 = () => {
-    p2.classList.add("hidden");
-    p3.classList.remove("hidden");
-  };
-
-  // Página 4 → 5
-  document.querySelector("#vitoria button").onclick = () => {
-    p4.classList.add("hidden");
-    p5.classList.remove("hidden");
-  };
-
-  // Página 5 → 6
-  const btnToP6 = document.getElementById("btnToP6");
-  btnToP6.onclick = () => {
-    p5.classList.add("hidden");
-    p6.classList.remove("hidden");
-
-    const canvas = document.getElementById("paintCanvas");
-    canvas.style.display = "block";
-    canvas.style.pointerEvents = "auto";
-
-    iniciarPintura();
-  };
-
+/* navegação */
+document.getElementById("btnToP2")?.addEventListener("click",()=>show(p2));
+document.getElementById("btnToP3")?.addEventListener("click",()=>show(p3));
+document.getElementById("btnToP4")?.addEventListener("click",()=>show(p4));
+document.getElementById("btnToP5")?.addEventListener("click",()=>show(p5));
+document.getElementById("btnToP6")?.addEventListener("click",()=>{
+  show(p6);
+  iniciarPintura(); // só aqui
 });
   </script>
 </body>
