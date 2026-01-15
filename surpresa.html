@@ -163,8 +163,7 @@ button {
   </div>
 
 </section>
-
-<script>
+  
   const p1 = document.getElementById("p1");
 const p2 = document.getElementById("p2");
 const p3 = document.getElementById("p3");
@@ -274,7 +273,7 @@ function mostrarFotos(){
   }
   next();
 }
-</script>
+
 <!-- ===== PAGINA 4 - JOGO DA MEMÓRIA ===== -->
 <section class="section hidden" id="p4">
 
@@ -318,7 +317,7 @@ function mostrarFotos(){
 
 </section>
 
-<script>
+
 /* ===== BOTÃO DA PAGINA 3 PARA 4 ===== */
 const btnFinal = document.createElement("button");
 btnFinal.innerText = "Mais uma surpresa 💜";
@@ -444,7 +443,7 @@ function efeitoAcerto(carta){
     setTimeout(()=>p.remove(),700);
   }
 }
-</script>
+
   <!-- ===== PAGINA 5 - NOSSOS TEXTOS ===== -->
 <section class="section hidden" id="p5">
 
@@ -656,13 +655,12 @@ Amar você é ter um lugar seguro dentro de mim.
   }
 </style>
 
-<script>
 /* BOTÃO DA PAGINA 4 PARA 5 */
 document.querySelector("#vitoria button").onclick = () => {
   p4.classList.add("hidden");
   p5.classList.remove("hidden");
 };
-</script>
+
   <!-- ===== PAGINA 6 ===== -->
 <section class="section hidden" id="p6" style="overflow:hidden;align-items:center;">
 
