@@ -80,7 +80,7 @@ body{
   height:100%;
   width:0%;
   background:linear-gradient(90deg,#a855f7,#ec4899);
-  animation: load 14s linear forwards;
+  animation: load 25s linear forwards;
 }
 
 @keyframes load{
@@ -130,20 +130,18 @@ body{
 <div class="bar"><span></span></div>
 
 <script>
-const fotos = [
-  "fotos/foto1.jpg",
-  "fotos/foto2.jpg",
-  "fotos/foto3.jpg",
-  "fotos/foto4.jpg",
-  "fotos/foto5.jpg",
-  "fotos/foto6.jpg"
-];
+/* ===== FOTOS ===== */
+const fotos = [];
+for(let i=1;i<=20;i++){
+  fotos.push(`fotos/foto${i}.jpg`);
+}
 
 const elogios = [
-  "Princesa", "Linda", "Maravilhosa", "Perfeita",
-  "Cheirosa", "Gostosa", "Delícia", "Cacheada",
-  "Pretinha", "Pequena", "Pitica",
-  "Hello Kittyzinha", "Buxinn"
+  "Princesa","Linda","Maravilhosa","Perfeita","Cheirosa",
+  "Gostosa","Delícia","Cacheada","Pretinha","Pequena",
+  "Pitica","Hello Kittyzinha","Buxinn","Meu amor",
+  "Meu tudo","Minha vida","Coisinha linda","Neném",
+  "Minha paz","Meu lar"
 ];
 
 const cores = ["#ff7ac8","#b44cff","#5aa7ff"];
@@ -155,33 +153,38 @@ function trocarFoto(){
   if(index >= fotos.length) return;
   screen.innerHTML = `<img src="${fotos[index]}">`;
   index++;
-  setTimeout(trocarFoto, 2200);
+  setTimeout(trocarFoto, 1200);
 }
 trocarFoto();
 
-/* ELOGIOS */
+/* ===== ELOGIOS (MAIS FREQUENTES) ===== */
 setInterval(()=>{
-  const e = document.createElement("div");
-  e.className = "elogio";
-  e.innerText = elogios[Math.floor(Math.random()*elogios.length)];
-  e.style.left = Math.random()*80 + "%";
-  e.style.top = Math.random()*80 + "%";
-  e.style.color = cores[Math.floor(Math.random()*cores.length)];
-  document.body.appendChild(e);
-  setTimeout(()=>e.remove(),6000);
-},1200);
-
-/* CORAÇÕES */
-setInterval(()=>{
-  const h = document.createElement("div");
-  h.className = "heart";
-  h.innerText = "💜";
-  h.style.left = Math.random()*100 + "vw";
-  h.style.animationDuration = (6 + Math.random()*4) + "s";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),9000);
+  for(let i=0;i<2;i++){ // cria mais de um por vez
+    const e = document.createElement("div");
+    e.className = "elogio";
+    e.innerText = elogios[Math.floor(Math.random()*elogios.length)];
+    e.style.left = Math.random()*85 + "%";
+    e.style.top = Math.random()*85 + "%";
+    e.style.color = cores[Math.floor(Math.random()*cores.length)];
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),6500);
+  }
 },700);
-</script>
+
+/* ===== CORAÇÕES (BEM MAIS) ===== */
+setInterval(()=>{
+  for(let i=0;i<3;i++){
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "💜";
+    h.style.left = Math.random()*100 + "vw";
+    h.style.animationDuration = (5 + Math.random()*5) + "s";
+    h.style.fontSize = (14 + Math.random()*10) + "px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),9000);
+  }
+},500);
+    </script>
 
 </body>
 </html>
