@@ -127,6 +127,46 @@ body{
     opacity: 0;
   }
 }
+  .hidden {
+  display: none;
+}
+
+#p1{
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.page1{
+  text-align: center;
+  padding: 20px;
+}
+
+.page1 h1{
+  font-size: 2rem;
+  color: #d6b3ff;
+  margin-bottom: 15px;
+}
+
+.page1 p{
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin-bottom: 25px;
+}
+
+.page1 button{
+  padding: 12px 28px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 20px;
+  background: linear-gradient(90deg,#a855f7,#ec4899);
+  color: white;
+  cursor: pointer;
+}
 </style>
 </head>
 
@@ -139,7 +179,15 @@ body{
 <div class="loading-text">Carregando sua beleza…</div>
 
 <div class="bar"><span></span></div>
-
+<section id="p1" class="hidden">
+  <div class="page1">
+    <h1>Oi, meu amor 💜</h1>
+    <p>Isso aqui é só o começo…</p>
+    <button id="btnP1">Continuar</button>
+  </div>
+  
+</section>
+  
 <script>
 /* ===== CONFIG ===== */
 const TOTAL_FOTOS = 20;
@@ -220,6 +268,14 @@ setInterval(() => {
     h.remove();
   }, 10000);
 }, 250);
+  setTimeout(() => {
+  document.body.innerHTML = document.body.innerHTML; // mantém animações ok
+  document.querySelector(".phone").style.display = "none";
+  document.querySelector(".loading-text").style.display = "none";
+  document.querySelector(".bar").style.display = "none";
+
+  document.getElementById("p1").classList.remove("hidden");
+}, 26000); // ajuste conforme o tempo total
 </script>
 
 </body>
