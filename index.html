@@ -167,6 +167,56 @@ body{
   color: white;
   cursor: pointer;
 }
+  #p1{
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
+  overflow-y: auto;
+  z-index: 5;
+}
+
+.p1-content{
+  max-width: 420px;
+  margin: auto;
+  padding: 30px 20px 60px;
+}
+
+.texto{
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #e9ddff;
+  white-space: pre-wrap;
+  margin-bottom: 40px;
+}
+
+/* ===== GALERIA ===== */
+#galeria img{
+  width: 100%;
+  border-radius: 18px;
+  margin-bottom: 12px;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.legenda{
+  text-align: center;
+  font-size: 0.95rem;
+  margin-bottom: 35px;
+  color: #d6b3ff;
+}
+
+/* ===== BOTÃO PADRÃO ===== */
+.btnPadrao{
+  display: block;
+  margin: 40px auto 0;
+  padding: 14px 34px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 22px;
+  background: linear-gradient(90deg,#7c7cff,#a855f7,#5aa7ff);
+  color: white;
+  cursor: pointer;
+  }
 </style>
 </head>
 
@@ -177,16 +227,22 @@ body{
 </div>
 
 <div class="loading-text">Carregando sua beleza…</div>
-
-<div class="bar"><span></span></div>
-<section id="p1" class="hidden">
-  <div class="page1">
-    <h1>Oi, meu amor 💜</h1>
-    <p>Isso aqui é só o começo…</p>
-    <button id="btnP1">Continuar</button>
-  </div>
   
 </section>
+  <section id="p1" class="hidden">
+  <div class="p1-content">
+
+    <div id="textoDigitado" class="texto"></div>
+
+    <div id="galeria"></div>
+
+    <button class="btnPadrao" id="btnP1">
+      clique aqui princesinha
+    </button>
+
+  </div>
+    
+  </section>
   
 <script>
 /* ===== CONFIG ===== */
@@ -276,6 +332,99 @@ setInterval(() => {
 
   document.getElementById("p1").classList.remove("hidden");
 }, 26000); // ajuste conforme o tempo total
+  /* ===== TEXTO DIGITADO ===== */
+const texto = `
+Desde o momento em que você entrou na minha vida,
+tudo ficou mais intenso.
+
+Seu jeito, seu sorriso,
+o jeito que você fala, o jeito que você olha…
+é impossível não querer ficar.
+
+Você é doce, mas também é fogo.
+É carinho, mas também é desejo.
+É calma, mas quando quer,
+vira tempestade.
+
+Eu te admiro.
+Eu te desejo.
+Eu te quero perto.
+
+Cada detalhe seu parece ter sido feito
+pra bagunçar minha cabeça
+e acalmar meu coração ao mesmo tempo.
+
+Se você soubesse o quanto é linda
+quando não está tentando ser…
+talvez entendesse porque eu fico assim por você.
+`;
+
+const elTexto = document.getElementById("textoDigitado");
+let i = 0;
+
+function digitar(){
+  if(i < texto.length){
+    elTexto.innerHTML += texto.charAt(i);
+    i++;
+    setTimeout(digitar, 35);
+  }else{
+    iniciarFotos();
+  }
+}
+
+/* ===== FOTOS + ELOGIOS ===== */
+const elogiosFotos = [
+  "Seu sorriso deveria ser crime",
+  "Você fica linda até sem perceber",
+  "Esse olhar me desmonta",
+  "Você é absurda de bonita",
+  "Você tem um charme que vicia",
+  "Cada detalhe seu é perfeito",
+  "Seu corpo parece arte",
+  "Você consegue ser doce e perigosa",
+  "Você é fogo disfarçado de carinho",
+  "Você é linda até em silêncio",
+  "Você é presença",
+  "Você é vontade",
+  "Você é tentação",
+  "Você é meu ponto fraco",
+  "Você é intensidade pura",
+  "Você é tudo que prende o olhar",
+  "Você bagunça minha mente",
+  "Você é viciante",
+  "Você é diferente de tudo",
+  "você é perigosa do melhor jeito possível"
+];
+
+function iniciarFotos(){
+  const galeria = document.getElementById("galeria");
+
+  for(let i=1;i<=20;i++){
+    const img = document.createElement("img");
+    img.src = `fotos/foto${i}.jpg`;
+
+    const leg = document.createElement("div");
+    leg.className = "legenda";
+    leg.innerText = elogiosFotos[i-1];
+
+    galeria.appendChild(img);
+    galeria.appendChild(leg);
+
+    setTimeout(()=>{
+      img.style.opacity = 1;
+    }, i * 450);
+  }
+}
+
+/* ===== MOSTRAR PÁGINA 1 APÓS LOADING ===== */
+setTimeout(()=>{
+  document.querySelector(".phone").style.display = "none";
+  document.querySelector(".loading-text").style.display = "none";
+  document.querySelector(".bar").style.display = "none";
+
+  document.getElementById("p1").classList.remove("hidden");
+  digitar();
+}, 26000);
 </script>
 
 </body>
