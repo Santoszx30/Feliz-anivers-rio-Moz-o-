@@ -3,27 +3,206 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carregando...</title>
-<link rel="stylesheet" href="style.css">
+<title>Carregando sua beleza</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+body{
+  height:100vh;
+  overflow:hidden;
+  background: linear-gradient(135deg, #2a003f, #1b0033, #050010);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+}
+
+/* CELULAR */
+.phone{
+  width:260px;
+  height:520px;
+  border-radius:32px;
+  background:#000;
+  position:relative;
+  box-shadow:0 0 40px rgba(160,60,255,0.5);
+  overflow:hidden;
+}
+
+.screen{
+  width:100%;
+  height:100%;
+  background:linear-gradient(160deg,#3b0066,#12001f);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+/* FOTO CENTRAL */
+.phone img{
+  max-width:85%;
+  max-height:85%;
+  border-radius:18px;
+  opacity:0;
+  position:absolute;
+  transition:opacity 1s ease;
+}
+
+/* TEXTO */
+.loading-text{
+  position:absolute;
+  bottom:110px;
+  width:100%;
+  text-align:center;
+  font-size:14px;
+  opacity:0.9;
+}
+
+/* BARRA */
+.progress{
+  position:absolute;
+  bottom:70px;
+  left:50%;
+  transform:translateX(-50%);
+  width:70%;
+  height:8px;
+  background:#1a0030;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress span{
+  display:block;
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#b14cff,#6a00ff);
+  transition:width 0.4s linear;
+}
+
+/* ELOGIOS */
+.word{
+  position:absolute;
+  font-size:18px;
+  font-weight:bold;
+  color:#e6c3ff;
+  animation:floatWord linear forwards;
+  pointer-events:none;
+}
+
+/* CORAÇÃO */
+.heart{
+  position:absolute;
+  font-size:16px;
+  color:#b14cff;
+  animation:floatHeart linear forwards;
+  pointer-events:none;
+}
+
+@keyframes floatWord{
+  from{
+    transform:translateY(40px);
+    opacity:0;
+  }
+  10%{opacity:1;}
+  90%{opacity:1;}
+  to{
+    transform:translateY(-120px);
+    opacity:0;
+  }
+}
+
+@keyframes floatHeart{
+  from{
+    transform:translateY(0) scale(0.8);
+    opacity:0;
+  }
+  20%{opacity:1;}
+  to{
+    transform:translateY(-160px) scale(1.3);
+    opacity:0;
+  }
+}
+</style>
 </head>
+
 <body>
 
-<div id="loadingScreen">
-
-  <div id="phone">
-    <div id="screen">
-      <div id="photoContainer"></div>
-    </div>
+<div class="phone">
+  <div class="screen">
+    <img id="photo">
+    <div class="loading-text">carregando sua beleza</div>
+    <div class="progress"><span id="bar"></span></div>
   </div>
-
-  <div id="compliment"></div>
-
-  <div id="progressBar">
-    <div id="progress"></div>
-  </div>
-
 </div>
 
-<script src="script.js"></script>
+<script>
+const photos = ["fotos/1.jpg","fotos/2.jpg","fotos/3.jpg","fotos/4.jpg"];
+const compliments = [
+  "Princesa","Linda","Maravilhosa","Perfeita","Cheirosa",
+  "Delícia","Cacheada","Pretinha","Pitica","Hello Kittyzinha","Buxinn"
+];
+
+const img = document.getElementById("photo");
+const bar = document.getElementById("bar");
+let photoIndex = 0;
+let progress = 0;
+
+/* TROCA DE FOTOS */
+function showPhoto(){
+  img.style.opacity = 0;
+  setTimeout(()=>{
+    img.src = photos[photoIndex % photos.length];
+    img.style.opacity = 1;
+    photoIndex++;
+  },500);
+}
+showPhoto();
+setInterval(showPhoto, 1800);
+
+/* BARRA */
+const loadingInterval = setInterval(()=>{
+  progress += 3;
+  bar.style.width = progress + "%";
+  if(progress >= 100){
+    clearInterval(loadingInterval);
+  }
+}, 250);
+
+/* ELOGIOS VOANDO */
+function spawnWord(){
+  const word = document.createElement("div");
+  word.className = "word";
+  word.textContent = compliments[Math.floor(Math.random()*compliments.length)];
+  word.style.left = Math.random()*80 + "%";
+  word.style.top = Math.random()*80 + "%";
+  word.style.animationDuration = (3 + Math.random()*3) + "s";
+  document.body.appendChild(word);
+
+  setTimeout(()=>word.remove(),6000);
+}
+
+/* CORAÇÕES */
+function spawnHeart(){
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.textContent = "💜";
+  heart.style.left = Math.random()*100 + "%";
+  heart.style.top = "90%";
+  heart.style.animationDuration = (2 + Math.random()*2) + "s";
+  document.body.appendChild(heart);
+
+  setTimeout(()=>heart.remove(),5000);
+}
+
+setInterval(spawnWord, 900);
+setInterval(spawnHeart, 400);
+</script>
+
 </body>
-</html>
+  </html>
