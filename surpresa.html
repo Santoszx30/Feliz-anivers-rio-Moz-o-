@@ -759,7 +759,10 @@ const ctx = canvas.getContext("2d");
 const gridSize = 90;
 let imgData = null;
 let revealed = new Set();
-let totalPixels = gridSize * gridSize;
+totalPixels = gridSize * gridSize;
+paintedCount = 0;
+revealed.clear();
+atualizarContador();
 let paintedCount = 0;
 
 /* ===== CONTADOR ===== */
@@ -770,9 +773,20 @@ function atualizarContador(){
 
 /* ===== INICIAR ===== */
 function iniciarPintura(){
-  const size = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.6);
-  canvas.width = size;
-  canvas.height = size;
+  const largura = Math.min(window.innerWidth * 0.95, 420);
+
+  canvas.width = largura;
+  canvas.height = largura;
+
+  canvas.style.display = "block";
+  canvas.style.pointerEvents = "auto";
+
+  atualizarContador();
+
+  const img = new Image();
+  img.src = "coracao/amor1.jpg";
+  img.onload = () => prepararImagem(img);
+  }
 
   atualizarContador();
 
@@ -817,9 +831,22 @@ function desenharGrade(){
 }
 
 /* ===== PINTAR ===== */
-canvas.addEventListener("pointermove", e => {
-  if(e.buttons !== 1) return;
+let pintando = false;
 
+canvas.addEventListener("pointerdown", e => {
+  pintando = true;
+  pintar(e);
+});
+
+canvas.addEventListener("pointermove", e => {
+  if (!pintando) return;
+  pintar(e);
+});
+
+canvas.addEventListener("pointerup", () => pintando = false);
+canvas.addEventListener("pointerleave", () => pintando = false);
+
+function pintar(e){
   const rect = canvas.getBoundingClientRect();
   const gx = Math.floor((e.clientX - rect.left) / (canvas.width / gridSize));
   const gy = Math.floor((e.clientY - rect.top) / (canvas.height / gridSize));
@@ -837,8 +864,12 @@ canvas.addEventListener("pointermove", e => {
       if(!revealed.has(id)){
         revealed.add(id);
         paintedCount++;
+        atualizarContador();
       }
     }
+  }
+
+  desenhar();
   }
 
   desenharGrade();
@@ -920,16 +951,6 @@ document.addEventListener("DOMContentLoaded", () => {
     p2.classList.add("hidden");
     p3.classList.remove("hidden");
   };
-
-  // Página 3 → 4
-  const btnFinal = document.createElement("button");
-  btnFinal.textContent = "Mais uma surpresa 💜";
-  btnFinal.style.margin = "60px auto";
-  btnFinal.onclick = () => {
-    p3.classList.add("hidden");
-    p4.classList.remove("hidden");
-  };
-  p3.appendChild(btnFinal);
 
   // Página 4 → 5
   document.querySelector("#vitoria button").onclick = () => {
