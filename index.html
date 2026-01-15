@@ -104,30 +104,31 @@ body{
 }
 
 /* ===== CORAÇÕES ===== */
-.heart{
+.heart {
   position: fixed;
-  bottom: -30px;
-  animation: subir 5s linear forwards;
+  left: 0;
+  bottom: -40px;
+  font-size: 20px;
   pointer-events: none;
-  opacity: 1;
+  animation: subirCoracao linear forwards;
 }
 
-@keyframes subir{
-  0%{
+@keyframes subirCoracao {
+  0% {
     transform: translateY(0);
     opacity: 0;
   }
-  10%{
+  10% {
     opacity: 1;
   }
-  80%{
+  85% {
     opacity: 1;
   }
-  100%{
-    transform: translateY(-120vh);
+  100% {
+    transform: translateY(-150vh);
     opacity: 0;
   }
-  }
+}
 </style>
 </head>
 
@@ -197,18 +198,21 @@ setInterval(()=>{
 },500);
 
 /* ===== CORAÇÕES ===== */
-setInterval(()=>{
-  for(let i=0;i<5;i++){ // MUITOS corações
-    const h = document.createElement("div");
-    h.className = "heart";
-    h.innerText = "💜";
-    h.style.left = Math.random()*100 + "vw";
-    h.style.animationDuration = (4 + Math.random()*3) + "s";
-    h.style.fontSize = (16 + Math.random()*12) + "px";
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),7000);
-  }
-},350);
+setInterval(() => {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.innerText = "💜";
+
+  h.style.left = Math.random() * 100 + "vw";
+  h.style.fontSize = (16 + Math.random() * 14) + "px";
+  h.style.animationDuration = (5 + Math.random() * 4) + "s";
+
+  document.body.appendChild(h);
+
+  setTimeout(() => {
+    h.remove();
+  }, 10000);
+}, 250);
 </script>
 
 </body>
