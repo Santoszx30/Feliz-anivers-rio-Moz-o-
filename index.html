@@ -31,6 +31,8 @@ body{
   align-items:center;
   justify-content:center;
   overflow:hidden;
+  z-index:9999;
+  background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
 }
 
 .phone{
@@ -168,7 +170,9 @@ body{
 
   <div id="fotos"></div>
 
-  <button class="btn">clique aqui princesinha</button>
+  <button class="btn" id="btnFinal" style="display:none">
+  clique aqui princesinha
+  </button>
 </section>
 
 <script>
@@ -294,6 +298,7 @@ const frases=[
 
 function mostrarFotos(){
   const c=document.getElementById("fotos");
+
   for(let j=1;j<=20;j++){
     const b=document.createElement("div");
     b.className="foto-bloco";
@@ -302,9 +307,47 @@ function mostrarFotos(){
       <p>${frases[j-1]}</p>
     `;
     c.appendChild(b);
+
     setTimeout(()=>b.classList.add("show"),j*400);
   }
-}
+
+  // botão só no final de tudo
+  setTimeout(()=>{
+    document.getElementById("btnFinal").style.display="block";
+  }, 20 * 400 + 800);
+  }
+  const elogioInterval = setInterval(()=>{
+  for(let i=0;i<4;i++){
+    const e=document.createElement("div");
+    e.className="elogio";
+    e.innerText=elogios[Math.random()*elogios.length|0];
+    e.style.left=Math.random()*80+"%";
+    e.style.top=Math.random()*80+"%";
+    e.style.color=cores[Math.random()*cores.length|0];
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),6000);
+  }
+},500);
+
+const heartInterval = setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="💜";
+  h.style.left=Math.random()*100+"vw";
+  h.style.fontSize=16+Math.random()*14+"px";
+  h.style.animationDuration=5+Math.random()*4+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),9000);
+},250);
+  setTimeout(()=>{
+  clearInterval(elogioInterval);
+  clearInterval(heartInterval);
+
+  document.getElementById("loading").style.display="none";
+  document.getElementById("page1").classList.remove("hidden");
+
+  escreverTexto();
+},13000);
 </script>
 
 </body>
