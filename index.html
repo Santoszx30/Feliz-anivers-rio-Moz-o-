@@ -296,20 +296,24 @@ const frases=[
   "você é perigosa do melhor jeito possível"
 ];
 
-function mostrarFotos(){
-  const c=document.getElementById("fotos");
+const TEMPO_VISIVEL = 2200; // tempo parada
+const TEMPO_FADE = 800;    // tempo do fade
 
-  for(let j=1;j<=20;j++){
-    const b=document.createElement("div");
-    b.className="foto-bloco";
-    b.innerHTML=`
-      <img src="fotos/foto${j}.jpg">
-      <p>${frases[j-1]}</p>
-    `;
-    c.appendChild(b);
+function trocarFoto() {
+  img.style.opacity = 0; // fade out
 
-    setTimeout(()=>b.classList.add("show"),j*400);
-  }
+  setTimeout(() => {
+    img.src = fotos[index];
+    img.onload = () => {
+      img.style.opacity = 1; // fade in
+    };
+
+    index++;
+    if (index >= fotos.length) index = fotos.length - 1;
+  }, TEMPO_FADE);
+
+  setTimeout(trocarFoto, TEMPO_VISIVEL + TEMPO_FADE);
+             }
 
   // botão só no final de tudo
   setTimeout(()=>{
