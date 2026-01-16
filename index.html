@@ -145,6 +145,70 @@ body{
   cursor:pointer;
   background:linear-gradient(90deg,#a855f7,#3b82f6);
 }
+  /* ===== PAGE 2 ===== */
+#page2{
+  min-height:100vh;
+  padding:60px 20px;
+  max-width:900px;
+  margin:auto;
+}
+
+.coracao-bloco{
+  margin:90px 0;
+  text-align:center;
+  opacity:0;
+  transform:translateY(30px);
+  transition:1.2s;
+}
+
+.coracao-bloco.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.coracao{
+  width:320px;
+  height:320px;
+  margin:auto;
+  background:red;
+  position:relative;
+  transform:rotate(-45deg);
+  overflow:hidden;
+}
+
+.coracao::before,
+.coracao::after{
+  content:"";
+  width:320px;
+  height:320px;
+  background:red;
+  border-radius:50%;
+  position:absolute;
+}
+
+.coracao::before{
+  top:-160px;
+  left:0;
+}
+
+.coracao::after{
+  left:160px;
+  top:0;
+}
+
+.coracao img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transform:rotate(45deg) scale(1.1);
+}
+
+.coracao-bloco p{
+  margin-top:30px;
+  font-size:1.4rem;
+  }
 </style>
 </head>
 
@@ -162,6 +226,12 @@ body{
   <div id="texto"></div>
   <div id="fotos"></div>
   <button class="btn" id="btnFinal">clique aqui princesinha</button>
+  
+</section>
+  <!-- PAGE 2 -->
+<section id="page2" class="hidden">
+  <div id="finalFotos"></div>
+  <button class="btn" id="btnVoltar">clique aqui princesinha</button>
 </section>
 
 <script>
@@ -302,6 +372,52 @@ function mostrarFotos(){
     document.getElementById("btnFinal").style.display="block";
   }, frases.length*900 + 1000);
 }
+  const frasesFinal = [
+  "Com você, o amor tem forma, cheiro e desejo.",
+  "Seu corpo encaixa no meu como se fosse destino.",
+  "Você é romance e pecado na mesma medida.",
+  "Te amar é fácil, difícil é parar de te querer.",
+  "Seu beijo me desmonta inteiro.",
+  "Você é meu amor e minha tentação.",
+  "Eu escolheria você até no fim do mundo."
+];
+  function mostrarFinal(){
+  const cont = document.getElementById("finalFotos");
+
+  frasesFinal.forEach((f,i)=>{
+    const bloco = document.createElement("div");
+    bloco.className = "coracao-bloco";
+
+    bloco.innerHTML = `
+      <div class="coracao">
+        <img src="final/casal${i+1}.jpg">
+      </div>
+      <p>${f}</p>
+    `;
+
+    cont.appendChild(bloco);
+
+    setTimeout(()=>{
+      bloco.classList.add("show");
+    }, i * 900);
+  });
+
+  setTimeout(()=>{
+    document.getElementById("btnVoltar").style.display="block";
+  }, frasesFinal.length * 900 + 800);
+  }
+  document.getElementById("btnFinal").onclick = () => {
+  document.getElementById("page1").classList.add("hidden");
+  document.getElementById("page2").classList.remove("hidden");
+  window.scrollTo(0,0);
+  mostrarFinal();
+};
+
+document.getElementById("btnVoltar").onclick = () => {
+  document.getElementById("page2").classList.add("hidden");
+  document.getElementById("page1").classList.remove("hidden");
+  window.scrollTo(0,0);
+};
 </script>
 
 </body>
