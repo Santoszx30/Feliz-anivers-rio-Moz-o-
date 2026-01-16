@@ -6,20 +6,14 @@
 <title>Para você 💜</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: Arial, sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
 
 body{
-  background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
+  background:linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
   color:white;
   overflow-x:hidden;
 }
 
-/* ===== HIDDEN ===== */
 .hidden{display:none}
 
 /* ===== LOADING ===== */
@@ -30,9 +24,8 @@ body{
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  overflow:hidden;
+  background:linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
   z-index:9999;
-  background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
 }
 
 .phone{
@@ -41,8 +34,7 @@ body{
   background:#000;
   border-radius:28px;
   padding:12px;
-  box-shadow:0 0 40px rgba(170,85,255,0.6);
-  z-index:2;
+  box-shadow:0 0 40px rgba(170,85,255,.6);
 }
 
 #screen img{
@@ -50,32 +42,25 @@ body{
   height:100%;
   object-fit:cover;
   opacity:0;
-  transition:opacity 0.8s;
+  transition:opacity 1s;
 }
 
-.loading-text{
-  margin-top:20px;
-  color:#d6b3ff;
-}
+.loading-text{margin-top:20px;color:#d6b3ff}
 
 .bar{
-  width:220px;
-  height:6px;
-  background:rgba(255,255,255,0.2);
+  width:220px;height:6px;
+  background:rgba(255,255,255,.2);
   border-radius:6px;
   overflow:hidden;
   margin-top:10px;
 }
 .bar span{
-  display:block;
-  height:100%;
-  width:0%;
+  display:block;height:100%;width:0%;
   background:linear-gradient(90deg,#a855f7,#3b82f6);
-  animation:load 13s linear forwards;
+  animation:load 14s linear forwards;
 }
 @keyframes load{to{width:100%}}
 
-/* ===== ELOGIOS LOADING ===== */
 .elogio{
   position:absolute;
   font-size:1.3rem;
@@ -116,7 +101,6 @@ body{
   white-space:pre-wrap;
 }
 
-/* ===== FOTOS ===== */
 .foto-bloco{
   margin:80px 0;
   text-align:center;
@@ -138,10 +122,9 @@ body{
   font-size:1.4rem;
 }
 
-/* ===== BOTÃO PADRÃO ===== */
 .btn{
   margin:80px auto;
-  display:block;
+  display:none;
   padding:18px 40px;
   border:none;
   border-radius:40px;
@@ -155,50 +138,45 @@ body{
 
 <body>
 
-<!-- ===== LOADING ===== -->
+<!-- LOADING -->
 <section id="loading">
-  <div class="phone">
-    <div id="screen"></div>
-  </div>
+  <div class="phone"><div id="screen"></div></div>
   <div class="loading-text">Carregando sua beleza…</div>
   <div class="bar"><span></span></div>
 </section>
 
-<!-- ===== PAGE 1 ===== -->
+<!-- PAGE 1 -->
 <section id="page1" class="hidden">
   <div id="texto"></div>
-
   <div id="fotos"></div>
-
-  <button class="btn" id="btnFinal" style="display:none">
-  clique aqui princesinha
-  </button>
+  <button class="btn" id="btnFinal">clique aqui princesinha</button>
 </section>
 
 <script>
-/* ===== LOADING FOTOS ===== */
-const screen=document.getElementById("screen");
-const img=document.createElement("img");
+/* ===== LOADING ===== */
+const TOTAL_FOTOS = 20;
+const screen = document.getElementById("screen");
+const img = document.createElement("img");
 screen.appendChild(img);
 
-let lf=1;
-function troca(){
+let iFoto = 1;
+function loadingFotos(){
   img.style.opacity=0;
   setTimeout(()=>{
-    img.src=`fotos/foto${lf}.jpg`;
+    img.src=`fotos/foto${iFoto}.jpg`;
     img.onload=()=>img.style.opacity=1;
-    lf=lf<20?lf+1:1;
-  },400);
-  setTimeout(troca,600);
+    iFoto = iFoto < TOTAL_FOTOS ? iFoto+1 : 1;
+  },600);
+  setTimeout(loadingFotos,1600);
 }
-troca();
+loadingFotos();
 
-/* ===== ELOGIOS + CORAÇÕES ===== */
+/* elogios + corações SOMENTE no loading */
 const elogios=["Princesa","Linda","Maravilhosa","Perfeita","Cheirosa","Gostosa","Delícia","Cacheada","Pretinha","Pitica","Hello Kittyzinha","Meu amor"];
 const cores=["#ff7ac8","#b44cff","#5aa7ff"];
 
-setInterval(()=>{
-  for(let i=0;i<4;i++){
+const elogioInterval=setInterval(()=>{
+  for(let i=0;i<3;i++){
     const e=document.createElement("div");
     e.className="elogio";
     e.innerText=elogios[Math.random()*elogios.length|0];
@@ -210,7 +188,7 @@ setInterval(()=>{
   }
 },500);
 
-setInterval(()=>{
+const heartInterval=setInterval(()=>{
   const h=document.createElement("div");
   h.className="heart";
   h.innerText="💜";
@@ -219,54 +197,41 @@ setInterval(()=>{
   h.style.animationDuration=5+Math.random()*4+"s";
   document.body.appendChild(h);
   setTimeout(()=>h.remove(),9000);
-},250);
+},300);
 
 /* ===== TRANSIÇÃO ===== */
 setTimeout(()=>{
-  document.getElementById("loading").classList.add("hidden");
+  clearInterval(elogioInterval);
+  clearInterval(heartInterval);
+  document.getElementById("loading").remove();
   document.getElementById("page1").classList.remove("hidden");
   escreverTexto();
-},13000);
+},14000);
 
 /* ===== TEXTO ===== */
-const textoCompleto=
-`Amar você nunca foi esforço.
+const textoCompleto=`Amar você nunca foi esforço.
 Foi encontro.
 
 Você chegou com esse jeito calmo,
 esse olhar que prende,
 esse sorriso que desarma,
-e sem perceber virou casa.
-
-Você é delicada sem ser fraca,
-forte sem perder a doçura,
-intensa na medida que deixa tudo mais vivo.
-Tem algo em você que não pede atenção,
-mas domina qualquer ambiente.
+e virou casa.
 
 Seu corpo é bonito,
 mas é o jeito que você existe nele
 que me deixa completamente perdido.
-Seu toque é tranquilo,
-mas carrega um desejo que arrepia.
 
-Com você, até o silêncio conversa.
-Até o tempo desacelera.
-Até o mundo faz sentido.
+Com você, tudo faz sentido.
+E eu escolheria você
+todas as vezes.`;
 
-E se eu tivesse que escolher de novo,
-entre todos os caminhos,
-eu escolheria você —
-sempre você.`
-
-let i=0;
+let t=0;
 function escreverTexto(){
   const el=document.getElementById("texto");
-  const interval=setInterval(()=>{
-    el.innerHTML+=textoCompleto.charAt(i);
-    i++;
-    if(i>=textoCompleto.length){
-      clearInterval(interval);
+  const int=setInterval(()=>{
+    el.innerHTML+=textoCompleto.charAt(t++);
+    if(t>=textoCompleto.length){
+      clearInterval(int);
       mostrarFotos();
     }
   },35);
@@ -296,62 +261,20 @@ const frases=[
   "você é perigosa do melhor jeito possível"
 ];
 
-const TEMPO_VISIVEL = 2200; // tempo parada
-const TEMPO_FADE = 800;    // tempo do fade
+function mostrarFotos(){
+  const cont=document.getElementById("fotos");
+  frases.forEach((f,i)=>{
+    const b=document.createElement("div");
+    b.className="foto-bloco";
+    b.innerHTML=`<img src="fotos/foto${i+1}.jpg"><p>${f}</p>`;
+    cont.appendChild(b);
+    setTimeout(()=>b.classList.add("show"), i*900);
+  });
 
-function trocarFoto() {
-  img.style.opacity = 0; // fade out
-
-  setTimeout(() => {
-    img.src = fotos[index];
-    img.onload = () => {
-      img.style.opacity = 1; // fade in
-    };
-
-    index++;
-    if (index >= fotos.length) index = fotos.length - 1;
-  }, TEMPO_FADE);
-
-  setTimeout(trocarFoto, TEMPO_VISIVEL + TEMPO_FADE);
-             }
-
-  // botão só no final de tudo
   setTimeout(()=>{
     document.getElementById("btnFinal").style.display="block";
-  }, 20 * 400 + 800);
-  }
-  const elogioInterval = setInterval(()=>{
-  for(let i=0;i<4;i++){
-    const e=document.createElement("div");
-    e.className="elogio";
-    e.innerText=elogios[Math.random()*elogios.length|0];
-    e.style.left=Math.random()*80+"%";
-    e.style.top=Math.random()*80+"%";
-    e.style.color=cores[Math.random()*cores.length|0];
-    document.body.appendChild(e);
-    setTimeout(()=>e.remove(),6000);
-  }
-},500);
-
-const heartInterval = setInterval(()=>{
-  const h=document.createElement("div");
-  h.className="heart";
-  h.innerText="💜";
-  h.style.left=Math.random()*100+"vw";
-  h.style.fontSize=16+Math.random()*14+"px";
-  h.style.animationDuration=5+Math.random()*4+"s";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),9000);
-},250);
-  setTimeout(()=>{
-  clearInterval(elogioInterval);
-  clearInterval(heartInterval);
-
-  document.getElementById("loading").style.display="none";
-  document.getElementById("page1").classList.remove("hidden");
-
-  escreverTexto();
-},13000);
+  }, frases.length*900 + 800);
+}
 </script>
 
 </body>
