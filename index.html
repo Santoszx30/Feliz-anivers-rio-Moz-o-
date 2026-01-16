@@ -6,6 +6,7 @@
 <title>Carregando sua beleza 💜</title>
 
 <style>
+/* RESET */
 *{
   margin:0;
   padding:0;
@@ -13,63 +14,64 @@
   font-family: Arial, sans-serif;
 }
 
+/* FUNDO */
 body{
-  width:100vw;
   height:100vh;
+  background: linear-gradient(135deg, #2b0040, #4b0082, #0a0a1a);
   overflow:hidden;
-  background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
-  display:flex;
-  align-items:center;
-  justify-content:center;
   color:white;
 }
 
-/* ===== CELULAR ===== */
+/* LOADING */
+#loading{
+  position:fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+/* CELULAR */
 .phone{
   width:220px;
   height:420px;
-  background:#000;
-  border-radius:28px;
-  padding:12px;
-  box-shadow: 0 0 40px rgba(170,85,255,0.6);
+  border:6px solid black;
+  border-radius:30px;
+  background:#111;
+  overflow:hidden;
   position:relative;
-  z-index:2;
+  margin-bottom:25px;
 }
 
-#screen img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: opacity 0.8s ease;
+#screen{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 #screen img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  transition: opacity 0.25s ease-in-out;
+  max-width:100%;
+  max-height:100%;
+  opacity:0;
+  transition:opacity 1s;
 }
 
-@keyframes fadeIn{
-  to{opacity:1;}
-}
-
-/* ===== TEXTO CARREGAMENTO ===== */
+/* TEXTO LOADING */
 .loading-text{
-  position:absolute;
-  bottom:110px;
-  font-size:1.1rem;
-  color:#d6b3ff;
+  margin-bottom:10px;
+  font-size:18px;
+  color:#e0b3ff;
 }
 
-/* ===== BARRA ===== */
+/* BARRA */
 .bar{
-  position:absolute;
-  bottom:70px;
-  width:220px;
-  height:6px;
-  background:rgba(255,255,255,0.15);
-  border-radius:6px;
+  width:200px;
+  height:8px;
+  background:#222;
+  border-radius:10px;
   overflow:hidden;
 }
 
@@ -77,354 +79,127 @@ body{
   display:block;
   height:100%;
   width:0%;
-  background:linear-gradient(90deg,#a855f7,#ec4899);
-  animation: load 13s linear forwards;
+  background:linear-gradient(90deg,#a855f7,#3b82f6);
+  animation:load 12s linear forwards;
 }
 
 @keyframes load{
-  to{width:100%;}
+  to{ width:100%; }
 }
 
-/* ===== ELOGIOS ===== */
-.elogio{
-  position:absolute;
-  font-size:1.3rem;
-  font-weight:bold;
-  opacity:0;
-  animation: fly 6s ease-in-out forwards;
+/* ELOGIOS */
+.word{
+  position:fixed;
+  color:#e9c6ff;
+  font-size:18px;
+  animation:float 6s linear forwards;
 }
 
-@keyframes fly{
-  0%{opacity:0; transform:translateY(30px);}
-  20%{opacity:1;}
-  80%{opacity:1;}
-  100%{opacity:0; transform:translateY(-80px);}
+@keyframes float{
+  from{ opacity:0; transform:translateY(50px); }
+  10%{ opacity:1; }
+  to{ opacity:0; transform:translateY(-100vh); }
 }
 
-/* ===== CORAÇÕES ===== */
-.heart {
-  position: fixed;
-  left: 0;
-  bottom: -40px;
-  font-size: 20px;
-  pointer-events: none;
-  animation: subirCoracao linear forwards;
+/* CORAÇÕES */
+.heart{
+  position:fixed;
+  animation:heart 6s linear forwards;
 }
 
-@keyframes subirCoracao {
-  0% {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  85% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-150vh);
-    opacity: 0;
-  }
-}
-  .hidden {
-  display: none;
+@keyframes heart{
+  from{ opacity:1; transform:translateY(0); }
+  to{ opacity:0; transform:translateY(-100vh); }
 }
 
-#p1{
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 5;
+/* PÁGINA 1 */
+#page1{
+  display:none;
+  height:100vh;
+  padding:30px;
+  overflow-y:auto;
 }
-
-.page1{
-  text-align: center;
-  padding: 20px;
-}
-
-.page1 h1{
-  font-size: 2rem;
-  color: #d6b3ff;
-  margin-bottom: 15px;
-}
-
-.page1 p{
-  font-size: 1.1rem;
-  opacity: 0.9;
-  margin-bottom: 25px;
-}
-
-.page1 button{
-  padding: 12px 28px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 20px;
-  background: linear-gradient(90deg,#a855f7,#ec4899);
-  color: white;
-  cursor: pointer;
-}
-  #p1{
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
-  overflow-y: auto;
-  z-index: 5;
-}
-
-.p1-content{
-  max-width: 420px;
-  margin: auto;
-  padding: 30px 20px 60px;
-}
-
-.texto{
-  font-size: 1.1rem;
-  line-height: 1.7;
-  color: #e9ddff;
-  white-space: pre-wrap;
-  margin-bottom: 40px;
-}
-
-/* ===== GALERIA ===== */
-#galeria img{
-  width: 100%;
-  border-radius: 18px;
-  margin-bottom: 12px;
-  opacity: 0;
-  transition: opacity 1.2s ease;
-}
-
-.legenda{
-  text-align: center;
-  font-size: 0.95rem;
-  margin-bottom: 35px;
-  color: #d6b3ff;
-}
-
-/* ===== BOTÃO PADRÃO ===== */
-.btnPadrao{
-  display: block;
-  margin: 40px auto 0;
-  padding: 14px 34px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 22px;
-  background: linear-gradient(90deg,#7c7cff,#a855f7,#5aa7ff);
-  color: white;
-  cursor: pointer;
-  }
 </style>
 </head>
 
 <body>
 
-<div class="phone">
-  <div class="screen" id="screen"></div>
+<!-- LOADING -->
+<div id="loading">
+  <div class="phone">
+    <div id="screen"></div>
+  </div>
+
+  <div class="loading-text">carregando sua beleza 💜</div>
+  <div class="bar"><span></span></div>
 </div>
 
-<div class="loading-text">Carregando sua beleza…</div>
-  
+<!-- PÁGINA 1 (VAI SER USADA DEPOIS) -->
+<section id="page1">
+  <!-- vamos construir depois -->
 </section>
-  <section id="p1" class="hidden">
-  <div class="p1-content">
 
-    <div id="textoDigitado" class="texto"></div>
-
-    <div id="galeria"></div>
-
-    <button class="btnPadrao" id="btnP1">
-      clique aqui princesinha
-    </button>
-
-  </div>
-    
-  </section>
-  
 <script>
-/* ===== CONFIG ===== */
+/* FOTOS */
 const TOTAL_FOTOS = 20;
-const TEMPO_FOTO = 650; // ms (mais rápido)
-const TEMPO_TOTAL = TOTAL_FOTOS * TEMPO_FOTO;
+const TEMPO_FOTO = 600;
 
-/* ===== FOTOS ===== */
 const fotos = [];
-for (let i = 1; i <= TOTAL_FOTOS; i++) {
+for(let i=1;i<=TOTAL_FOTOS;i++){
   fotos.push(`fotos/foto${i}.jpg`);
 }
 
 let index = 0;
 const screen = document.getElementById("screen");
 
-// cria UMA imagem só
-const img = document.createElement("img");
-img.style.opacity = 0;
-screen.appendChild(img);
+function trocarFoto(){
+  if(index >= fotos.length) return;
 
-function trocarFoto() {
-  // fade out
-  img.style.opacity = 0;
+  const img = document.createElement("img");
+  img.src = fotos[index];
+  screen.innerHTML = "";
+  screen.appendChild(img);
 
-  setTimeout(() => {
-    img.src = fotos[index];
+  setTimeout(()=>img.style.opacity = 1, 50);
 
-    img.onload = () => {
-      img.style.opacity = 1; // fade in
-    };
-
-    index = (index + 1) % fotos.length;
-  }, 800); // tempo do fade-out
-
-  // tempo total que a foto fica
-  setTimeout(trocarFoto, 2800);
+  index++;
+  setTimeout(trocarFoto, TEMPO_FOTO);
 }
-
 trocarFoto();
 
-/* ===== ELOGIOS ===== */
+/* ELOGIOS */
 const elogios = [
-  "Princesa","Linda","Maravilhosa","Perfeita","Cheirosa",
-  "Gostosa","Delícia","Cacheada","Pretinha","Pequena",
-  "Pitica","Hello Kittyzinha","Buxinn","Meu amor",
-  "Meu tudo","Minha vida","Neném","Minha paz",
-  "Coisinha linda","Meu lar"
+"princesa","linda","maravilhosa","perfeita","cheirosa",
+"cacheada","pretinha","pitica","delícia","buxinn",
+"hello kittyzinha","pequena","gostosa"
 ];
 
-const cores = ["#ff7ac8","#b44cff","#5aa7ff"];
-
 setInterval(()=>{
-  for(let i=0;i<4;i++){ // MAIS elogios
-    const e = document.createElement("div");
-    e.className = "elogio";
-    e.innerText = elogios[Math.floor(Math.random()*elogios.length)];
-    e.style.left = Math.random()*80 + "%";
-    e.style.top = Math.random()*80 + "%";
-    e.style.color = cores[Math.floor(Math.random()*cores.length)];
-    document.body.appendChild(e);
-    setTimeout(()=>e.remove(),5000);
-  }
-},500);
+  const w = document.createElement("div");
+  w.className = "word";
+  w.innerText = elogios[Math.floor(Math.random()*elogios.length)];
+  w.style.left = Math.random()*100 + "vw";
+  w.style.top = "100vh";
+  document.body.appendChild(w);
+  setTimeout(()=>w.remove(),6000);
+},300);
 
-/* ===== CORAÇÕES ===== */
-setInterval(() => {
+/* CORAÇÕES */
+setInterval(()=>{
   const h = document.createElement("div");
   h.className = "heart";
   h.innerText = "💜";
-
-  h.style.left = Math.random() * 100 + "vw";
-  h.style.fontSize = (16 + Math.random() * 14) + "px";
-  h.style.animationDuration = (5 + Math.random() * 4) + "s";
-
+  h.style.left = Math.random()*100 + "vw";
+  h.style.fontSize = (16 + Math.random()*12) + "px";
   document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+},250);
 
-  setTimeout(() => {
-    h.remove();
-  }, 10000);
-}, 250);
-  setTimeout(() => {
-  document.body.innerHTML = document.body.innerHTML; // mantém animações ok
-  document.querySelector(".phone").style.display = "none";
-  document.querySelector(".loading-text").style.display = "none";
-  document.querySelector(".bar").style.display = "none";
-
-  document.getElementById("p1").classList.remove("hidden");
-}, 26000); // ajuste conforme o tempo total
-  /* ===== TEXTO DIGITADO ===== */
-const texto = `
-Desde o momento em que você entrou na minha vida,
-tudo ficou mais intenso.
-
-Seu jeito, seu sorriso,
-o jeito que você fala, o jeito que você olha…
-é impossível não querer ficar.
-
-Você é doce, mas também é fogo.
-É carinho, mas também é desejo.
-É calma, mas quando quer,
-vira tempestade.
-
-Eu te admiro.
-Eu te desejo.
-Eu te quero perto.
-
-Cada detalhe seu parece ter sido feito
-pra bagunçar minha cabeça
-e acalmar meu coração ao mesmo tempo.
-
-Se você soubesse o quanto é linda
-quando não está tentando ser…
-talvez entendesse porque eu fico assim por você.
-`;
-
-const elTexto = document.getElementById("textoDigitado");
-let i = 0;
-
-function digitar(){
-  if(i < texto.length){
-    elTexto.innerHTML += texto.charAt(i);
-    i++;
-    setTimeout(digitar, 35);
-  }else{
-    iniciarFotos();
-  }
-}
-
-/* ===== FOTOS + ELOGIOS ===== */
-const elogiosFotos = [
-  "Seu sorriso deveria ser crime",
-  "Você fica linda até sem perceber",
-  "Esse olhar me desmonta",
-  "Você é absurda de bonita",
-  "Você tem um charme que vicia",
-  "Cada detalhe seu é perfeito",
-  "Seu corpo parece arte",
-  "Você consegue ser doce e perigosa",
-  "Você é fogo disfarçado de carinho",
-  "Você é linda até em silêncio",
-  "Você é presença",
-  "Você é vontade",
-  "Você é tentação",
-  "Você é meu ponto fraco",
-  "Você é intensidade pura",
-  "Você é tudo que prende o olhar",
-  "Você bagunça minha mente",
-  "Você é viciante",
-  "Você é diferente de tudo",
-  "você é perigosa do melhor jeito possível"
-];
-
-function iniciarFotos(){
-  const galeria = document.getElementById("galeria");
-
-  for(let i=1;i<=20;i++){
-    const img = document.createElement("img");
-    img.src = `fotos/foto${i}.jpg`;
-
-    const leg = document.createElement("div");
-    leg.className = "legenda";
-    leg.innerText = elogiosFotos[i-1];
-
-    galeria.appendChild(img);
-    galeria.appendChild(leg);
-
-    setTimeout(()=>{
-      img.style.opacity = 1;
-    }, i * 450);
-  }
-}
-
-/* ===== MOSTRAR PÁGINA 1 APÓS LOADING ===== */
+/* TRANSIÇÃO AUTOMÁTICA */
 setTimeout(()=>{
-  document.querySelector(".phone").style.display = "none";
-  document.querySelector(".loading-text").style.display = "none";
-  document.querySelector(".bar").style.display = "none";
-
-  document.getElementById("p1").classList.remove("hidden");
-  digitar();
-}, 26000);
+  document.getElementById("loading").style.display="none";
+  document.getElementById("page1").style.display="block";
+},12000);
 </script>
 
 </body>
