@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carregando sua beleza 💜</title>
+<title>Para você 💜</title>
 
 <style>
-/* RESET */
 *{
   margin:0;
   padding:0;
@@ -14,15 +13,16 @@
   font-family: Arial, sans-serif;
 }
 
-/* FUNDO */
 body{
-  height:100vh;
-  background: linear-gradient(135deg, #2b0040, #4b0082, #0a0a1a);
-  overflow:hidden;
+  background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
   color:white;
+  overflow-x:hidden;
 }
 
-/* LOADING */
+/* ===== HIDDEN ===== */
+.hidden{display:none}
+
+/* ===== LOADING ===== */
 #loading{
   position:fixed;
   inset:0;
@@ -30,176 +30,281 @@ body{
   flex-direction:column;
   align-items:center;
   justify-content:center;
+  overflow:hidden;
 }
 
-/* CELULAR */
 .phone{
   width:220px;
   height:420px;
-  border:6px solid black;
-  border-radius:30px;
-  background:#111;
-  overflow:hidden;
-  position:relative;
-  margin-bottom:25px;
-}
-
-#screen{
-  width:100%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  background:#000;
+  border-radius:28px;
+  padding:12px;
+  box-shadow:0 0 40px rgba(170,85,255,0.6);
+  z-index:2;
 }
 
 #screen img{
-  max-width:100%;
-  max-height:100%;
+  width:100%;
+  height:100%;
+  object-fit:cover;
   opacity:0;
-  transition:opacity 1s;
+  transition:opacity 0.8s;
 }
 
-/* TEXTO LOADING */
 .loading-text{
-  margin-bottom:10px;
-  font-size:18px;
-  color:#e0b3ff;
+  margin-top:20px;
+  color:#d6b3ff;
 }
 
-/* BARRA */
 .bar{
-  width:200px;
-  height:8px;
-  background:#222;
-  border-radius:10px;
+  width:220px;
+  height:6px;
+  background:rgba(255,255,255,0.2);
+  border-radius:6px;
   overflow:hidden;
+  margin-top:10px;
 }
-
 .bar span{
   display:block;
   height:100%;
   width:0%;
   background:linear-gradient(90deg,#a855f7,#3b82f6);
-  animation:load 12s linear forwards;
+  animation:load 13s linear forwards;
+}
+@keyframes load{to{width:100%}}
+
+/* ===== ELOGIOS LOADING ===== */
+.elogio{
+  position:absolute;
+  font-size:1.3rem;
+  font-weight:bold;
+  opacity:0;
+  animation:fly 6s forwards;
+}
+@keyframes fly{
+  0%{opacity:0;transform:translateY(40px)}
+  20%{opacity:1}
+  80%{opacity:1}
+  100%{opacity:0;transform:translateY(-120px)}
 }
 
-@keyframes load{
-  to{ width:100%; }
-}
-
-/* ELOGIOS */
-.word{
-  position:fixed;
-  color:#e9c6ff;
-  font-size:18px;
-  animation:float 6s linear forwards;
-}
-
-@keyframes float{
-  from{ opacity:0; transform:translateY(50px); }
-  10%{ opacity:1; }
-  to{ opacity:0; transform:translateY(-100vh); }
-}
-
-/* CORAÇÕES */
 .heart{
   position:fixed;
-  animation:heart 6s linear forwards;
+  bottom:-40px;
+  animation:heartUp linear forwards;
+  pointer-events:none;
+}
+@keyframes heartUp{
+  0%{opacity:0}
+  10%{opacity:1}
+  100%{transform:translateY(-150vh);opacity:0}
 }
 
-@keyframes heart{
-  from{ opacity:1; transform:translateY(0); }
-  to{ opacity:0; transform:translateY(-100vh); }
-}
-
-/* PÁGINA 1 */
+/* ===== PAGE 1 ===== */
 #page1{
-  display:none;
-  height:100vh;
-  padding:30px;
-  overflow-y:auto;
+  min-height:100vh;
+  padding:60px 20px;
+  max-width:900px;
+  margin:auto;
+}
+
+#texto{
+  font-size:1.4rem;
+  line-height:2;
+  white-space:pre-wrap;
+}
+
+/* ===== FOTOS ===== */
+.foto-bloco{
+  margin:80px 0;
+  text-align:center;
+  opacity:0;
+  transform:translateY(30px);
+  transition:1.2s;
+}
+.foto-bloco.show{
+  opacity:1;
+  transform:translateY(0);
+}
+.foto-bloco img{
+  width:100%;
+  max-width:500px;
+  border-radius:22px;
+}
+.foto-bloco p{
+  margin-top:20px;
+  font-size:1.4rem;
+}
+
+/* ===== BOTÃO PADRÃO ===== */
+.btn{
+  margin:80px auto;
+  display:block;
+  padding:18px 40px;
+  border:none;
+  border-radius:40px;
+  font-size:1.2rem;
+  color:white;
+  cursor:pointer;
+  background:linear-gradient(90deg,#a855f7,#3b82f6);
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOADING -->
-<div id="loading">
+<!-- ===== LOADING ===== -->
+<section id="loading">
   <div class="phone">
     <div id="screen"></div>
   </div>
-
-  <div class="loading-text">carregando sua beleza 💜</div>
+  <div class="loading-text">Carregando sua beleza…</div>
   <div class="bar"><span></span></div>
-</div>
+</section>
 
-<!-- PÁGINA 1 (VAI SER USADA DEPOIS) -->
-<section id="page1">
-  <!-- vamos construir depois -->
+<!-- ===== PAGE 1 ===== -->
+<section id="page1" class="hidden">
+  <div id="texto"></div>
+
+  <div id="fotos"></div>
+
+  <button class="btn">clique aqui princesinha</button>
 </section>
 
 <script>
-/* FOTOS */
-const TOTAL_FOTOS = 20;
-const TEMPO_FOTO = 600;
+/* ===== LOADING FOTOS ===== */
+const screen=document.getElementById("screen");
+const img=document.createElement("img");
+screen.appendChild(img);
 
-const fotos = [];
-for(let i=1;i<=TOTAL_FOTOS;i++){
-  fotos.push(`fotos/foto${i}.jpg`);
+let lf=1;
+function troca(){
+  img.style.opacity=0;
+  setTimeout(()=>{
+    img.src=`fotos/foto${lf}.jpg`;
+    img.onload=()=>img.style.opacity=1;
+    lf=lf<20?lf+1:1;
+  },400);
+  setTimeout(troca,600);
 }
+troca();
 
-let index = 0;
-const screen = document.getElementById("screen");
-
-function trocarFoto(){
-  if(index >= fotos.length) return;
-
-  const img = document.createElement("img");
-  img.src = fotos[index];
-  screen.innerHTML = "";
-  screen.appendChild(img);
-
-  setTimeout(()=>img.style.opacity = 1, 50);
-
-  index++;
-  setTimeout(trocarFoto, TEMPO_FOTO);
-}
-trocarFoto();
-
-/* ELOGIOS */
-const elogios = [
-"princesa","linda","maravilhosa","perfeita","cheirosa",
-"cacheada","pretinha","pitica","delícia","buxinn",
-"hello kittyzinha","pequena","gostosa"
-];
+/* ===== ELOGIOS + CORAÇÕES ===== */
+const elogios=["Princesa","Linda","Maravilhosa","Perfeita","Cheirosa","Gostosa","Delícia","Cacheada","Pretinha","Pitica","Hello Kittyzinha","Meu amor"];
+const cores=["#ff7ac8","#b44cff","#5aa7ff"];
 
 setInterval(()=>{
-  const w = document.createElement("div");
-  w.className = "word";
-  w.innerText = elogios[Math.floor(Math.random()*elogios.length)];
-  w.style.left = Math.random()*100 + "vw";
-  w.style.top = "100vh";
-  document.body.appendChild(w);
-  setTimeout(()=>w.remove(),6000);
-},300);
+  for(let i=0;i<4;i++){
+    const e=document.createElement("div");
+    e.className="elogio";
+    e.innerText=elogios[Math.random()*elogios.length|0];
+    e.style.left=Math.random()*80+"%";
+    e.style.top=Math.random()*80+"%";
+    e.style.color=cores[Math.random()*cores.length|0];
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),6000);
+  }
+},500);
 
-/* CORAÇÕES */
 setInterval(()=>{
-  const h = document.createElement("div");
-  h.className = "heart";
-  h.innerText = "💜";
-  h.style.left = Math.random()*100 + "vw";
-  h.style.fontSize = (16 + Math.random()*12) + "px";
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="💜";
+  h.style.left=Math.random()*100+"vw";
+  h.style.fontSize=16+Math.random()*14+"px";
+  h.style.animationDuration=5+Math.random()*4+"s";
   document.body.appendChild(h);
-  setTimeout(()=>h.remove(),6000);
+  setTimeout(()=>h.remove(),9000);
 },250);
 
-/* TRANSIÇÃO AUTOMÁTICA */
+/* ===== TRANSIÇÃO ===== */
 setTimeout(()=>{
-  document.getElementById("loading").style.display="none";
-  document.getElementById("page1").style.display="block";
-},12000);
+  document.getElementById("loading").classList.add("hidden");
+  document.getElementById("page1").classList.remove("hidden");
+  escreverTexto();
+},13000);
+
+/* ===== TEXTO ===== */
+const textoCompleto=
+`Amar você nunca foi esforço.
+Foi encontro.
+
+Você chegou com esse jeito calmo,
+esse olhar que prende,
+esse sorriso que desarma,
+e sem perceber virou casa.
+
+Você é delicada sem ser fraca,
+forte sem perder a doçura,
+intensa na medida que deixa tudo mais vivo.
+Tem algo em você que não pede atenção,
+mas domina qualquer ambiente.
+
+Seu corpo é bonito,
+mas é o jeito que você existe nele
+que me deixa completamente perdido.
+Seu toque é tranquilo,
+mas carrega um desejo que arrepia.
+
+Com você, até o silêncio conversa.
+Até o tempo desacelera.
+Até o mundo faz sentido.
+
+E se eu tivesse que escolher de novo,
+entre todos os caminhos,
+eu escolheria você —
+sempre você.`
+
+let i=0;
+function escreverTexto(){
+  const el=document.getElementById("texto");
+  const interval=setInterval(()=>{
+    el.innerHTML+=textoCompleto.charAt(i);
+    i++;
+    if(i>=textoCompleto.length){
+      clearInterval(interval);
+      mostrarFotos();
+    }
+  },35);
+}
+
+/* ===== FOTOS PAGE 1 ===== */
+const frases=[
+  "Seu sorriso é o meu lugar seguro.",
+  "Você tem uma beleza que acalma.",
+  "Seu olhar fala comigo.",
+  "Você é leveza e desejo.",
+  "Tudo em você é detalhe bonito.",
+  "Seu jeito me prende.",
+  "Você é abrigo.",
+  "Seu corpo é poesia.",
+  "Você é intensidade boa.",
+  "Seu riso me desmonta.",
+  "Você é calma e fogo.",
+  "Seu toque é verdade.",
+  "Você é presença.",
+  "Seu charme é natural.",
+  "Você é irresistível.",
+  "Você é minha escolha.",
+  "Você é minha paz.",
+  "Você é meu vício bom.",
+  "Você é meu lar.",
+  "você é perigosa do melhor jeito possível"
+];
+
+function mostrarFotos(){
+  const c=document.getElementById("fotos");
+  for(let j=1;j<=20;j++){
+    const b=document.createElement("div");
+    b.className="foto-bloco";
+    b.innerHTML=`
+      <img src="fotos/foto${j}.jpg">
+      <p>${frases[j-1]}</p>
+    `;
+    c.appendChild(b);
+    setTimeout(()=>b.classList.add("show"),j*400);
+  }
+}
 </script>
 
 </body>
