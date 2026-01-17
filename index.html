@@ -169,6 +169,96 @@ body{
   .coracao-bloco{
   margin:70px 0;
   }
+  /* ===== PAGE 3 ===== */
+#page3{
+  min-height:100vh;
+  padding:40px 16px 80px;
+  max-width:900px;
+  margin:auto;
+  text-align:center;
+}
+
+.titulo-jogo{
+  font-size:2rem;
+  margin-bottom:16px;
+}
+
+.regras{
+  font-size:1rem;
+  opacity:.9;
+  margin-bottom:24px;
+}
+
+.grid-jogo{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:40px;
+}
+
+/* ===== CARTA ===== */
+.carta{
+  aspect-ratio:1/1;
+  perspective:800px;
+}
+
+.carta-inner{
+  width:100%;
+  height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .6s;
+}
+
+.carta.virada .carta-inner{
+  transform:rotateY(180deg);
+}
+
+.face{
+  position:absolute;
+  inset:0;
+  border-radius:16px;
+  backface-visibility:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.6rem;
+}
+
+/* frente */
+.frente{
+  background:linear-gradient(135deg,#a855f7,#6b21a8);
+}
+
+/* verso */
+.verso{
+  background:#120020;
+  transform:rotateY(180deg);
+  padding:8px;
+}
+
+.verso img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:12px;
+}
+
+.verso span{
+  font-size:.9rem;
+  line-height:1.4;
+}
+
+/* mobile ajuste */
+@media(max-width:500px){
+  .grid-jogo{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+#btnNextPage{
+  display:none;
+    }
 </style>
 </head>
 
@@ -192,6 +282,22 @@ body{
 <section id="page2" class="hidden">
   <div id="finalFotos"></div>
   <button class="btn" id="btnVoltar">clique aqui princesinha</button>
+</section>
+
+  <!-- PAGE 3 -->
+<section id="page3" class="hidden">
+  <h1 class="titulo-jogo">O jogo sobre você</h1>
+
+  <div class="regras">
+    <p>💜 Encontre os pares corretos</p>
+    <p>📷 Cada foto tem uma frase</p>
+    <p>❌ Errou? Tente de novo</p>
+    <p>✅ Acertou? O coração se abre</p>
+  </div>
+
+  <div id="jogoMemoria" class="grid-jogo"></div>
+
+  <button class="btn" id="btnNextPage">Próxima página 💜</button>
 </section>
 
 <script>
@@ -373,9 +479,88 @@ function mostrarFotos(){
 
 document.getElementById("btnVoltar").onclick = () => {
   document.getElementById("page2").classList.add("hidden");
-  document.getElementById("page1").classList.remove("hidden");
+  document.getElementById("page3").classList.remove("hidden");
   window.scrollTo(0,0);
 };
+  /* ===== JOGO DA MEMÓRIA ===== */
+
+const pares = [
+  { img:"Jogo/foto1.jpg", texto:"Você cuida da sua beleza com tanto carinho que dá pra ver: não é vaidade, é amor por quem você é." },
+
+  { img:"Jogo/foto2.jpg", texto:"Suas brincadeiras têm o dom de deixar qualquer dia mais leve, como se rir com você fosse inevitável." },
+
+  { img:"Jogo/foto3.jpg", texto:"Seu sorriso chega antes de você e fica depois, iluminando tudo ao redor sem pedir permissão." },
+
+  { img:"Jogo/foto4.jpg", texto:"Seu corpo é bonito, mas é a forma como você existe nele que faz tudo ficar ainda mais especial." },
+
+  { img:"Jogo/foto5.jpg", texto:"Tem uma fofura em você que não se explica, só se sente — e eu sinto o tempo todo." },
+
+  { img:"Jogo/foto6.jpg", texto:"Seus cachos parecem carregar sua personalidade: livres, marcantes e impossíveis de ignorar." },
+
+  { img:"Jogo/foto7.jpg", texto:"Você é maravilhosamente aleatória, e é exatamente isso que faz cada momento ao seu lado ser único." },
+
+  { img:"Jogo/foto8.jpg", texto:"Seu estilo não segue tendência nenhuma, ele simplesmente combina com quem você é." },
+
+  { img:"Jogo/foto9.jpg", texto:"My spider girl ❤️🕷️ — única, forte e linda do seu próprio jeito, presa só ao que realmente importa." },
+
+  { img:"Jogo/foto10.jpg", texto:"Seus olhos falam antes da sua voz, e sempre dizem mais do que qualquer palavra conseguiria." }
+];
+
+const cartas = [];
+pares.forEach((p,i)=>{
+  cartas.push({ tipo:"img", valor:p.img, id:i });
+  cartas.push({ tipo:"txt", valor:p.texto, id:i });
+});
+
+cartas.sort(()=>Math.random()-0.5);
+
+const jogo = document.getElementById("jogoMemoria");
+let primeira=null, bloqueio=false, acertos=0;
+
+cartas.forEach(c=>{
+  const card=document.createElement("div");
+  card.className="carta";
+
+  card.innerHTML=`
+    <div class="carta-inner">
+      <div class="face frente">💜</div>
+      <div class="face verso">
+        ${c.tipo==="img"
+          ? `<img src="${c.valor}">`
+          : `<span>${c.valor}</span>`}
+      </div>
+    </div>
+  `;
+
+  card.onclick=()=>{
+    if(bloqueio || card.classList.contains("virada")) return;
+    card.classList.add("virada");
+
+    if(!primeira){
+      primeira={card,id:c.id};
+    }else{
+      bloqueio=true;
+      if(primeira.id===c.id){
+        acertos++;
+        primeira=null;
+        bloqueio=false;
+
+        if(acertos===pares.length){
+          document.getElementById("btnNextPage").style.display="block";
+        }
+      }else{
+        setTimeout(()=>{
+          card.classList.remove("virada");
+          primeira.card.classList.remove("virada");
+          primeira=null;
+          bloqueio=false;
+        },900);
+      }
+    }
+  };
+
+  jogo.appendChild(card);
+});
 </script>
 
 </body>
