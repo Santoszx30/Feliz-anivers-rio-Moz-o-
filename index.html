@@ -274,6 +274,46 @@ body{
   object-fit:cover;
   border-radius:12px;
   }
+  .coracao-pop{
+  position:fixed;
+  font-size:22px;
+  pointer-events:none;
+  animation:pop 1.4s ease-out forwards;
+}
+
+@keyframes pop{
+  0%{
+    transform:scale(.5) translateY(0);
+    opacity:0;
+  }
+  30%{
+    opacity:1;
+  }
+  100%{
+    transform:scale(1.4) translateY(-120px);
+    opacity:0;
+  }
+}
+  .erro-msg{
+  position:fixed;
+  top:20%;
+  left:50%;
+  transform:translateX(-50%);
+  background:#2a0050;
+  padding:16px 28px;
+  border-radius:30px;
+  font-size:1.4rem;
+  z-index:9999;
+  animation:shake .6s;
+}
+
+@keyframes shake{
+  0%{transform:translateX(-50%)}
+  25%{transform:translateX(-55%)}
+  50%{transform:translateX(-45%)}
+  75%{transform:translateX(-55%)}
+  100%{transform:translateX(-50%)}
+}
 </style>
 </head>
 
@@ -576,6 +616,39 @@ cartas.forEach(c=>{
 
   jogo.appendChild(card);
 });
+  function explodirCoracoes(x, y){
+  for(let i=0;i<12;i++){
+    const c = document.createElement("div");
+    c.className = "coracao-pop";
+    c.innerText = "💜";
+    c.style.left = x + (Math.random()*80-40) + "px";
+    c.style.top = y + (Math.random()*80-40) + "px";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),1400);
+  }
+      }
+  if(primeira.id===c.id){
+  acertos++;
+
+  const rect = card.getBoundingClientRect();
+  explodirCoracoes(rect.left + rect.width/2, rect.top);
+
+  primeira=null;
+  bloqueio=false;
+
+  if(acertos===pares.length){
+    document.getElementById("btnNextPage").style.display="block";
+  }
+  }
+  }else{
+  setTimeout(()=>{
+    card.classList.remove("virada");
+    primeira.card.classList.remove("virada");
+    mostrarErro();
+    primeira=null;
+    bloqueio=false;
+  },900);
+  }
 </script>
 
 </body>
