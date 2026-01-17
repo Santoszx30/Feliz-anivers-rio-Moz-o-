@@ -153,51 +153,6 @@ body{
   margin:auto;
 }
 
-.coracao-bloco{
-  margin:90px 0;
-  text-align:center;
-  opacity:0;
-  transform:translateY(30px);
-  transition:1.2s;
-}
-
-.coracao-bloco.show{
-  opacity:1;
-  transform:translateY(0);
-}
-
-.coracao{
-  width:320px;
-  height:320px;
-  margin:auto;
-  position:relative;
-  transform:rotate(-45deg);
-  overflow:hidden;
-}
-
-/* partes vermelhas */
-.coracao::before,
-.coracao::after{
-  content:"";
-  width:320px;
-  height:320px;
-  background:red;
-  border-radius:50%;
-  position:absolute;
-  z-index:1; /* 👈 IMPORTANTE */
-}
-
-.coracao::before{
-  top:-160px;
-  left:0;
-}
-
-.coracao::after{
-  left:160px;
-  top:0;
-}
-
-/* imagem */
 .coracao img{
   position:absolute;
   inset:0;
@@ -206,12 +161,7 @@ body{
   object-fit:cover;
   transform:rotate(45deg) scale(1);
   z-index:2;
-  }
-
-.coracao-bloco p{
-  margin-top:30px;
-  font-size:1.4rem;
-  }
+}
 </style>
 </head>
 
@@ -392,11 +342,9 @@ function mostrarFotos(){
     bloco.className = "coracao-bloco";
 
     bloco.innerHTML = `
-      <div class="coracao">
-        <img src="final/casal${i+1}.jpg">
-      </div>
-      <p>${f}</p>
-    `;
+  <img src="final/casal${i+1}.jpg">
+  <p>${f}</p>
+`;
 
     cont.appendChild(bloco);
 
