@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surpresa</title>
+<style>
+body, html {
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+  background:#0b0016;
+  color:white;
+  overflow-x:hidden;
+}
+
+/* ================== LOADING ================== */
+#loading {
+  position:fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
+  z-index:9999;
+}
+
+.phone {
+  width:220px;
+  height:420px;
+  background:#000;
+  border-radius:28px;
+  padding:12px;
+  box-shadow:0 0 40px rgba(180,0,255,0.6);
+  position:relative;
+  overflow:hidden;
+}
+
+#screen {
+  width:100%;
+  height:100%;
+  position:relative;
+}
+
+#screen img {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 1.2s ease;
+}
+
+#screen img.active { opacity:1; }
+
+.loading-text {
+  margin-top:20px;
+  color:#d6b3ff;
+  font-size:1.2rem;
+  text-align:center;
+}
+
+.bar {
+  width:220px;
+  height:6px;
+  background:rgba(255,255,255,0.2);
+  border-radius:6px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.bar span {
+  display:block;
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#a855f7,#3b82f6);
+  animation:load 36s linear forwards;
+}
+
+@keyframes load { to { width:100%; } }
+
+.elogio {
+  position:absolute;
+  font-size:1.3rem;
+  font-weight:bold;
+  opacity:0;
+  animation:fly 6s forwards;
+}
+
+@keyframes fly {
+  0% {opacity:0; transform:translateY(40px);}
+  20% {opacity:1;}
+  80% {opacity:1;}
+  100% {opacity:0; transform:translateY(-120px);}
+}
+
+.heart {
+  position:absolute;
+  bottom:-40px;
+  animation:heartUp linear forwards;
+  pointer-events:none;
+}
+
+@keyframes heartUp {
+  0% {opacity:0;}
+  10% {opacity:1;}
+  100% {transform:translateY(-150vh);opacity:0;}
+}
+
+/* ================== PAGES ================== */
+.hidden { display:none; }
+
+.page {
+  min-height:100vh;
+  padding:40px 20px;
+  max-width:800px;
+  margin:auto;
+  background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
+  color:white;
+  overflow-y:auto;
+}
+
+#texto {
+  font-size:1.5rem;
+  line-height:2;
+  white-space:pre-wrap;
+  margin-bottom:30px;
+}
+
+.foto-bloco {
+  margin:40px 0;
+  opacity:0;
+  transform:translateY(30px);
+  transition:opacity 1s, transform 1s;
+  text-align:center;
+}
+
+.foto-bloco.show { opacity:1; transform:translateY(0); }
+
+.foto-bloco img {
+  width:90%;
+  max-width:500px;
+  border-radius:16px;
+  margin-bottom:12px;
+  box-shadow:0 0 20px rgba(180,0,255,0.3);
+}
+
+.foto-bloco p { font-size:1.2rem; }
+
+.btn {
+  display:none;
+  margin:40px auto;
+  padding:16px 32px;
+  font-size:1.2rem;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#9b4dff,#d08cff);
+  color:white;
+  cursor:pointer;
+  box-shadow:0 0 15px rgba(180,0,255,0.6);
+}
+</style>
+</head>
+<body>
+
+<!-- ================== LOADING ================== -->
+<section id="loading">
+  <div class="phone">
+    <div id="screen"></div>
+  </div>
+  <div class="loading-text">Carregando sua beleza…</div>
+  <div class="bar"><span></span></div>
+</section>
+
+<!-- ================== PÁGINA 1 ================== -->
+<section id="page1" class="page hidden">
+  <div id="texto"></div>
+  <div id="fotos"></div>
+  <button class="btn" id="btnFinal">Clique aqui princesinha 💜</button>
+</section>
+
+<!-- ================== PÁGINA 2 ================== -->
+<section id="page2" class="page hidden">
+  <div id="texto2"></div>
+  <div id="fotos2"></div>
+  <button class="btn" id="btnFinal2">Clique aqui princesinha 💜</button>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
+  /* ================== LOADING ================== */
+  const TOTAL_FOTOS = 20;
+  const elogios=["Princesa","Linda","Maravilhosa","Perfeita","Cheirosa","Gostosa","Delícia","Cacheada","Pretinha","Pitica","Hello Kittyzinha","Meu amor"];
+  const cores=["#ff7ac8","#b44cff","#5aa7ff"];
+  const loading=document.getElementById("loading");
+  const screen=document.getElementById("screen");
+
+  const imgA=document.createElement("img");
+  const imgB=document.createElement("img");
+  screen.appendChild(imgA);
+  screen.appendChild(imgB);
+  let atual=imgA, proxima=imgB, iFoto=1;
+
+  function trocarFoto(){
+    proxima.src=`fotos/foto${iFoto}.jpg`;
+    proxima.onload=proxima.onerror=()=>{
+      proxima.classList.add("active");
+      atual.classList.remove("active");
+      [atual,proxima]=[proxima,atual];
+    };
+    iFoto = iFoto < TOTAL_FOTOS ? iFoto+1 : 1;
+  }
+  trocarFoto();
+  setInterval(trocarFoto,1800);
+
+  const elogioInterval=setInterval(()=>{
+    for(let i=0;i<3;i++){
+      const e=document.createElement("div");
+      e.className="elogio";
+      e.innerText=elogios[Math.floor(Math.random()*elogios.length)];
+      e.style.left=Math.random()*80+"%";
+      e.style.top=Math.random()*80+"%";
+      e.style.color=cores[Math.floor(Math.random()*cores.length)];
+      loading.appendChild(e);
+      setTimeout(()=>e.remove(),6000);
+    }
+  },500);
+
+  const heartInterval=setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerText="💜";
+    h.style.left=Math.random()*100+"%";
+    h.style.fontSize=16+Math.random()*14+"px";
+    h.style.animationDuration=5+Math.random()*4+"s";
+    loading.appendChild(h);
+    setTimeout(()=>h.remove(),9000);
+  },300);
+
+  setTimeout(()=>{
+    clearInterval(elogioInterval);
+    clearInterval(heartInterval);
+    loading.remove();
+    startPage1(); // chama a página 1
+  },36000);
+
+  /* ================== PÁGINA 1 ================== */
+  function startPage1(){
+    const page1 = document.getElementById("page1");
+    const elTexto = document.getElementById("texto");
+    const containerFotos = document.getElementById("fotos");
+    const btnFinal = document.getElementById("btnFinal");
+
+    page1.classList.remove("hidden");
+
+    const textoCompleto = `Amar você nunca foi esforço.
+Foi encontro.
+
+Você chegou com esse jeito calmo,
+esse olhar que prende,
+esse sorriso que desarma,
+e virou casa.
+
+Seu corpo é bonito,
+mas é o jeito que você existe nele
+que me deixa completamente perdido.
+
+Com você, tudo faz sentido.
+E eu escolheria você
+todas as vezes.`;
+
+    const frases = [
+      "Seu sorriso é o meu lugar seguro.",
+      "Você tem uma beleza que acalma.",
+      "Seu olhar fala comigo.",
+      "Você é leveza e desejo.",
+      "Tudo em você é detalhe bonito.",
+      "Seu jeito me prende.",
+      "Você é abrigo.",
+      "Seu corpo é poesia.",
+      "Você é intensidade boa.",
+      "Seu riso me desmonta.",
+      "Você é calma e fogo.",
+      "Seu toque é verdade.",
+      "Você é presença.",
+      "Seu charme é natural.",
+      "Você é irresistível.",
+      "Você é minha escolha.",
+      "Você é minha paz.",
+      "Você é meu vício bom.",
+      "Você é meu lar.",
+      "Você é perigosa do melhor jeito possível"
+    ];
+
+    function digitarTexto(i=0){
+      if(i < textoCompleto.length){
+        elTexto.innerHTML += textoCompleto.charAt(i);
+        setTimeout(()=>digitarTexto(i+1),35);
+      } else { mostrarFotos(); }
+    }
+
+    function mostrarFotos(index=0){
+      if(index >= frases.length){
+        btnFinal.style.display="block";
+        return;
+      }
+
+      const bloco = document.createElement("div");
+      bloco.className="foto-bloco";
+
+      const img = document.createElement("img");
+      img.src=`fotos/foto${index+1}.jpg`;
+
+      const p = document.createElement("p");
+      p.textContent = frases[index];
+
+      bloco.append(img,p);
+      containerFotos.appendChild(bloco);
+
+      img.onload = img.onerror = ()=>{
+        bloco.classList.add("show");
+        setTimeout(()=>mostrarFotos(index+1),300);
+      };
+    }
+
+    digitarTexto();
+
+    btnFinal.onclick = ()=>{
+      page1.style.display="none";
+      document.getElementById("page2").style.display="block";
+      window.scrollTo(0,0);
+      startPage2();
+    };
+  }
+
+  /* ================== PÁGINA 2 ================== */
+  function startPage2(){
+    const page2 = document.getElementById("page2");
+    const containerFotos2 = document.getElementById("fotos2");
+    const btnFinal2 = document.getElementById("btnFinal2");
+    page2.classList.remove("hidden");
+
+    const frases2 = [
+      "Cada momento com você é inesquecível.",
+      "Seu sorriso me ilumina.",
+      "Com você, tudo é mais bonito.",
+      "Você é meu lar e meu refúgio.",
+      "Seu abraço é meu abrigo.",
+      "Eu amo cada detalhe seu.",
+      "Você é minha felicidade."
+    ];
+
+    function mostrarFotos2(index=0){
+      if(index >= frases2.length){
+        btnFinal2.style.display="block";
+        return;
+      }
+
+      const bloco = document.createElement("div");
+      bloco.className="foto-bloco";
+
+      const img = document.createElement("img");
+      img.src=`final/casal${index+1}.jpg`;
+
+      const p = document.createElement("p");
+      p.textContent = frases2[index];
+
+      bloco.append(img,p);
+      containerFotos2.appendChild(bloco);
+
+      img.onload = img.onerror = ()=>{
+        bloco.classList.add("show");
+        setTimeout(()=>mostrarFotos2(index+1),500);
+      };
+    }
+
+    mostrarFotos2();
+  }
+
+});
+</script>
+</body>
+  </html>
