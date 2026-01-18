@@ -395,7 +395,7 @@ body{
 
   <div id="jogoMemoria" class="grid-jogo"></div>
 
-  <button class="btn" id="btnNextPage">Clique aqui princesa💜</button>
+l  <button class="btn" id="btnNextPage">Clique aqui princesa💜</button>
 </section>
 
   <section id="page4" class="hidden">
@@ -688,7 +688,7 @@ cartas.forEach(c=>{
     setTimeout(()=>c.remove(),1400);
   }
       }
-  function mostrarErro(){
+  funcll(){
   const msg = document.createElement("div");
   msg.innerText = "Muito burra KKKKKKKK";
   msg.style.position = "fixed";
@@ -757,86 +757,70 @@ const conteudosPage4 = [
     texto:"Mesmo quando faltam palavras, eu entendo. Porque o que você sente chega antes de qualquer explicação. Saber que sou esse lugar seguro pra você me faz sentir em casa também. Em meio a qualquer confusão, é reconfortante saber que existe esse sentimento firme entre nós — simples, verdadeiro e cheio de sentido."
   }
 ];
+<script>
+document.addEventListener("DOMContentLoaded", () => {
 
-let indice = 0;
+  let indice = 0;
 
-function iniciarPage4(){
-  container.innerHTML = "";
-  indice = 0;
-  mostrarProximo();
-}
+  function iniciarPage4(){
+    const container = document.getElementById("sequencia");
+    container.innerHTML = "";
+    indice = 0;
+    mostrarProximo();
+  }
 
-function digitarTexto(elemento, texto, callback){
-  const intervalo = setInterval(()=>{
-    elemento.innerHTML += texto.charAt(i);
-    i++;
-    if(i >= texto.length){
-      clearInterval(intervalo);
-      setTimeout(callback, 800);
+  function digitarTexto(elemento, texto, callback){
+    let i = 0;
+    const intervalo = setInterval(()=>{
+      elemento.innerHTML += texto.charAt(i);
+      i++;
+      if(i >= texto.length){
+        clearInterval(intervalo);
+        setTimeout(callback, 800);
+      }
+    }, 35);
+  }
+
+  function mostrarProximo(){
+    const container = document.getElementById("sequencia");
+
+    if(indice >= conteudosPage4.length){
+      document.getElementById("btnPage5").classList.remove("hidden");
+      return;
     }
-  },35);
-}
 
-function mostrarProximo(){
-const container = document.getElementById("sequencia");
-let indice = 0;
+    const bloco = document.createElement("div");
+    bloco.className = "bloco";
 
-function iniciarPage4(){
-  container.innerHTML = "";
-  indice = 0;
-  mostrarProximo();
-}
+    const img = document.createElement("img");
+    img.src = conteudosPage4[indice].img;
 
-function digitarTexto(elemento, texto, callback){
-  let i = 0; // ✅ AGORA EXISTE
-  const intervalo = setInterval(()=>{
-    elemento.innerHTML += texto.charAt(i);
-    i++;
-    if(i >= texto.length){
-      clearInterval(intervalo);
-      setTimeout(callback, 800);
+    const textoDiv = document.createElement("div");
+    textoDiv.className = "texto-digitando";
+
+    bloco.appendChild(img);
+    bloco.appendChild(textoDiv);
+    container.appendChild(bloco);
+
+    function iniciarTexto(){
+      digitarTexto(textoDiv, conteudosPage4[indice].texto, ()=>{
+        indice++;
+        mostrarProximo();
+      });
     }
-  },35);
-}
 
-function mostrarProximo(){
-
-  if(indice >= conteudosPage4.length){
-    document.getElementById("btnPage5").classList.remove("hidden");
-    return;
+    img.onload = iniciarTexto;
+    img.onerror = iniciarTexto;
   }
 
-  const bloco = document.createElement("div");
-  bloco.className = "bloco";
+  // botão page 5
+  document.getElementById("btnPage5").onclick = ()=>{
+    document.getElementById("page4").classList.add("hidden");
+    document.getElementById("page5").classList.remove("hidden");
+    window.scrollTo(0,0);
+  };
 
-  const img = document.createElement("img");
-  img.src = conteudosPage4[indice].img;
-
-  const textoDiv = document.createElement("div");
-  textoDiv.className = "texto-digitando";
-
-  bloco.appendChild(img);
-  bloco.appendChild(textoDiv);
-  container.appendChild(bloco);
-
-  function iniciarTexto(){
-    digitarTexto(textoDiv, conteudosPage4[indice].texto, ()=>{
-      indice++;
-      mostrarProximo();
-    });
-  }
-
-  img.onload = iniciarTexto;
-  img.onerror = iniciarTexto;
-  }
-
-
-/* BOTÃO PAGE 5 */
-document.getElementById("btnPage5").onclick = ()=>{
-  document.getElementById("page4").classList.add("hidden");
-  document.getElementById("page5").classList.remove("hidden");
-  window.scrollTo(0,0);
-};
+});
 </script>
 
 </body>
