@@ -715,7 +715,14 @@ cartas.forEach(c=>{
     setTimeout(()=>msg.remove(),300);
   },1200);
   }
-  <script>
+  document.getElementById("btnNextPage").onclick = ()=>{
+  document.getElementById("page3").classList.add("hidden");
+  document.getElementById("page4").classList.remove("hidden");
+  window.scrollTo(0,0);
+
+  iniciarPage4(); // 💜 AQUI
+};
+  
 const conteudosPage4 = [
   {
     img:"textos/texto1.jpg",
@@ -751,8 +758,14 @@ const conteudosPage4 = [
   }
 ];
 
-const container = document.getElementById("sequencia");
 let indice = 0;
+
+function iniciarPage4(){
+  const container = document.getElementById("sequencia");
+  container.innerHTML = "";
+  indice = 0;
+  mostrarProximo();
+}
 
 function digitarTexto(elemento, texto, callback){
   let i = 0;
