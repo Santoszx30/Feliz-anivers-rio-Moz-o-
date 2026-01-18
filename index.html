@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carregamento e Página 1</title>
+<title>Loading e Página 1</title>
 <style>
-/* ===== GERAL ===== */
+/* ====== Estilos Globais ====== */
 body, html {
   margin:0;
   padding:0;
-  font-family: Arial, sans-serif;
-  background: #0b0016;
-  color: white;
-  overflow-x: hidden;
+  font-family:Arial,sans-serif;
+  background:#0b0016;
+  overflow-x:hidden;
 }
 
-/* ===== LOADING ===== */
+/* ====== Tela de Loading ====== */
 #loading {
   position:fixed;
   inset:0;
@@ -112,14 +111,15 @@ body, html {
   100% {transform:translateY(-150vh);opacity:0;}
 }
 
-/* ===== PÁGINA 1 ===== */
+/* ====== Página 1 ====== */
 #page1 {
-  display:none; /* só aparece depois do loading */
+  display:none;
   min-height:100vh;
   padding:40px 20px;
   max-width:800px;
   margin:auto;
   background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
+  color:white;
   overflow-y:auto;
 }
 
@@ -171,7 +171,7 @@ body, html {
 </head>
 <body>
 
-<!-- ===== LOADING ===== -->
+<!-- ====== Loading ====== -->
 <section id="loading">
   <div class="phone">
     <div id="screen"></div>
@@ -180,7 +180,7 @@ body, html {
   <div class="bar"><span></span></div>
 </section>
 
-<!-- ===== PÁGINA 1 ===== -->
+<!-- ====== Página 1 ====== -->
 <section id="page1">
   <div id="texto"></div>
   <div id="fotos"></div>
@@ -190,14 +190,13 @@ body, html {
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
 
-  /* ===== LOADING ===== */
   const TOTAL_FOTOS = 20;
   const elogios=["Princesa","Linda","Maravilhosa","Perfeita","Cheirosa","Gostosa","Delícia","Cacheada","Pretinha","Pitica","Hello Kittyzinha","Meu amor"];
   const cores=["#ff7ac8","#b44cff","#5aa7ff"];
   const loading=document.getElementById("loading");
   const screen=document.getElementById("screen");
 
-  // Criar imagens alternadas
+  // Criar imagens para alternar
   const imgA=document.createElement("img");
   const imgB=document.createElement("img");
   screen.appendChild(imgA);
@@ -247,11 +246,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
     clearInterval(elogioInterval);
     clearInterval(heartInterval);
     loading.remove();
-    startPage1(); // chama a página 1
+    startPage1();
   },36000);
 
-  /* ===== FUNÇÃO PÁGINA 1 ===== */
-  function startPage1(){
+  function startPage1() {
     const page1 = document.getElementById("page1");
     const elTexto = document.getElementById("texto");
     const containerFotos = document.getElementById("fotos");
@@ -300,19 +298,18 @@ todas as vezes.`;
       "Você é perigosa do melhor jeito possível"
     ];
 
-    // Digitar texto letra por letra
-    function digitarTexto(i=0){
-      if(i < textoCompleto.length){
+    function digitarTexto(i=0) {
+      if(i < textoCompleto.length) {
         elTexto.innerHTML += textoCompleto.charAt(i);
         setTimeout(()=>digitarTexto(i+1),35);
       } else {
-        mostrarFotos(); // depois que termina, mostrar fotos
+        mostrarFotos(); // mostra fotos depois do texto
       }
     }
 
-    function mostrarFotos(index=0){
-      if(index >= frases.length){
-        btnFinal.style.display="block";
+    function mostrarFotos(index=0) {
+      if(index >= frases.length) {
+        btnFinal.style.display="block"; // botão aparece só no final
         return;
       }
 
@@ -328,7 +325,11 @@ todas as vezes.`;
       bloco.append(img,p);
       containerFotos.appendChild(bloco);
 
-      img.onload = img.onerror = () => {
+      img.onload = () => {
+        bloco.classList.add("show");
+        setTimeout(()=>mostrarFotos(index+1),300);
+      };
+      img.onerror = () => {
         bloco.classList.add("show");
         setTimeout(()=>mostrarFotos(index+1),300);
       };
@@ -337,7 +338,7 @@ todas as vezes.`;
     digitarTexto();
 
     btnFinal.onclick = () => {
-      alert("Aqui você pode conectar com página 2!");
+      window.location.href = "pagina2.html"; // vai para a página 2
     };
   }
 
