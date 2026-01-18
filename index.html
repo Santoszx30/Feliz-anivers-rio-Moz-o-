@@ -624,29 +624,6 @@ cartas.forEach(c=>{
   }
 };
 
-    if(!primeira){
-      primeira={card,id:c.id};
-    }else{
-      bloqueio=true;
-      if(primeira.id===c.id){
-        acertos++;
-        primeira=null;
-        bloqueio=false;
-
-        if(acertos===pares.length){
-          document.getElementById("btnNextPage").style.display="block";
-        }
-      }else{
-        setTimeout(()=>{
-          card.classList.remove("virada");
-          primeira.card.classList.remove("virada");
-          primeira=null;
-          bloqueio=false;
-        },900);
-      }
-    }
-  };
-
   jogo.appendChild(card);
 });
   function explodirCoracoes(x, y){
