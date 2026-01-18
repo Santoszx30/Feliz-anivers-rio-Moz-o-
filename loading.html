@@ -10,7 +10,6 @@ body, html {
   padding:0;
   overflow:hidden;
   font-family:Arial,sans-serif;
-  background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
 }
 
 #loading {
@@ -20,6 +19,7 @@ body, html {
   flex-direction:column;
   align-items:center;
   justify-content:center;
+  background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
   z-index:9999;
 }
 
@@ -121,7 +121,6 @@ body, html {
 
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
-
   const TOTAL_FOTOS = 20;
   const elogios=["Princesa","Linda","Maravilhosa","Perfeita","Cheirosa","Gostosa","Delícia","Cacheada","Pretinha","Pitica","Hello Kittyzinha","Meu amor"];
   const cores=["#ff7ac8","#b44cff","#5aa7ff"];
@@ -178,13 +177,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
     clearInterval(elogioInterval);
     clearInterval(heartInterval);
     loading.remove();
-
-    // Redirecionamento garantido mesmo abrindo localmente
-    const page1Path = location.href.replace(/loading\.html$/,"pagina1.html");
-    window.location.href = page1Path;
+    // Redireciona pra página 1
+    window.location.href = "pagina1.html";
   },36000);
-
 });
 </script>
+
 </body>
 </html>
