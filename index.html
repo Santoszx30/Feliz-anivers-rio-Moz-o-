@@ -338,6 +338,127 @@ function mostrarFotos(){
 
 });
 </script>
+<!-- PAGE 2 -->
+<section id="page2" class="hidden">
+  <div id="texto2"></div>
+  <div id="fotos2"></div>
+  <button class="btn" id="btnNext2">Clique aqui princesinha 💜</button>
+</section>
 
+<style>
+#page2 {
+  min-height:100vh;
+  padding:40px 20px;
+  max-width:800px;
+  margin:auto;
+  background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
+  color:white;
+  overflow-y:auto;
+}
+
+#texto2 {
+  font-size:1.5rem;
+  line-height:2;
+  white-space:pre-wrap;
+  margin-bottom:30px;
+}
+
+.foto2-bloco {
+  margin:40px 0;
+  opacity:0;
+  transition:opacity 1s;
+  text-align:center;
+}
+
+.foto2-bloco.show {
+  opacity:1;
+}
+
+.foto2-bloco img {
+  width:90%;
+  max-width:500px;
+  border-radius:16px;
+  margin-bottom:12px;
+  box-shadow:0 0 20px rgba(180,0,255,0.3);
+}
+
+.foto2-bloco p {
+  font-size:1.2rem;
+}
+
+#btnNext2 {
+  display:none;
+  margin:40px auto;
+  padding:16px 32px;
+  font-size:1.2rem;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#9b4dff,#d08cff);
+  color:white;
+  cursor:pointer;
+  box-shadow:0 0 15px rgba(180,0,255,0.6);
+}
+</style>
+
+<script>
+function startPage2(){
+  const page2 = document.getElementById("page2");
+  const containerFotos = document.getElementById("fotos2");
+  const btnNext2 = document.getElementById("btnNext2");
+
+  page2.classList.remove("hidden"); // mostra página 2
+
+  // Frases das fotos de casal
+  const frases = [
+    "Cada momento contigo é meu lugar favorito.",
+    "Seu sorriso ilumina meu mundo.",
+    "Estar ao seu lado faz tudo fazer sentido.",
+    "Você é meu porto seguro.",
+    "Nosso amor cresce a cada dia.",
+    "Você me completa de formas que nem sabia existir.",
+    "Juntos somos perfeitos em nossas imperfeições."
+  ];
+
+  const totalFotos = 7;
+
+  function mostrarFotos(index=0){
+    if(index >= totalFotos){
+      btnNext2.style.display="block"; // botão aparece no final
+      btnNext2.scrollIntoView({behavior:"smooth"});
+      return;
+    }
+
+    const bloco = document.createElement("div");
+    bloco.className="foto2-bloco";
+
+    const img = document.createElement("img");
+    img.src = `final/casal${index+1}.jpg`;
+
+    const p = document.createElement("p");
+    p.textContent = frases[index];
+
+    bloco.appendChild(img);
+    bloco.appendChild(p);
+    containerFotos.appendChild(bloco);
+
+    img.onload = () => {
+      bloco.classList.add("show");
+      setTimeout(()=>mostrarFotos(index+1), 500); // fade sequencial
+    };
+    img.onerror = () => {
+      bloco.classList.add("show");
+      setTimeout(()=>mostrarFotos(index+1), 500);
+    };
+  }
+
+  mostrarFotos(); // inicia a exibição das fotos
+
+  btnNext2.onclick = () => {
+    page2.style.display="none";
+    document.getElementById("page3").style.display="block";
+    window.scrollTo(0,0);
+  };
+}
+</script>
 </body>
 </html>
