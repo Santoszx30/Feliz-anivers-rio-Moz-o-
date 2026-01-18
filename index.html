@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 });
 </script>
 <!-- PAGE 1 -->
-<section id="page1" style="display:none;">
+<section id="page1" class="hidden">
   <div id="texto"></div>
   <div id="fotos"></div>
   <button class="btn" id="btnFinal">Clique aqui princesinha 💜</button>
@@ -255,9 +255,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const containerFotos = document.getElementById("fotos");
   const btnFinal = document.getElementById("btnFinal");
 
-  page1.style.display = "block";
+  page1.classList.remove("hidden"); // mostrar página 1 assim que loading terminar
 
-  // Texto
+  // Texto letra por letra
   const textoCompleto = `Amar você nunca foi esforço.
 Foi encontro.
 
@@ -274,26 +274,42 @@ Com você, tudo faz sentido.
 E eu escolheria você
 todas as vezes.`;
 
-  // Frases com fotos
-  const frases = Array.from({length:20}, (_,i)=>`Frase do elogio ${i+1}`);
+  // Frases das fotos
+  const frases = [
+    "Seu sorriso é o meu lugar seguro.",
+    "Você tem uma beleza que acalma.",
+    "Seu olhar fala comigo.",
+    "Você é leveza e desejo.",
+    "Tudo em você é detalhe bonito.",
+    "Seu jeito me prende.",
+    "Você é abrigo.",
+    "Seu corpo é poesia.",
+    "Você é intensidade boa.",
+    "Seu riso me desmonta.",
+    "Você é calma e fogo.",
+    "Seu toque é verdade.",
+    "Você é presença.",
+    "Seu charme é natural.",
+    "Você é irresistível.",
+    "Você é minha escolha.",
+    "Você é minha paz.",
+    "Você é meu vício bom.",
+    "Você é meu lar.",
+    "Você é perigosa do melhor jeito possível"
+  ];
 
-  // Digitar texto letra por letra
-  function digitarTexto(texto, callback) {
-    let i=0;
-    elTexto.innerHTML="";
-    const interval = setInterval(()=>{
-      elTexto.innerHTML += texto.charAt(i++);
-      if(i>=texto.length){
-        clearInterval(interval);
-        setTimeout(callback,300); // pausa antes das fotos
-      }
-    },35);
+  function digitarTexto(i=0) {
+    if(i < textoCompleto.length) {
+      elTexto.innerHTML += textoCompleto.charAt(i);
+      setTimeout(()=>digitarTexto(i+1),35);
+    } else {
+      mostrarFotos(); // começa a mostrar fotos depois que o texto termina
+    }
   }
 
-  // Mostrar fotos uma a uma sem travar
   function mostrarFotos(index=0) {
-    if(index >= frases.length){
-      btnFinal.style.display="block";
+    if(index >= frases.length) {
+      btnFinal.style.display="block"; // botão aparece no final
       return;
     }
 
@@ -301,7 +317,7 @@ todas as vezes.`;
     bloco.className="foto-bloco";
 
     const img = document.createElement("img");
-    img.src=`fotos/foto${index+1}.jpg`;
+    img.src=`fotos/foto${index+1}.jpg`; // precisa da pasta fotos/foto1.jpg até foto20.jpg
 
     const p = document.createElement("p");
     p.textContent = frases[index];
@@ -312,20 +328,20 @@ todas as vezes.`;
     img.onload = () => {
       bloco.classList.add("show");
       setTimeout(()=>mostrarFotos(index+1),300);
-    }
+    };
     img.onerror = () => {
       bloco.classList.add("show");
       setTimeout(()=>mostrarFotos(index+1),300);
-    }
+    };
   }
 
-  digitarTexto(textoCompleto, ()=>mostrarFotos());
+  digitarTexto(); // inicia a digitação do texto
 
   btnFinal.onclick = () => {
     page1.style.display="none";
     document.getElementById("page2").style.display="block";
     window.scrollTo(0,0);
-  }
+  };
 });
 </script>
 </body>
