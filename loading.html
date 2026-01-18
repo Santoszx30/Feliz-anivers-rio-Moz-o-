@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carregando sua beleza</title>
+<title>Carregamento</title>
 <style>
 body, html {
   margin:0;
   padding:0;
   overflow:hidden;
-  font-family: Arial, sans-serif;
+  font-family:Arial,sans-serif;
+  background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
 }
 
 #loading {
-  position: fixed;
+  position:fixed;
   inset:0;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
-  z-index: 9999;
+  z-index:9999;
 }
 
 .phone {
@@ -64,7 +64,7 @@ body, html {
 .bar {
   width:220px;
   height:6px;
-  background: rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.2);
   border-radius:6px;
   overflow:hidden;
   margin-top:10px;
@@ -74,8 +74,8 @@ body, html {
   display:block;
   height:100%;
   width:0%;
-  background: linear-gradient(90deg,#a855f7,#3b82f6);
-  animation: load 36s linear forwards;
+  background:linear-gradient(90deg,#a855f7,#3b82f6);
+  animation:load 36s linear forwards;
 }
 
 @keyframes load { to { width:100%; } }
@@ -85,7 +85,7 @@ body, html {
   font-size:1.3rem;
   font-weight:bold;
   opacity:0;
-  animation: fly 6s forwards;
+  animation:fly 6s forwards;
 }
 
 @keyframes fly {
@@ -98,14 +98,14 @@ body, html {
 .heart {
   position:absolute;
   bottom:-40px;
-  animation: heartUp linear forwards;
+  animation:heartUp linear forwards;
   pointer-events:none;
 }
 
 @keyframes heartUp {
   0% {opacity:0;}
   10% {opacity:1;}
-  100% {transform:translateY(-150vh); opacity:0;}
+  100% {transform:translateY(-150vh);opacity:0;}
 }
 </style>
 </head>
@@ -120,51 +120,51 @@ body, html {
 </section>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", ()=>{
 
   const TOTAL_FOTOS = 20;
-  const elogios = ["Princesa","Linda","Maravilhosa","Perfeita","Cheirosa","Gostosa","Delícia","Cacheada","Pretinha","Pitica","Hello Kittyzinha","Meu amor"];
-  const cores = ["#ff7ac8","#b44cff","#5aa7ff"];
-  const loading = document.getElementById("loading");
-  const screen = document.getElementById("screen");
+  const elogios=["Princesa","Linda","Maravilhosa","Perfeita","Cheirosa","Gostosa","Delícia","Cacheada","Pretinha","Pitica","Hello Kittyzinha","Meu amor"];
+  const cores=["#ff7ac8","#b44cff","#5aa7ff"];
+  const loading=document.getElementById("loading");
+  const screen=document.getElementById("screen");
 
   // Criar imagens para alternar
-  const imgA = document.createElement("img");
-  const imgB = document.createElement("img");
+  const imgA=document.createElement("img");
+  const imgB=document.createElement("img");
   screen.appendChild(imgA);
   screen.appendChild(imgB);
-  let atual = imgA, proxima = imgB, iFoto = 1;
+  let atual=imgA, proxima=imgB, iFoto=1;
 
   function trocarFoto(){
-    proxima.src = `fotos/foto${iFoto}.jpg`;
-    proxima.onload = proxima.onerror = () => {
+    proxima.src=`fotos/foto${iFoto}.jpg`;
+    proxima.onload=proxima.onerror=()=>{
       proxima.classList.add("active");
       atual.classList.remove("active");
-      [atual, proxima] = [proxima, atual];
+      [atual,proxima]=[proxima,atual];
     };
-    iFoto = iFoto < TOTAL_FOTOS ? iFoto + 1 : 1;
+    iFoto = iFoto < TOTAL_FOTOS ? iFoto+1 : 1;
   }
   trocarFoto();
-  setInterval(trocarFoto, 1800);
+  setInterval(trocarFoto,1800);
 
   // Elogios flutuando
-  const elogioInterval = setInterval(() => {
+  const elogioInterval=setInterval(()=>{
     for(let i=0;i<3;i++){
-      const e = document.createElement("div");
-      e.className = "elogio";
-      e.innerText = elogios[Math.floor(Math.random()*elogios.length)];
-      e.style.left = Math.random()*80 + "%";
-      e.style.top = Math.random()*80 + "%";
-      e.style.color = cores[Math.floor(Math.random()*cores.length)];
+      const e=document.createElement("div");
+      e.className="elogio";
+      e.innerText=elogios[Math.floor(Math.random()*elogios.length)];
+      e.style.left=Math.random()*80+"%";
+      e.style.top=Math.random()*80+"%";
+      e.style.color=cores[Math.floor(Math.random()*cores.length)];
       loading.appendChild(e);
       setTimeout(()=>e.remove(),6000);
     }
   },500);
 
   // Corações roxos voando
-  const heartInterval = setInterval(()=>{
-    const h = document.createElement("div");
-    h.className = "heart";
+  const heartInterval=setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
     h.innerText="💜";
     h.style.left=Math.random()*100+"%";
     h.style.fontSize=16+Math.random()*14+"px";
@@ -178,12 +178,13 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInterval(elogioInterval);
     clearInterval(heartInterval);
     loading.remove();
-    // Redireciona para página 1 (caminho seguro)
-    window.location.href="./page1.html";
+
+    // Redirecionamento garantido mesmo abrindo localmente
+    const page1Path = location.href.replace(/loading\.html$/,"pagina1.html");
+    window.location.href = page1Path;
   },36000);
 
 });
 </script>
-
 </body>
 </html>
