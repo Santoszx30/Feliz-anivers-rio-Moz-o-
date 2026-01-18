@@ -164,6 +164,8 @@ cardsArray.sort(()=>Math.random()-0.5);
 
 let firstCard=null, secondCard=null, lockBoard=false, acertos=0;
 
+// ... código anterior ...
+
 function createCard(cardData){
   const card = document.createElement("div");
   card.className="card";
@@ -186,6 +188,8 @@ function createCard(cardData){
     const img = document.createElement("img");
     img.src = cardData.content;
     img.style.width="100%";
+    img.style.height="100%";
+    img.style.objectFit="cover";
     img.style.borderRadius="8px";
     back.appendChild(img);
   }
@@ -219,18 +223,29 @@ function createCard(cardData){
         });
         resetCards();
       }else{
-        [firstCard,secondCard].forEach(c=>{
-          const h = document.createElement("div");
-          h.style.position="absolute";
-          h.style.top="50%";
-          h.style.left="50%";
-          h.style.transform="translate(-50%,-50%)";
-          h.style.color="red";
-          h.style.fontWeight="bold";
-          h.innerText="MUITO BURRA KKKKKKKKKK";
-          c.appendChild(h);
-          setTimeout(()=>h.remove(),800);
-        });
+        // Mensagem voando fora da carta
+        for(let i=0;i<5;i++){
+          const e = document.createElement("div");
+          e.innerText="MUITO BURRA KKKKKKKKK";
+          e.style.position="absolute";
+          e.style.left = Math.random()*80 + "%";
+          e.style.top = Math.random()*80 + "%";
+          e.style.fontSize = 14 + Math.random()*8 + "px";
+          e.style.color = "#ff4fff";
+          e.style.fontWeight="bold";
+          e.style.pointerEvents="none";
+          e.style.opacity="1";
+          board.appendChild(e);
+
+          // animação simples subindo e desaparecendo
+          e.animate([
+            {transform:"translateY(0)", opacity:1},
+            {transform:"translateY(-60px)", opacity:0}
+          ], {duration:3000, easing:"ease-out"});
+
+          setTimeout(()=>e.remove(),3000);
+        }
+
         setTimeout(()=>{
           firstCard.classList.remove("flip");
           secondCard.classList.remove("flip");
@@ -243,6 +258,7 @@ function createCard(cardData){
   card.__data = cardData;
   return card;
 }
+</script>
 
 function resetCards(){
   [firstCard,secondCard,lockBoard]=[null,null,false];
