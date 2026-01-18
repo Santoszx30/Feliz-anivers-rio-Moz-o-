@@ -1,1 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo da Memória</title>
+<style>
+body, html {
+  margin:0;
+  padding:0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
+  color:white;
+  min-height:100vh;
+}
 
+#page3 {
+  padding:30px;
+  max-width:900px;
+  margin:auto;
+}
+
+h2 {
+  text-align:center;
+  margin-bottom:20px;
+}
+
+#regras {
+  background: rgba(255,255,255,0.1);
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:30px;
+}
+
+#game-board {
+  display:grid;
+  grid-template-columns: repeat(5,1fr);
+  gap:15px;
+  justify-items:center;
+}
+
+.card {
+  width:120px;
+  height:160px;
+  perspective:1000px;
+  cursor:pointer;
+  position:relative;
+}
+
+.card-inner {
+  position:absolute;
+  width:100%;
+  height:100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.card.flip .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  position:absolute;
+  width:100%;
+  height:100%;
+  backface-visibility: hidden;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:0.9rem;
+  padding:5px;
+  box-shadow:0 0 15px rgba(180,0,255,0.6);
+}
+
+.card-front {
+  background:#2a0050;
+  color:white;
+  font-weight:bold;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  background:#5b0b9a;
+  color:white;
+  font-size:0.8rem;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.heart-effect {
+  position:absolute;
+  animation:heartUp 1s ease-out forwards;
+  font-size:20px;
+}
+
+@keyframes heartUp {
+  0% {opacity:1; transform:translateY(0);}
+  100% {opacity: translateY(-100px); opacity:0;}
+}
+
+#btnNext {
+  display:none;
+  margin:30px auto;
+  padding:16px 32px;
+  font-size:1.2rem;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#9b4dff,#d08cff);
+  color:white;
+  cursor:pointer;
+  display:block;
+  box-shadow:0 0 15px rgba(180,0,255,0.6);
+}
+</style>
+</head>
+<body>
+<section id="page3">
+  <h2>Jogo da Memória 💜</h2>
+  <div id="regras">
+    <p><strong>Regras:</strong> Clique nas cartas para encontrar os pares correspondentes. Cada carta revela uma frase romântica sobre você. Se acertar o par, corações roxos explodem! Se errar, aparece: <em>MUITO BURRA KKKKKKKKKK</em>. Complete todas para liberar o botão para a próxima página.</p>
+  </div>
+
+  <div id="game-board"></div>
+  <button id="btnNext">Próxima Página 💜</button>
+</section>
+
+<script>
+const frases = [
+  "Cada detalhe seu é precioso, e vejo como você se cuida com amor próprio. Sua beleza não é só exterior, é a luz que você carrega em cada gesto.",
+  "A forma como você brinca, ri e transforma momentos simples em diversão é simplesmente encantadora. Você traz alegria para todos ao seu redor.",
+  "Seu sorriso é o meu lugar seguro. Ele ilumina meu dia mesmo quando tudo parece escuro, e eu me perco feliz nele.",
+  "Seu corpo é poesia em movimento. Mas o que me fascina mesmo é a forma como você existe nele, com leveza e autenticidade.",
+  "Você é pura fofura, e cada gesto seu me faz querer proteger e admirar ainda mais a pessoa incrível que você é.",
+  "Seus cachos são únicos, assim como você. Eles representam sua liberdade, sua força e a beleza natural que me deixa completamente encantado.",
+  "Sua espontaneidade me surpreende todos os dias. Eu adoro como você traz surpresas e transforma qualquer momento em algo especial.",
+  "Seu estilo é tão seu, autêntico e elegante. Ele mostra sua personalidade, sua confiança e tudo que torna você irresistível.",
+  "Você é minha spider girl, minha heroína do dia a dia. Entre risos e aventuras, você sempre me faz sentir em casa.",
+  "Seus olhos falam mais que mil palavras. Neles vejo carinho, intensidade e a razão de eu me perder cada vez mais em você."
+];
+
+const board = document.getElementById("game-board");
+const btnNext = document.getElementById("btnNext");
+
+let cardsArray = [];
+for(let i=0;i<frases.length;i++){
+  // Duas cartas por frase
+  cardsArray.push({id:i, frase:frases[i]});
+  cardsArray.push({id:i, frase:frases[i]});
+}
+
+// Embaralhar
+cardsArray.sort(()=>Math.random()-0.5);
+
+let firstCard = null, secondCard = null, lockBoard = false, acertos=0;
+
+function createCard(cardData){
+  const card = document.createElement("div");
+  card.className="card";
+  const inner = document.createElement("div");
+  inner.className="card-inner";
+
+  const front = document.createElement("div");
+  front.className="card-front";
+  front.innerText="💜";
+
+  const back = document.createElement("div");
+  back.className="card-back";
+
+  const img = document.createElement("img");
+  img.src=`jogo/memória${cardData.id+1}.jpg`;
+  img.style.width="100%";
+  img.style.borderRadius="8px";
+  img.style.marginBottom="5px";
+
+  const p = document.createElement("p");
+  p.innerText=cardData.frase;
+
+  back.appendChild(img);
+  back.appendChild(p);
+
+  inner.appendChild(front);
+  inner.appendChild(back);
+  card.appendChild(inner);
+
+  card.addEventListener("click",()=>{
+    if(lockBoard || card===firstCard || card.classList.contains("flip")) return;
+
+    card.classList.add("flip");
+
+    if(!firstCard){
+      firstCard = card;
+    }else{
+      secondCard = card;
+      lockBoard = true;
+
+      const firstId = firstCard.__data.id;
+      const secondId = secondCard.__data.id;
+
+      if(firstId===secondId){
+        acertos++;
+        // efeito coração
+        [firstCard,secondCard].forEach(c=>{
+          const h = document.createElement("div");
+          h.className="heart-effect";
+          h.innerText="💜";
+          c.appendChild(h);
+          setTimeout(()=>h.remove(),800);
+        });
+        resetCards();
+      }else{
+        // efeito errado
+        [firstCard,secondCard].forEach(c=>{
+          const h = document.createElement("div");
+          h.style.position="absolute";
+          h.style.top="50%";
+          h.style.left="50%";
+          h.style.transform="translate(-50%,-50%)";
+          h.style.color="red";
+          h.style.fontWeight="bold";
+          h.innerText="MUITO BURRA KKKKKKKKKK";
+          c.appendChild(h);
+          setTimeout(()=>h.remove(),800);
+        });
+        setTimeout(()=>{ 
+          firstCard.classList.remove("flip");
+          secondCard.classList.remove("flip");
+          resetCards();
+        },1000);
+      }
+    }
+  });
+
+  card.__data = cardData;
+  return card;
+}
+
+function resetCards(){
+  [firstCard,secondCard,lockBoard] = [null,null,false];
+  if(acertos===frases.length){
+    btnNext.style.display="block";
+  }
+}
+
+// Criar cartas no board
+cardsArray.forEach(c=>{
+  board.appendChild(createCard(c));
+});
+
+btnNext.addEventListener("click",()=>{
+  window.location.href="pagina4.html";
+});
+</script>
+</body>
+  </html>
