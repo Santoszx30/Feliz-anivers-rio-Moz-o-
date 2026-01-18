@@ -95,6 +95,14 @@
     10%{opacity:1}
     100%{transform:translateY(-150vh);opacity:0}
   }
+ .bar span{
+  display:block;
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#a855f7,#3b82f6);
+  animation:load 36s linear forwards; /* DURAÇÃO TOTAL */
+}
+@keyframes load{to{width:100%}}
 </style>
 </head>
 <body>
@@ -113,30 +121,30 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const TOTAL_FOTOS = 20;
-  const screen = document.getElementById("screen");
+const screen = document.getElementById("screen");
 
-  // Criar 2 imgs para troca
-  const imgA = document.createElement("img");
-  const imgB = document.createElement("img");
-  screen.appendChild(imgA);
-  screen.appendChild(imgB);
+// Criar 2 imgs para troca
+const imgA = document.createElement("img");
+const imgB = document.createElement("img");
+screen.appendChild(imgA);
+screen.appendChild(imgB);
 
-  let atual = imgA;
-  let proxima = imgB;
-  let iFoto = 1;
+let atual = imgA;
+let proxima = imgB;
+let iFoto = 1;
 
-  function trocarFoto(){
-    proxima.src = `fotos/foto${iFoto}.jpg`;
-    proxima.onload = () => {
-      proxima.classList.add("active");
-      atual.classList.remove("active");
-      [atual, proxima] = [proxima, atual];
-    };
-    iFoto = iFoto < TOTAL_FOTOS ? iFoto + 1 : 1;
-  }
+function trocarFoto(){
+  proxima.src = `fotos/foto${iFoto}.jpg`;
+  proxima.onload = () => {
+    proxima.classList.add("active");
+    atual.classList.remove("active");
+    [atual, proxima] = [proxima, atual];
+  };
+  iFoto = iFoto < TOTAL_FOTOS ? iFoto + 1 : 1;
+}
 
-  trocarFoto();
-  setInterval(trocarFoto, 1800);
+trocarFoto();
+setInterval(trocarFoto, 1800); // 1,8s por foto
 
   // ELOGIOS
   const elogios=["Princesa","Linda","Maravilhosa","Perfeita","Cheirosa","Gostosa","Delícia","Cacheada","Pretinha","Pitica","Hello Kittyzinha","Meu amor"];
@@ -168,14 +176,13 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(()=>h.remove(),9000);
   },300);
 
-  // REMOVER LOADING AUTOMÁTICO DEPOIS DE 10s
-  setTimeout(()=>{
-    clearInterval(elogioInterval);
-    clearInterval(heartInterval);
-    loading.remove();
-    document.getElementById("page1").classList.remove("hidden");
-  },10000);
-});
+// Duração total do loading = 36s
+setTimeout(()=>{
+  clearInterval(elogioInterval);
+  clearInterval(heartInterval);
+  loading.remove();
+  document.getElementById("page1").classList.remove("hidden");
+}, 36000);
 </script>
 
 </body>
