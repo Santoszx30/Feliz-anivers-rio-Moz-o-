@@ -799,13 +799,12 @@ function mostrarProximo(){
   bloco.appendChild(textoDiv);
   container.appendChild(bloco);
 
-  setTimeout(()=>{
-    digitarTexto(textoDiv, conteudosPage4[indice].texto, ()=>{
-      indice++;
-      mostrarProximo();
-    });
-  },1200);
-}
+  img.onload = () => {
+  digitarTexto(textoDiv, conteudosPage4[indice].texto, ()=>{
+    indice++;
+    mostrarProximo();
+  });
+};
 
 
 /* BOTÃO PAGE 5 */
