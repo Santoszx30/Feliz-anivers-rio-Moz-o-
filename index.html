@@ -407,9 +407,6 @@ body{
   </section>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-  const div = document.getElementById("teste"); // existe
-});
 /* ===== LOADING FOTOS ===== */
 const TOTAL_FOTOS = 20;
 const screen = document.getElementById("screen");
@@ -781,8 +778,29 @@ function digitarTexto(elemento, texto, callback){
 }
 
 function mostrarProximo(){
-  const container = document.getElementById("sequencia");
-  
+const container = document.getElementById("sequencia");
+let indice = 0;
+
+function iniciarPage4(){
+  container.innerHTML = "";
+  indice = 0;
+  mostrarProximo();
+}
+
+function digitarTexto(elemento, texto, callback){
+  let i = 0; // ✅ AGORA EXISTE
+  const intervalo = setInterval(()=>{
+    elemento.innerHTML += texto.charAt(i);
+    i++;
+    if(i >= texto.length){
+      clearInterval(intervalo);
+      setTimeout(callback, 800);
+    }
+  },35);
+}
+
+function mostrarProximo(){
+
   if(indice >= conteudosPage4.length){
     document.getElementById("btnPage5").classList.remove("hidden");
     return;
@@ -801,15 +819,16 @@ function mostrarProximo(){
   bloco.appendChild(textoDiv);
   container.appendChild(bloco);
 
-  img.onload = iniciarTexto;
-img.onerror = iniciarTexto;
+  function iniciarTexto(){
+    digitarTexto(textoDiv, conteudosPage4[indice].texto, ()=>{
+      indice++;
+      mostrarProximo();
+    });
+  }
 
-function iniciarTexto(){
-  digitarTexto(textoDiv, conteudosPage4[indice].texto, ()=>{
-    indice++;
-    mostrarProximo();
-  });
-}
+  img.onload = iniciarTexto;
+  img.onerror = iniciarTexto;
+  }
 
 
 /* BOTÃO PAGE 5 */
