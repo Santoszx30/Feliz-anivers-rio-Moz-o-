@@ -193,34 +193,31 @@ todas as vezes.`;
         mostrarFotos();
       }
     }
+function mostrarFotos(index=0){
+  if(index >= frases.length){
+    btnFinal.style.display="block";
+    return;
+  }
 
-    function mostrarFotos(index=0){
-      if(index >= frases.length){
-        btnFinal.style.display="block";
-        return;
-      }
+  const bloco = document.createElement("div");
+  bloco.className="foto-bloco";
 
-      const bloco = document.createElement("div");
-      bloco.className="foto-bloco";
+  const img = document.createElement("img");
+  img.src = `fotos/foto${index+1}.jpg`;
 
-      const img = document.createElement("img");
-      img.src = `fotos/foto${index+1}.jpg`;
+  const p = document.createElement("p");
+  p.textContent = frases[index];
 
-      const p = document.createElement("p");
-      p.textContent = frases[index];
+  bloco.append(img,p);
+  containerFotos.appendChild(bloco);
 
-      bloco.append(img,p);
-      containerFotos.appendChild(bloco);
-
-      img.onload = () => {
-        bloco.classList.add("show");
-        setTimeout(()=>mostrarFotos(index+1),300);
-      };
-      img.onerror = () => {
-        bloco.classList.add("show");
-        setTimeout(()=>mostrarFotos(index+1),300);
-      };
-    }
+  // animar com setTimeout curtinho pra não travar
+  setTimeout(()=>{
+    bloco.classList.add("show");
+    // chama a próxima foto sem bloquear
+    mostrarFotos(index+1);
+  }, 300);
+  }
 
     digitarTexto();
 
