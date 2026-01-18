@@ -179,7 +179,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     clearInterval(heartInterval);
     loading.remove();
     // Aqui você vai mostrar a Page 1:
-    // document.getElementById("page1").classList.remove("hidden");
+startPage1(); // só inicia a Page1 depois que o loading terminar
   },36000);
 
 });
@@ -249,15 +249,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
 </style>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+function startPage1() {
   const page1 = document.getElementById("page1");
   const elTexto = document.getElementById("texto");
   const containerFotos = document.getElementById("fotos");
   const btnFinal = document.getElementById("btnFinal");
 
-  page1.classList.remove("hidden"); // mostrar página 1 assim que loading terminar
+  page1.classList.remove("hidden");
 
-  // Texto letra por letra
   const textoCompleto = `Amar você nunca foi esforço.
 Foi encontro.
 
@@ -274,7 +273,6 @@ Com você, tudo faz sentido.
 E eu escolheria você
 todas as vezes.`;
 
-  // Frases das fotos
   const frases = [
     "Seu sorriso é o meu lugar seguro.",
     "Você tem uma beleza que acalma.",
@@ -298,18 +296,20 @@ todas as vezes.`;
     "Você é perigosa do melhor jeito possível"
   ];
 
+  // Digitar letra por letra
   function digitarTexto(i=0) {
     if(i < textoCompleto.length) {
       elTexto.innerHTML += textoCompleto.charAt(i);
       setTimeout(()=>digitarTexto(i+1),35);
     } else {
-      mostrarFotos(); // começa a mostrar fotos depois que o texto termina
+      mostrarFotos();
     }
   }
 
+  // Mostrar fotos devagar
   function mostrarFotos(index=0) {
     if(index >= frases.length) {
-      btnFinal.style.display="block"; // botão aparece no final
+      btnFinal.style.display="block";
       return;
     }
 
@@ -317,7 +317,7 @@ todas as vezes.`;
     bloco.className="foto-bloco";
 
     const img = document.createElement("img");
-    img.src=`fotos/foto${index+1}.jpg`; // precisa da pasta fotos/foto1.jpg até foto20.jpg
+    img.src=`fotos/foto${index+1}.jpg`;
 
     const p = document.createElement("p");
     p.textContent = frases[index];
@@ -325,24 +325,26 @@ todas as vezes.`;
     bloco.append(img,p);
     containerFotos.appendChild(bloco);
 
-    img.onload = () => {
+    // Espera carregar imagem antes de mostrar a próxima
+    img.onload = img.onerror = () => {
       bloco.classList.add("show");
-      setTimeout(()=>mostrarFotos(index+1),300);
-    };
-    img.onerror = () => {
-      bloco.classList.add("show");
-      setTimeout(()=>mostrarFotos(index+1),300);
+      setTimeout(()=>mostrarFotos(index+1),400); // 400ms entre fotos pra não travar
     };
   }
 
-  digitarTexto(); // inicia a digitação do texto
+  digitarTexto();
 
   btnFinal.onclick = () => {
     page1.style.display="none";
-    document.getElementById("page2").style.display="block";
+    if(document.getElementById("page2"))
+      document.getElementById("page2").style.display="block";
     window.scrollTo(0,0);
   };
-});
+}
+
+// Chamar essa função **apenas quando o loading terminar**
+// Exemplo: dentro do seu setTimeout do loading
+setTimeout(()=>{ startPage1(); }, 36000);
 </script>
 </body>
 </html>
