@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   margin:auto;
   background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
   color:white;
-  overflow-x:hidden;
+  overflow-y:auto;
 }
 
 #texto {
@@ -213,7 +213,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   margin:40px 0;
   opacity:0;
   transform:translateY(30px);
-  transition:1s;
+  transition:opacity 1s, transform 1s;
   text-align:center;
 }
 
@@ -252,13 +252,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-
   const page1 = document.getElementById("page1");
   const elTexto = document.getElementById("texto");
   const containerFotos = document.getElementById("fotos");
   const btnFinal = document.getElementById("btnFinal");
 
-  // TEXTO DA PAGE 1
+  page1.style.display = "block";
+
+  // TEXTO
   const textoCompleto = `Amar você nunca foi esforço.
 Foi encontro.
 
@@ -299,45 +300,54 @@ todas as vezes.`;
     "Você é perigosa do melhor jeito possível"
   ];
 
-  // Mostrar page1
-  page1.style.display = "block";
-
-  // Função para digitar texto letra por letra
+  // DIGITAR TEXTO LETRA POR LETRA
   function digitarTexto(texto, callback) {
     let i = 0;
     elTexto.innerHTML = "";
-    const interval = setInterval(() => {
+    const intervalo = setInterval(() => {
       elTexto.innerHTML += texto.charAt(i++);
       if (i >= texto.length) {
-        clearInterval(interval);
-        setTimeout(callback, 500); // Pequena pausa antes das fotos
+        clearInterval(intervalo);
+        setTimeout(callback, 300); // Pequena pausa antes das fotos
       }
     }, 35);
   }
 
-  // Função para mostrar fotos uma a uma
-  function mostrarFotos() {
-    frases.forEach((f, i) => {
-      const bloco = document.createElement("div");
-      bloco.className = "foto-bloco";
-      bloco.innerHTML = `<img src="fotos/foto${i+1}.jpg"><p>${f}</p>`;
-      containerFotos.appendChild(bloco);
-      setTimeout(() => bloco.classList.add("show"), i*800);
-    });
+  // MOSTRAR FOTOS UMA A UMA
+  function mostrarFotos(index = 0) {
+    if (index >= frases.length) {
+      btnFinal.style.display = "block";
+      return;
+    }
 
-    // Mostrar botão depois de todas as fotos
-    setTimeout(() => btnFinal.style.display = "block", frases.length*800 + 500);
+    const bloco = document.createElement("div");
+    bloco.className = "foto-bloco";
+    const img = document.createElement("img");
+    img.src = `fotos/foto${index+1}.jpg`;
+    const p = document.createElement("p");
+    p.textContent = frases[index];
+    bloco.appendChild(img);
+    bloco.appendChild(p);
+    containerFotos.appendChild(bloco);
+
+    // Espera imagem carregar antes de mostrar e ir para próxima
+    img.onload = () => {
+      bloco.classList.add("show");
+      setTimeout(() => mostrarFotos(index+1), 300); // Pequena pausa entre fotos
+    }
+    img.onerror = () => {
+      bloco.classList.add("show");
+      setTimeout(() => mostrarFotos(index+1), 300);
+    }
   }
 
-  digitarTexto(textoCompleto, mostrarFotos);
+  digitarTexto(textoCompleto, () => mostrarFotos(0));
 
-  // Botão para ir para Page 2
   btnFinal.onclick = () => {
     page1.style.display = "none";
     document.getElementById("page2").style.display = "block";
     window.scrollTo(0,0);
   }
-
 });
 </script>
 </body>
