@@ -21,14 +21,15 @@ h2 { margin:20px 0 10px 0; text-align:center; }
 #regras { text-align:center; margin-bottom:30px; }
 
 #board {
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
-  gap:10px;
-  width:90%;
-  max-width:800px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* antes estava 120px */
+  gap: 8px; /* dá mais espaço entre as cartas */
+  width: 95%; /* ocupa quase toda a largura */
+  max-width: 900px;
+  margin-bottom: 20px; /* pra não colar no botão */
 }
 
-.card { width:100%; padding-top:100%; position:relative; perspective:1000px; cursor:pointer; }
+.card { width: 100%; padding-top: 100%; position: relative; perspective: 1000px; cursor: pointer; }
 .card-inner { position:absolute; inset:0; transition: transform 0.6s; transform-style: preserve-3d; }
 .card.flipped .card-inner { transform: rotateY(180deg); }
 .card-front, .card-back {
