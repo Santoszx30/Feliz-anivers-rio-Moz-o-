@@ -8,48 +8,48 @@
 body, html {
   margin:0;
   padding:0;
-  font-family:Arial,sans-serif;
+  font-family: Arial, sans-serif;
   background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
   color:white;
-}
-
-.container {
-  max-width:1000px;
-  margin: auto;
-  padding:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
 }
 
 h1 {
+  margin-top:20px;
   text-align:center;
-  margin-bottom:10px;
 }
 
-.rules {
+#regras {
+  margin:20px auto;
   text-align:center;
-  margin-bottom:30px;
   font-size:1.2rem;
 }
 
-.board {
+#board {
   display:grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 120px);
   gap:15px;
-  justify-items:center;
+  justify-content:center;
+  margin:30px 0;
 }
 
 .card {
-  width:150px;
-  height:200px;
+  width:120px;
+  height:160px;
   perspective:1000px;
+  cursor:pointer;
 }
 
 .card-inner {
+  position:relative;
   width:100%;
   height:100%;
-  position:relative;
-  transform-style: preserve-3d;
+  text-align:center;
   transition: transform 0.6s;
-  cursor:pointer;
+  transform-style: preserve-3d;
 }
 
 .card.flipped .card-inner {
@@ -60,40 +60,36 @@ h1 {
   position:absolute;
   width:100%;
   height:100%;
-  backface-visibility:hidden;
+  backface-visibility: hidden;
   border-radius:12px;
   display:flex;
   align-items:center;
   justify-content:center;
+  font-size:0.9rem;
+  padding:5px;
+  box-sizing:border-box;
 }
 
 .card-front {
-  background:#8b4dff;
-  font-size:2rem;
+  background:#3b006f;
+  color:white;
 }
 
 .card-back {
-  background:#5a00b3;
+  transform: rotateY(180deg);
+  background:#9b4dff;
   color:white;
-  transform:rotateY(180deg);
-  flex-direction:column;
-  text-align:center;
-  padding:8px;
-  box-sizing:border-box;
-  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  font-size:1.5rem;
 }
 
-.card-back img {
-  max-width:100%;
-  max-height:100%;
-  border-radius:10px;
-  object-fit:cover;
-}
-
-.btn-next {
+#btnNext {
   display:none;
-  margin:30px auto;
-  padding:16px 32px;
+  margin:20px auto;
+  padding:12px 24px;
   font-size:1.2rem;
   border:none;
   border-radius:30px;
@@ -101,159 +97,177 @@ h1 {
   color:white;
   cursor:pointer;
   box-shadow:0 0 15px rgba(180,0,255,0.6);
-  display:block;
-  text-align:center;
 }
 
-.error-flying, .heart-flying {
+.elogio {
   position:absolute;
-  font-size:1.5rem;
+  font-size:1.3rem;
+  font-weight:bold;
+  opacity:0;
+  animation:fly 3s forwards;
   pointer-events:none;
-  user-select:none;
-  z-index:999;
-  animation:flyUp 3s forwards;
 }
 
-@keyframes flyUp {
-  0% {opacity:0; transform:translateY(20px);}
+@keyframes fly {
+  0% {opacity:0; transform:translateY(40px);}
   20% {opacity:1;}
-  100% {opacity:0; transform:translateY(-100px);}
+  80% {opacity:1;}
+  100% {opacity:0; transform:translateY(-120px);}
 }
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>Jogo da Memória 💜</h1>
-  <div class="rules">
-    Vire as cartas 🃏<br>
-    Cada carta corresponde a uma foto sua ❤️<br>
-    Acerte todas e conclua o jogo 💜
-  </div>
-  <div class="board" id="board"></div>
-  <button class="btn-next" id="btnNext">Próxima página 💜</button>
+
+<h1>Jogo da Memória</h1>
+
+<div id="regras">
+  <p>Vire as cartas 🃏</p>
+  <p>Cada carta corresponde a uma foto sua ❤️</p>
+  <p>Acertei todas e conclua o jogo 💜</p>
 </div>
 
+<div id="board"></div>
+<button id="btnNext">Clique aqui para próxima página 💜</button>
+
 <script>
-const board = document.getElementById("board");
-const btnNext = document.getElementById("btnNext");
-
-let firstCard = null;
-let secondCard = null;
-let lockBoard = false;
-let acertos = 0;
-
-// Fotos e frases correspondentes
-const cardsData = [
-  {type:"foto", content:"Jogo/memoria1.jpg", frase:"Seu cuidado com sua beleza me encanta"},
-  {type:"frase", content:"A delicadeza que você demonstra em tudo que faz"},
-  {type:"foto", content:"Jogo/memoria2.jpg", frase:"Suas brincadeiras alegram meu dia"},
-  {type:"frase", content:"Seu sorriso ilumina meus momentos mais escuros"},
-  {type:"foto", content:"Jogo/memoria3.jpg", frase:"Seu sorriso contagiante é meu refúgio"},
-  {type:"frase", content:"A forma como você se move é pura poesia"},
-  {type:"foto", content:"Jogo/memoria4.jpg", frase:"Seu corpo é perfeito em cada detalhe"},
-  {type:"frase", content:"A fofura que você exala é irresistível"},
-  {type:"foto", content:"Jogo/memoria5.jpg", frase:"Seus cachos são uma obra de arte"},
-  {type:"frase", content:"Sua aleatoriedade me faz te admirar ainda mais"},
-  {type:"foto", content:"Jogo/memoria6.jpg", frase:"Seu estilo é único e encantador"},
-  {type:"frase", content:"My spider girl ❤️🕷️"},
-  {type:"foto", content:"Jogo/memoria7.jpg", frase:"Seus olhos me hipnotizam"},
-  {type:"frase", content:"Seu jeito de existir é inesquecível"},
-  {type:"foto", content:"Jogo/memoria8.jpg", frase:"Sua presença ilumina qualquer lugar"},
-  {type:"frase", content:"Seu abraço é abrigo perfeito"},
-  {type:"foto", content:"Jogo/memoria9.jpg", frase:"Seu carinho é puro amor"},
-  {type:"frase", content:"Você é meu ponto de paz e alegria"},
-  {type:"foto", content:"Jogo/memoria10.jpg", frase:"Você é meu lar seguro"},
-  {type:"frase", content:"Seu amor me transforma todos os dias"}
+const frases = [
+  "Você cuida da sua beleza tão bem, e com essa linguinha pra fora, acaba comigo 🥹",
+  "Você brincando com as fotos, misturando as minhas duas comidas favoritas 🫦",
+  "O seu sorriso me encanta, me deixa extremamente apaixonado e fascinado 💖",
+  "O seu corpo tem curvas maravilhosas, me deixam com uma sensação que você sabe muito bem qual é 🫦",
+  "Sua fofura me deixa muito sorridente e me tira risadas sinceras quando você expressa ela 🥺",
+  "Seus cachos fazem me sentir enrolado tanto quanto eles mesmos, seu cabelo é perfeito 😍",
+  "Sua aleatoriedade nas fotos, parecendo uma mulçumana com essa toalha na cabeça KKKKKK 😂",
+  "Seu estilo me deixa cativado, você fica linda nesses vestidos que você tem 🫦",
+  "Você é minha spider girl ❤️🕸️🕷️",
+  "Seus olhos me derretem completamente, e refletem o quanto você é especial para mim 🥹💜"
 ];
 
-// Embaralhar
-const shuffled = cardsData.sort(()=>Math.random()-0.5);
+const imagens = [
+  "Jogo/memoria1.jpg",
+  "Jogo/memoria2.jpg",
+  "Jogo/memoria3.jpg",
+  "Jogo/memoria4.jpg",
+  "Jogo/memoria5.jpg",
+  "Jogo/memoria6.jpg",
+  "Jogo/memoria7.jpg",
+  "Jogo/memoria8.jpg",
+  "Jogo/memoria9.jpg",
+  "Jogo/memoria10.jpg"
+];
 
-// Criar cartas
-shuffled.forEach(cardData => {
+// Criar array de cartas (10 frases + 10 imagens)
+let cardsArray = [];
+for(let i=0;i<10;i++){
+  cardsArray.push({type:"frase", content:frases[i]});
+  cardsArray.push({type:"foto", content:imagens[i]});
+}
+
+// Embaralhar cartas
+cardsArray = cardsArray.sort(()=>0.5-Math.random());
+
+const board = document.getElementById("board");
+let firstCard = null, secondCard = null, lockBoard = false;
+let acertos = 0;
+
+function criarCarta(data){
   const card = document.createElement("div");
-  card.classList.add("card");
+  card.className="card";
+
   const inner = document.createElement("div");
-  inner.classList.add("card-inner");
-  
+  inner.className="card-inner";
+
   const front = document.createElement("div");
-  front.classList.add("card-front");
-  front.innerHTML="❤️";
-  
+  front.className="card-front";
+  front.textContent="💜";
+
   const back = document.createElement("div");
-  back.classList.add("card-back");
-  
-  if(cardData.type==="foto"){
-    const img = document.createElement("img");
-    img.src=cardData.content;
-    back.appendChild(img);
+  back.className="card-back";
+
+  if(data.type==="frase"){
+    back.textContent=data.content;
   } else {
-    const p = document.createElement("p");
-    p.innerText=cardData.content;
-    p.style.margin="0";
-    p.style.wordWrap="break-word";
-    back.appendChild(p);
+    const img = document.createElement("img");
+    img.src=data.content;
+    img.style.width="100%";
+    img.style.height="100%";
+    img.style.objectFit="cover";
+    back.appendChild(img);
   }
-  
+
   inner.appendChild(front);
   inner.appendChild(back);
   card.appendChild(inner);
-  board.appendChild(card);
 
   card.addEventListener("click", ()=>{
-    if(lockBoard || card===firstCard) return;
+    if(lockBoard || card===firstCard || card.classList.contains("flipped")) return;
     card.classList.add("flipped");
+
     if(!firstCard){
       firstCard=card;
-      return;
-    }
-    secondCard=card;
-    lockBoard=true;
-
-    const firstBack = firstCard.querySelector(".card-back").innerHTML;
-    const secondBack = secondCard.querySelector(".card-back").innerHTML;
-
-    if(firstBack===secondBack){
-      // acerto
-      [firstCard, secondCard, lockBoard] = [null, null, false];
-      acertos++;
-      // efeito coração
-      [firstCard, secondCard].forEach(c=>{
-        const rect = c.getBoundingClientRect();
-        for(let i=0;i<5;i++){
-          const h = document.createElement("div");
-          h.classList.add("heart-flying");
-          h.innerText="💜";
-          h.style.left=(rect.left + Math.random()*c.offsetWidth)+"px";
-          h.style.top=(rect.top + Math.random()*c.offsetHeight)+"px";
-          h.style.fontSize=12+Math.random()*10+"px";
-          document.body.appendChild(h);
-          setTimeout(()=>h.remove(),3000);
-        }
-      });
     } else {
-      // erro
-      for(let i=0;i<5;i++){
-        const err = document.createElement("div");
-        err.classList.add("error-flying");
-        err.innerText="MUITO BURRA KKKKKKK";
-        err.style.left=(Math.random()*window.innerWidth)+"px";
-        err.style.top=(Math.random()*window.innerHeight)+"px";
-        document.body.appendChild(err);
-        setTimeout(()=>err.remove(),3000);
-      }
-      setTimeout(()=>{firstCard.classList.remove("flipped"); secondCard.classList.remove("flipped"); [firstCard,secondCard,lockBoard]=[null,null,false];},1000);
-    }
-
-    if(acertos===cardsData.length/2){
-      btnNext.style.display="block";
+      secondCard=card;
+      lockBoard=true;
+      setTimeout(checkMatch,700);
     }
   });
+
+  return card;
+}
+
+function checkMatch(){
+  const firstType = firstCard.querySelector(".card-back").querySelector("img") ? "foto" : "frase";
+  const secondType = secondCard.querySelector(".card-back").querySelector("img") ? "foto" : "frase";
+
+  if(firstType===secondType){
+    acertos++;
+    // Efeito corações voando
+    for(let i=0;i<5;i++){
+      const e=document.createElement("div");
+      e.className="elogio";
+      e.textContent="💜";
+      e.style.left=(firstCard.offsetLeft + Math.random()*60)+"px";
+      e.style.top=(firstCard.offsetTop + Math.random()*60)+"px";
+      document.body.appendChild(e);
+      setTimeout(()=>e.remove(),3000);
+    }
+    resetCards();
+  } else {
+    // Cartas erradas voando MUITO BURRA
+    for(let i=0;i<5;i++){
+      const e=document.createElement("div");
+      e.className="elogio";
+      e.textContent="MUITO BURRA KKKKKK";
+      e.style.left=(firstCard.offsetLeft + Math.random()*60)+"px";
+      e.style.top=(firstCard.offsetTop + Math.random()*60)+"px";
+      document.body.appendChild(e);
+      setTimeout(()=>e.remove(),3000);
+    }
+    setTimeout(()=>{
+      firstCard.classList.remove("flipped");
+      secondCard.classList.remove("flipped");
+      resetCards();
+    },700);
+  }
+}
+
+function resetCards(){
+  [firstCard,secondCard,lockBoard]=[null,null,false];
+  if(acertos===10){
+    document.getElementById("btnNext").style.display="block";
+  }
+}
+
+// Criar cartas no board
+cardsArray.forEach(c=>{
+  board.appendChild(criarCarta(c));
 });
 
-btnNext.addEventListener("click", ()=>{
+// Botão próximo
+document.getElementById("btnNext").addEventListener("click",()=>{
   window.location.href="pagina4.html";
 });
 </script>
+
 </body>
 </html>
