@@ -1,1 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Página 2</title>
+<style>
+body, html {
+  margin:0;
+  padding:0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
+  color:white;
+  overflow-x: hidden;
+}
 
+#page2 {
+  min-height:100vh;
+  padding:40px 20px;
+  max-width:800px;
+  margin:auto;
+  overflow-y:auto;
+}
+
+.foto-bloco {
+  margin:40px 0;
+  opacity:0;
+  transition:opacity 1s, transform 1s;
+  text-align:center;
+  transform:translateY(30px);
+}
+
+.foto-bloco.show {
+  opacity:1;
+  transform:translateY(0);
+}
+
+.foto-bloco img {
+  width:90%;
+  max-width:500px;
+  border-radius:16px;
+  margin-bottom:12px;
+  box-shadow:0 0 20px rgba(180,0,255,0.3);
+}
+
+.foto-bloco p {
+  font-size:1.2rem;
+}
+
+.btn {
+  display:none;
+  margin:40px auto;
+  padding:16px 32px;
+  font-size:1.2rem;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#9b4dff,#d08cff);
+  color:white;
+  cursor:pointer;
+  box-shadow:0 0 15px rgba(180,0,255,0.6);
+}
+</style>
+</head>
+<body>
+
+<section id="page2">
+  <div id="fotos"></div>
+  <button class="btn" id="btnFinal">Próxima página 💜</button>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const containerFotos = document.getElementById("fotos");
+  const btnFinal = document.getElementById("btnFinal");
+
+  const frases = [
+    "Cada momento com você é único.",
+    "Seu sorriso ilumina meus dias.",
+    "Te amar é a coisa mais fácil do mundo.",
+    "Nosso amor é minha força.",
+    "Com você, tudo se torna leve.",
+    "Você é meu porto seguro.",
+    "Cada dia ao seu lado é uma nova história."
+  ];
+
+  function mostrarFotos(index=0){
+    if(index >= frases.length){
+      btnFinal.style.display = "block"; // botão aparece no final
+      return;
+    }
+
+    const bloco = document.createElement("div");
+    bloco.className = "foto-bloco";
+
+    const img = document.createElement("img");
+    img.src = `final/casal${index+1}.jpg`; // pasta final/casal1.jpg até casal7.jpg
+
+    const p = document.createElement("p");
+    p.textContent = frases[index];
+
+    bloco.append(img, p);
+    containerFotos.appendChild(bloco);
+
+    img.onload = img.onerror = () => {
+      bloco.classList.add("show");
+      setTimeout(() => mostrarFotos(index+1), 500);
+    };
+  }
+
+  mostrarFotos();
+
+  btnFinal.onclick = () => {
+    window.location.href = "pagina3.html"; // próxima página
+  };
+});
+</script>
+</body>
+  </html>
