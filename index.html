@@ -245,8 +245,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
   color:white;
   cursor:pointer;
   box-shadow:0 0 15px rgba(180,0,255,0.6);
-  display:block;
-  text-align:center;
 }
 </style>
 
@@ -259,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   page1.style.display = "block";
 
-  // TEXTO
+  // Texto
   const textoCompleto = `Amar você nunca foi esforço.
 Foi encontro.
 
@@ -276,76 +274,56 @@ Com você, tudo faz sentido.
 E eu escolheria você
 todas as vezes.`;
 
-  // FRASES COM FOTOS
-  const frases = [
-    "Seu sorriso é o meu lugar seguro.",
-    "Você tem uma beleza que acalma.",
-    "Seu olhar fala comigo.",
-    "Você é leveza e desejo.",
-    "Tudo em você é detalhe bonito.",
-    "Seu jeito me prende.",
-    "Você é abrigo.",
-    "Seu corpo é poesia.",
-    "Você é intensidade boa.",
-    "Seu riso me desmonta.",
-    "Você é calma e fogo.",
-    "Seu toque é verdade.",
-    "Você é presença.",
-    "Seu charme é natural.",
-    "Você é irresistível.",
-    "Você é minha escolha.",
-    "Você é minha paz.",
-    "Você é meu vício bom.",
-    "Você é meu lar.",
-    "Você é perigosa do melhor jeito possível"
-  ];
+  // Frases com fotos
+  const frases = Array.from({length:20}, (_,i)=>`Frase do elogio ${i+1}`);
 
-  // DIGITAR TEXTO LETRA POR LETRA
+  // Digitar texto letra por letra
   function digitarTexto(texto, callback) {
-    let i = 0;
-    elTexto.innerHTML = "";
-    const intervalo = setInterval(() => {
+    let i=0;
+    elTexto.innerHTML="";
+    const interval = setInterval(()=>{
       elTexto.innerHTML += texto.charAt(i++);
-      if (i >= texto.length) {
-        clearInterval(intervalo);
-        setTimeout(callback, 300); // Pequena pausa antes das fotos
+      if(i>=texto.length){
+        clearInterval(interval);
+        setTimeout(callback,300); // pausa antes das fotos
       }
-    }, 35);
+    },35);
   }
 
-  // MOSTRAR FOTOS UMA A UMA
-  function mostrarFotos(index = 0) {
-    if (index >= frases.length) {
-      btnFinal.style.display = "block";
+  // Mostrar fotos uma a uma sem travar
+  function mostrarFotos(index=0) {
+    if(index >= frases.length){
+      btnFinal.style.display="block";
       return;
     }
 
     const bloco = document.createElement("div");
-    bloco.className = "foto-bloco";
+    bloco.className="foto-bloco";
+
     const img = document.createElement("img");
-    img.src = `fotos/foto${index+1}.jpg`;
+    img.src=`fotos/foto${index+1}.jpg`;
+
     const p = document.createElement("p");
     p.textContent = frases[index];
-    bloco.appendChild(img);
-    bloco.appendChild(p);
+
+    bloco.append(img,p);
     containerFotos.appendChild(bloco);
 
-    // Espera imagem carregar antes de mostrar e ir para próxima
     img.onload = () => {
       bloco.classList.add("show");
-      setTimeout(() => mostrarFotos(index+1), 300); // Pequena pausa entre fotos
+      setTimeout(()=>mostrarFotos(index+1),300);
     }
     img.onerror = () => {
       bloco.classList.add("show");
-      setTimeout(() => mostrarFotos(index+1), 300);
+      setTimeout(()=>mostrarFotos(index+1),300);
     }
   }
 
-  digitarTexto(textoCompleto, () => mostrarFotos(0));
+  digitarTexto(textoCompleto, ()=>mostrarFotos());
 
   btnFinal.onclick = () => {
-    page1.style.display = "none";
-    document.getElementById("page2").style.display = "block";
+    page1.style.display="none";
+    document.getElementById("page2").style.display="block";
     window.scrollTo(0,0);
   }
 });
