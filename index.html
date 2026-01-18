@@ -587,9 +587,42 @@ cartas.forEach(c=>{
     </div>
   `;
 
-  card.onclick=()=>{
-    if(bloqueio || card.classList.contains("virada")) return;
-    card.classList.add("virada");
+  card.onclick = (event) => {
+  if (bloqueio || card.classList.contains("virada")) return;
+
+  card.classList.add("virada");
+
+  if (!primeira) {
+    primeira = { card, id: c.id };
+  } else {
+    bloqueio = true;
+
+    if (primeira.id === c.id) {
+      acertos++;
+
+      const rect = card.getBoundingClientRect();
+      explodirCoracoes(
+        rect.left + rect.width / 2,
+        rect.top + rect.height / 2
+      );
+
+      primeira = null;
+      bloqueio = false;
+
+      if (acertos === pares.length) {
+        document.getElementById("btnNextPage").style.display = "block";
+      }
+    } else {
+      setTimeout(() => {
+        card.classList.remove("virada");
+        primeira.card.classList.remove("virada");
+        mostrarErro();
+        primeira = null;
+        bloqueio = false;
+      }, 900);
+    }
+  }
+};
 
     if(!primeira){
       primeira={card,id:c.id};
@@ -627,27 +660,32 @@ cartas.forEach(c=>{
     setTimeout(()=>c.remove(),1400);
   }
       }
-  if(primeira.id===c.id){
-  acertos++;
+  function mostrarErro(){
+  const msg = document.createElement("div");
+  msg.innerText = "Muito burra KKKKKKKK";
+  msg.style.position = "fixed";
+  msg.style.top = "20px";
+  msg.style.left = "50%";
+  msg.style.transform = "translateX(-50%)";
+  msg.style.padding = "14px 26px";
+  msg.style.background = "rgba(88,0,150,0.9)";
+  msg.style.color = "#fff";
+  msg.style.fontSize = "1.2rem";
+  msg.style.borderRadius = "30px";
+  msg.style.zIndex = "9999";
+  msg.style.opacity = "0";
+  msg.style.transition = "opacity .3s";
 
-  const rect = card.getBoundingClientRect();
-  explodirCoracoes(rect.left + rect.width/2, rect.top);
+  document.body.appendChild(msg);
 
-  primeira=null;
-  bloqueio=false;
+  requestAnimationFrame(()=>{
+    msg.style.opacity = "1";
+  });
 
-  if(acertos===pares.length){
-    document.getElementById("btnNextPage").style.display="block";
-  }
-  }
-  }else{
   setTimeout(()=>{
-    card.classList.remove("virada");
-    primeira.card.classList.remove("virada");
-    mostrarErro();
-    primeira=null;
-    bloqueio=false;
-  },900);
+    msg.style.opacity = "0";
+    setTimeout(()=>msg.remove(),300);
+  },1200);
   }
 </script>
 
