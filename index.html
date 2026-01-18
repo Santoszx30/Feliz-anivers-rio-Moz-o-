@@ -757,10 +757,20 @@ const conteudosPage4 = [
     texto:"Mesmo quando faltam palavras, eu entendo. Porque o que você sente chega antes de qualquer explicação. Saber que sou esse lugar seguro pra você me faz sentir em casa também. Em meio a qualquer confusão, é reconfortante saber que existe esse sentimento firme entre nós — simples, verdadeiro e cheio de sentido."
   }
 ];
-      </script>
   
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+
+  const conteudosPage4 = [
+    { img:"textos/texto1.jpg", texto:"..." },
+    { img:"textos/texto2.jpg", texto:"..." },
+    { img:"textos/texto3.jpg", texto:"..." },
+    { img:"textos/texto4.jpg", texto:"..." },
+    { img:"textos/texto5.jpg", texto:"..." },
+    { img:"textos/texto6.jpg", texto:"..." },
+    { img:"textos/texto7.jpg", texto:"..." },
+    { img:"textos/texto8.jpg", texto:"..." }
+  ];
 
   let indice = 0;
 
@@ -774,13 +784,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function digitarTexto(elemento, texto, callback){
     let i = 0;
     const intervalo = setInterval(()=>{
-      elemento.innerHTML += texto.charAt(i);
-      i++;
+      elemento.innerHTML += texto.charAt(i++);
       if(i >= texto.length){
         clearInterval(intervalo);
         setTimeout(callback, 800);
       }
-    }, 35);
+    },35);
   }
 
   function mostrarProximo(){
@@ -800,29 +809,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const textoDiv = document.createElement("div");
     textoDiv.className = "texto-digitando";
 
-    bloco.appendChild(img);
-    bloco.appendChild(textoDiv);
+    bloco.append(img, textoDiv);
     container.appendChild(bloco);
 
-    function iniciarTexto(){
-      digitarTexto(textoDiv, conteudosPage4[indice].texto, ()=>{
+    img.onload = img.onerror = () => {
+      digitarTexto(textoDiv, conteudosPage4[indice].texto, () => {
         indice++;
         mostrarProximo();
       });
-    }
-
-    img.onload = iniciarTexto;
-    img.onerror = iniciarTexto;
+    };
   }
 
-  // botão page 5
-  document.getElementById("btnPage5").onclick = ()=>{
-    document.getElementById("page4").classList.add("hidden");
-    document.getElementById("page5").classList.remove("hidden");
-    window.scrollTo(0,0);
-  };
+  // expõe a função pro botão anterior
+  window.iniciarPage4 = iniciarPage4;
 
 });
+</script>
+
 </script>
 
 </body>
