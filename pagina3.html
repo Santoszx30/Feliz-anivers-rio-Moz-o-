@@ -12,36 +12,39 @@ body, html {
   background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
   color:white;
   min-height:100vh;
+  overflow-x:hidden;
 }
 
 #page3 {
-  padding:30px;
+  padding:20px;
   max-width:900px;
   margin:auto;
+  zoom:0.85; /* reduz para caber tudo sem quebrar */
 }
 
 h2 {
   text-align:center;
-  margin-bottom:20px;
+  margin-bottom:15px;
 }
 
 #regras {
   background: rgba(255,255,255,0.1);
   padding:15px;
   border-radius:10px;
-  margin-bottom:30px;
+  margin-bottom:25px;
+  line-height:1.6;
 }
 
 #game-board {
   display:grid;
   grid-template-columns: repeat(5,1fr);
-  gap:15px;
+  gap:12px;
   justify-items:center;
 }
 
 .card {
-  width:120px;
-  height:160px;
+  width:100px;
+  height:140px;
   perspective:1000px;
   cursor:pointer;
   position:relative;
@@ -64,14 +67,14 @@ h2 {
   width:100%;
   height:100%;
   backface-visibility: hidden;
-  border-radius:12px;
+  border-radius:10px;
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
-  font-size:0.9rem;
+  font-size:0.85rem;
   padding:5px;
-  box-shadow:0 0 15px rgba(180,0,255,0.6);
+  box-shadow:0 0 12px rgba(180,0,255,0.5);
 }
 
 .card-front {
@@ -84,10 +87,12 @@ h2 {
   transform: rotateY(180deg);
   background:#5b0b9a;
   color:white;
-  font-size:0.8rem;
+  font-weight:bold;
   display:flex;
   flex-direction:column;
   justify-content:center;
+  align-items:center;
+  padding:6px;
 }
 
 .heart-effect {
@@ -98,21 +103,21 @@ h2 {
 
 @keyframes heartUp {
   0% {opacity:1; transform:translateY(0);}
-  100% {opacity: translateY(-100px); opacity:0;}
+  100% {transform:translateY(-100px); opacity:0;}
 }
 
 #btnNext {
   display:none;
   margin:30px auto;
-  padding:16px 32px;
+  padding:14px 30px;
   font-size:1.2rem;
   border:none;
   border-radius:30px;
   background:linear-gradient(45deg,#9b4dff,#d08cff);
   color:white;
   cursor:pointer;
-  display:block;
   box-shadow:0 0 15px rgba(180,0,255,0.6);
+  display:block;
 }
 </style>
 </head>
@@ -120,7 +125,9 @@ h2 {
 <section id="page3">
   <h2>Jogo da Memória 💜</h2>
   <div id="regras">
-    <p><strong>Regras:</strong> Clique nas cartas para encontrar os pares correspondentes. Cada carta revela uma frase romântica sobre você. Se acertar o par, corações roxos explodem! Se errar, aparece: <em>MUITO BURRA KKKKKKKKKK</em>. Complete todas para liberar o botão para a próxima página.</p>
+    <p>Vire as cartas 🃏</p>
+    <p>Cada carta corresponde a uma foto sua ❤️</p>
+    <p>Acerte todas e conclua o jogo 💜</p>
   </div>
 
   <div id="game-board"></div>
@@ -128,37 +135,39 @@ h2 {
 </section>
 
 <script>
+// Frases em ordem das cartas (1 a 10)
 const frases = [
-  "Cada detalhe seu é precioso, e vejo como você se cuida com amor próprio. Sua beleza não é só exterior, é a luz que você carrega em cada gesto.",
-  "A forma como você brinca, ri e transforma momentos simples em diversão é simplesmente encantadora. Você traz alegria para todos ao seu redor.",
-  "Seu sorriso é o meu lugar seguro. Ele ilumina meu dia mesmo quando tudo parece escuro, e eu me perco feliz nele.",
-  "Seu corpo é poesia em movimento. Mas o que me fascina mesmo é a forma como você existe nele, com leveza e autenticidade.",
-  "Você é pura fofura, e cada gesto seu me faz querer proteger e admirar ainda mais a pessoa incrível que você é.",
-  "Seus cachos são únicos, assim como você. Eles representam sua liberdade, sua força e a beleza natural que me deixa completamente encantado.",
-  "Sua espontaneidade me surpreende todos os dias. Eu adoro como você traz surpresas e transforma qualquer momento em algo especial.",
-  "Seu estilo é tão seu, autêntico e elegante. Ele mostra sua personalidade, sua confiança e tudo que torna você irresistível.",
-  "Você é minha spider girl, minha heroína do dia a dia. Entre risos e aventuras, você sempre me faz sentir em casa.",
-  "Seus olhos falam mais que mil palavras. Neles vejo carinho, intensidade e a razão de eu me perder cada vez mais em você."
+  "Cada detalhe seu é precioso, e vejo como você se cuida com amor próprio.",
+  "A forma como você brinca, ri e transforma momentos simples em diversão é encantadora.",
+  "Seu sorriso é o meu lugar seguro, ilumina meu dia mesmo quando tudo parece escuro.",
+  "Seu corpo é poesia em movimento, mas o que me fascina é como você existe nele.",
+  "Você é pura fofura, cada gesto seu me faz admirar ainda mais você.",
+  "Seus cachos são únicos, representam sua liberdade e força.",
+  "Sua espontaneidade me surpreende todos os dias.",
+  "Seu estilo é autêntico e elegante, mostrando sua personalidade.",
+  "Você é minha spider girl, minha heroína do dia a dia.",
+  "Seus olhos falam mais que mil palavras, intensidade e carinho."
 ];
 
 const board = document.getElementById("game-board");
 const btnNext = document.getElementById("btnNext");
 
+// Criar array de cartas (duas vezes cada)
 let cardsArray = [];
 for(let i=0;i<frases.length;i++){
-  // Duas cartas por frase
-  cardsArray.push({id:i, frase:frases[i]});
-  cardsArray.push({id:i, frase:frases[i]});
+  cardsArray.push({id:i, type:'frase', content:frases[i]});
+  cardsArray.push({id:i, type:'imagem', content:`jogo/memoria${i+1}.jpg`});
 }
 
 // Embaralhar
 cardsArray.sort(()=>Math.random()-0.5);
 
-let firstCard = null, secondCard = null, lockBoard = false, acertos=0;
+let firstCard=null, secondCard=null, lockBoard=false, acertos=0;
 
 function createCard(cardData){
   const card = document.createElement("div");
   card.className="card";
+
   const inner = document.createElement("div");
   inner.className="card-inner";
 
@@ -169,17 +178,17 @@ function createCard(cardData){
   const back = document.createElement("div");
   back.className="card-back";
 
-  const img = document.createElement("img");
-  img.src=`jogo/memória${cardData.id+1}.jpg`;
-  img.style.width="100%";
-  img.style.borderRadius="8px";
-  img.style.marginBottom="5px";
-
-  const p = document.createElement("p");
-  p.innerText=cardData.frase;
-
-  back.appendChild(img);
-  back.appendChild(p);
+  if(cardData.type==='frase'){
+    const p = document.createElement("p");
+    p.innerText = cardData.content;
+    back.appendChild(p);
+  }else{
+    const img = document.createElement("img");
+    img.src = cardData.content;
+    img.style.width="100%";
+    img.style.borderRadius="8px";
+    back.appendChild(img);
+  }
 
   inner.appendChild(front);
   inner.appendChild(back);
@@ -191,17 +200,16 @@ function createCard(cardData){
     card.classList.add("flip");
 
     if(!firstCard){
-      firstCard = card;
+      firstCard=card;
     }else{
-      secondCard = card;
-      lockBoard = true;
+      secondCard=card;
+      lockBoard=true;
 
       const firstId = firstCard.__data.id;
       const secondId = secondCard.__data.id;
 
       if(firstId===secondId){
         acertos++;
-        // efeito coração
         [firstCard,secondCard].forEach(c=>{
           const h = document.createElement("div");
           h.className="heart-effect";
@@ -211,7 +219,6 @@ function createCard(cardData){
         });
         resetCards();
       }else{
-        // efeito errado
         [firstCard,secondCard].forEach(c=>{
           const h = document.createElement("div");
           h.style.position="absolute";
@@ -224,7 +231,7 @@ function createCard(cardData){
           c.appendChild(h);
           setTimeout(()=>h.remove(),800);
         });
-        setTimeout(()=>{ 
+        setTimeout(()=>{
           firstCard.classList.remove("flip");
           secondCard.classList.remove("flip");
           resetCards();
@@ -238,13 +245,13 @@ function createCard(cardData){
 }
 
 function resetCards(){
-  [firstCard,secondCard,lockBoard] = [null,null,false];
+  [firstCard,secondCard,lockBoard]=[null,null,false];
   if(acertos===frases.length){
     btnNext.style.display="block";
   }
 }
 
-// Criar cartas no board
+// Criar cartas
 cardsArray.forEach(c=>{
   board.appendChild(createCard(c));
 });
