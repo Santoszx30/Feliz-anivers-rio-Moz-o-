@@ -303,27 +303,31 @@ todas as vezes.`;
         mostrarFotos();
       }
     }
+function mostrarFotos(){
+  frasesFotos.forEach((frase,i)=>{
+    const bloco = document.createElement("div");
+    bloco.className = "foto";
 
-    function mostrarFotos(){
-      frasesFotos.forEach((frase,i)=>{
-        const bloco = document.createElement("div");
-        bloco.className = "foto";
+    const img = document.createElement("img");
+    img.src = `fotos/foto${i+1}.jpg`;
 
-        const img = document.createElement("img");
-        img.src = `fotos/foto${i+1}.jpg`;
+    const p = document.createElement("p");
+    p.textContent = frase;
 
-        const p = document.createElement("p");
-        p.textContent = frase;
+    bloco.appendChild(img);
+    bloco.appendChild(p);
+    page1.appendChild(bloco);
 
-        bloco.appendChild(img);
-        bloco.appendChild(p);
-        page1.appendChild(bloco);
+    // Adiciona efeito de aparecimento escalonado
+    setTimeout(()=>{ bloco.classList.add("show"); }, i*400);
+  });
 
-        setTimeout(()=>{ bloco.classList.add("show"); }, i*400);
-      });
-
-      setTimeout(()=>{ btnNext.style.display="block"; }, frasesFotos.length*400 + 500);
-    }
+  // MOSTRA O BOTÃO **SOMENTE DEPOIS QUE TODAS AS FOTOS APARECEREM**
+  setTimeout(()=>{ 
+    btnNext.style.display="block"; 
+    btnNext.scrollIntoView({ behavior: "smooth" }); // rola até o botão
+  }, frasesFotos.length * 400 + 300);
+  }
 
     digitar();
 
