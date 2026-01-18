@@ -768,7 +768,6 @@ function iniciarPage4(){
 }
 
 function digitarTexto(elemento, texto, callback){
-  let i = 0;
   const intervalo = setInterval(()=>{
     elemento.innerHTML += texto.charAt(i);
     i++;
@@ -780,6 +779,8 @@ function digitarTexto(elemento, texto, callback){
 }
 
 function mostrarProximo(){
+  const container = document.getElementById("sequencia");
+  
   if(indice >= conteudosPage4.length){
     document.getElementById("btnPage5").classList.remove("hidden");
     return;
