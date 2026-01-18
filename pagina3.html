@@ -6,274 +6,227 @@
 <title>Jogo da Memória</title>
 <style>
 body, html {
-  margin:0;
-  padding:0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
-  color:white;
-  min-height:100vh;
-  overflow-x:hidden;
+    margin:0;
+    padding:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
+    color:white;
+    min-height:100vh;
 }
-
-#page3 {
-  padding:20px;
-  max-width:900px;
-  margin:auto;
-  zoom:0.85; /* reduz para caber tudo sem quebrar */
-}
-
-h2 {
-  text-align:center;
-  margin-bottom:15px;
-}
-
 #regras {
-  background: rgba(255,255,255,0.1);
-  padding:15px;
-  border-radius:10px;
-  margin-bottom:25px;
-  line-height:1.6;
+    text-align:center;
+    margin:20px 0;
+    font-size:1.2rem;
+    line-height:1.5;
 }
-
-#game-board {
-  display:grid;
-  grid-template-columns: repeat(5,1fr);
-  gap:12px;
-  justify-items:center;
+#board {
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(100px,1fr));
+    gap:10px;
+    justify-items:center;
+    padding:20px;
 }
-
 .card {
-  width:100px;
-  height:140px;
-  perspective:1000px;
-  cursor:pointer;
-  position:relative;
+    width:100px;
+    height:140px;
+    background:#2a0050;
+    border-radius:12px;
+    cursor:pointer;
+    position:relative;
+    perspective:1000px;
 }
-
 .card-inner {
-  position:absolute;
-  width:100%;
-  height:100%;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
+    position:relative;
+    width:100%;
+    height:100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
 }
-
 .card.flip .card-inner {
-  transform: rotateY(180deg);
+    transform: rotateY(180deg);
 }
-
 .card-front, .card-back {
-  position:absolute;
-  width:100%;
-  height:100%;
-  backface-visibility: hidden;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:0.85rem;
-  padding:5px;
-  box-shadow:0 0 12px rgba(180,0,255,0.5);
+    position:absolute;
+    width:100%;
+    height:100%;
+    backface-visibility:hidden;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:5px;
 }
-
 .card-front {
-  background:#2a0050;
-  color:white;
-  font-weight:bold;
+    background:#3b0050;
+    color:white;
 }
-
 .card-back {
-  transform: rotateY(180deg);
-  background:#5b0b9a;
-  color:white;
-  font-weight:bold;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  padding:6px;
+    background:#a855f7;
+    transform:rotateY(180deg);
+    color:white;
+    font-size:0.9rem;
 }
-
-.heart-effect {
-  position:absolute;
-  animation:heartUp 1s ease-out forwards;
-  font-size:20px;
+.btnNext {
+    display:none;
+    margin:20px auto;
+    padding:12px 24px;
+    font-size:1.2rem;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(45deg,#9b4dff,#d08cff);
+    color:white;
+    cursor:pointer;
+    display:block;
 }
-
-@keyframes heartUp {
-  0% {opacity:1; transform:translateY(0);}
-  100% {transform:translateY(-100px); opacity:0;}
+.mensagemErro {
+    position:absolute;
+    font-size:1.5rem;
+    font-weight:bold;
+    color:#d6b3ff;
+    opacity:0;
+    animation:flyErro 3s forwards;
 }
-
-#btnNext {
-  display:none;
-  margin:30px auto;
-  padding:14px 30px;
-  font-size:1.2rem;
-  border:none;
-  border-radius:30px;
-  background:linear-gradient(45deg,#9b4dff,#d08cff);
-  color:white;
-  cursor:pointer;
-  box-shadow:0 0 15px rgba(180,0,255,0.6);
-  display:block;
+@keyframes flyErro {
+    0% {opacity:0; transform:translateY(0);}
+    20% {opacity:1;}
+    80% {opacity:1;}
+    100% {opacity:0; transform:translateY(-100px);}
 }
 </style>
 </head>
 <body>
-<section id="page3">
-  <h2>Jogo da Memória 💜</h2>
-  <div id="regras">
+
+<div id="regras">
     <p>Vire as cartas 🃏</p>
     <p>Cada carta corresponde a uma foto sua ❤️</p>
-    <p>Acerte todas e conclua o jogo 💜</p>
-  </div>
+    <p>Acertei todas e conclua o jogo 💜</p>
+</div>
 
-  <div id="game-board"></div>
-  <button id="btnNext">Próxima Página 💜</button>
-</section>
+<div id="board"></div>
+<button class="btnNext" id="btnNext">Próxima página 💜</button>
 
 <script>
-// Frases em ordem das cartas (1 a 10)
-const frases = [
-  "Cada detalhe seu é precioso, e vejo como você se cuida com amor próprio.",
-  "A forma como você brinca, ri e transforma momentos simples em diversão é encantadora.",
-  "Seu sorriso é o meu lugar seguro, ilumina meu dia mesmo quando tudo parece escuro.",
-  "Seu corpo é poesia em movimento, mas o que me fascina é como você existe nele.",
-  "Você é pura fofura, cada gesto seu me faz admirar ainda mais você.",
-  "Seus cachos são únicos, representam sua liberdade e força.",
-  "Sua espontaneidade me surpreende todos os dias.",
-  "Seu estilo é autêntico e elegante, mostrando sua personalidade.",
-  "Você é minha spider girl, minha heroína do dia a dia.",
-  "Seus olhos falam mais que mil palavras, intensidade e carinho."
-];
-
-const board = document.getElementById("game-board");
+const board = document.getElementById("board");
 const btnNext = document.getElementById("btnNext");
 
-// Criar array de cartas (duas vezes cada)
-let cardsArray = [];
-for(let i=0;i<frases.length;i++){
-  cardsArray.push({id:i, type:'frase', content:frases[i]});
-  cardsArray.push({id:i, type:'imagem', content:`jogo/memoria${i+1}.jpg`});
-}
+// Cartas: imagens e frases na ordem 1 a 10
+const cardsArray = [
+    {type:'frase', content:'Seu cuidado com a sua beleza me encanta 💜'},
+    {type:'frase', content:'Adoro suas brincadeiras e como você se diverte ❤️'},
+    {type:'frase', content:'Seu sorriso ilumina meu mundo 💜'},
+    {type:'imagem', content:'jogo/memoria4.jpg', frase:'Seu corpo é incrível ❤️'},
+    {type:'frase', content:'Sua fofura me derrete 💜'},
+    {type:'imagem', content:'jogo/memoria6.jpg', frase:'Seus cachos são perfeitos ❤️'},
+    {type:'frase', content:'A sua aleatoriedade me deixa feliz 💜'},
+    {type:'imagem', content:'jogo/memoria8.jpg', frase:'Seu estilo é único ❤️'},
+    {type:'frase', content:'My spider girl ❤️🕷️'},
+    {type:'imagem', content:'jogo/memoria10.jpg', frase:'Seus olhos me prendem 💜'}
+];
 
-// Embaralhar
-cardsArray.sort(()=>Math.random()-0.5);
+// Duplicar para o jogo da memória
+let gameCards = [...cardsArray, ...cardsArray];
+gameCards = gameCards.sort(() => 0.5 - Math.random());
 
 let firstCard=null, secondCard=null, lockBoard=false, acertos=0;
 
-// ... código anterior ...
+function createCard(card){
+    const div = document.createElement("div");
+    div.classList.add("card");
 
-function createCard(cardData){
-  const card = document.createElement("div");
-  card.className="card";
+    const inner = document.createElement("div");
+    inner.className = "card-inner";
 
-  const inner = document.createElement("div");
-  inner.className="card-inner";
+    const front = document.createElement("div");
+    front.className = "card-front";
+    front.textContent = "?";
 
-  const front = document.createElement("div");
-  front.className="card-front";
-  front.innerText="💜";
+    const back = document.createElement("div");
+    back.className = "card-back";
 
-  const back = document.createElement("div");
-  back.className="card-back";
-
-  if(cardData.type==='frase'){
-    const p = document.createElement("p");
-    p.innerText = cardData.content;
-    back.appendChild(p);
-  }else{
-    const img = document.createElement("img");
-    img.src = cardData.content;
-    img.style.width="100%";
-    img.style.height="100%";
-    img.style.objectFit="cover";
-    img.style.borderRadius="8px";
-    back.appendChild(img);
-  }
-
-  inner.appendChild(front);
-  inner.appendChild(back);
-  card.appendChild(inner);
-
-  card.addEventListener("click",()=>{
-    if(lockBoard || card===firstCard || card.classList.contains("flip")) return;
-
-    card.classList.add("flip");
-
-    if(!firstCard){
-      firstCard=card;
-    }else{
-      secondCard=card;
-      lockBoard=true;
-
-      const firstId = firstCard.__data.id;
-      const secondId = secondCard.__data.id;
-
-      if(firstId===secondId){
-        acertos++;
-        [firstCard,secondCard].forEach(c=>{
-          const h = document.createElement("div");
-          h.className="heart-effect";
-          h.innerText="💜";
-          c.appendChild(h);
-          setTimeout(()=>h.remove(),800);
-        });
-        resetCards();
-      }else{
-        // Mensagem voando fora da carta
-        for(let i=0;i<5;i++){
-          const e = document.createElement("div");
-          e.innerText="MUITO BURRA KKKKKKKKK";
-          e.style.position="absolute";
-          e.style.left = Math.random()*80 + "%";
-          e.style.top = Math.random()*80 + "%";
-          e.style.fontSize = 14 + Math.random()*8 + "px";
-          e.style.color = "#ff4fff";
-          e.style.fontWeight="bold";
-          e.style.pointerEvents="none";
-          e.style.opacity="1";
-          board.appendChild(e);
-
-          // animação simples subindo e desaparecendo
-          e.animate([
-            {transform:"translateY(0)", opacity:1},
-            {transform:"translateY(-60px)", opacity:0}
-          ], {duration:3000, easing:"ease-out"});
-
-          setTimeout(()=>e.remove(),3000);
-        }
-
-        setTimeout(()=>{
-          firstCard.classList.remove("flip");
-          secondCard.classList.remove("flip");
-          resetCards();
-        },1000);
-      }
+    if(card.type==='frase'){
+        back.textContent = card.content;
+    } else if(card.type==='imagem'){
+        const img = document.createElement("img");
+        img.src = card.content;
+        img.style.width = "90%";
+        img.style.borderRadius = "10px";
+        back.appendChild(img);
+        const p = document.createElement("p");
+        p.textContent = card.frase;
+        back.appendChild(p);
     }
-  });
 
-  card.__data = cardData;
-  return card;
+    inner.appendChild(front);
+    inner.appendChild(back);
+    div.appendChild(inner);
+
+    div.addEventListener("click", () => flipCard(div, card));
+    return div;
 }
-</script>
+
+function flipCard(div, card){
+    if(lockBoard || div===firstCard) return;
+    div.classList.add("flip");
+    if(!firstCard){
+        firstCard=div;
+        return;
+    }
+    secondCard=div;
+    lockBoard=true;
+
+    setTimeout(checkMatch, 800);
+}
+
+function checkMatch(){
+    const card1 = firstCard;
+    const card2 = secondCard;
+
+    const content1 = card1.querySelector(".card-back").innerHTML;
+    const content2 = card2.querySelector(".card-back").innerHTML;
+
+    if(content1 === content2){
+        // Explodir corações roxos
+        for(let i=0;i<5;i++){
+            const h = document.createElement("div");
+            h.className="mensagemErro";
+            h.style.left = Math.random()*90+"%";
+            h.style.top = Math.random()*90+"%";
+            h.textContent="💜";
+            document.body.appendChild(h);
+            setTimeout(()=>h.remove(),3000);
+        }
+        acertos++;
+        resetCards();
+    } else {
+        // Mostrar "MUITO BURRA KKKKKKK" voando
+        for(let i=0;i<3;i++){
+            const m = document.createElement("div");
+            m.className="mensagemErro";
+            m.style.left = Math.random()*90+"%";
+            m.style.top = Math.random()*90+"%";
+            m.textContent="MUITO BURRA KKKKKKK";
+            document.body.appendChild(m);
+            setTimeout(()=>m.remove(),3000);
+        }
+        firstCard.classList.remove("flip");
+        secondCard.classList.remove("flip");
+        resetCards();
+    }
+}
 
 function resetCards(){
-  [firstCard,secondCard,lockBoard]=[null,null,false];
-  if(acertos===frases.length){
-    btnNext.style.display="block";
-  }
+    [firstCard, secondCard, lockBoard] = [null, null, false];
+    if(acertos === cardsArray.length){
+        btnNext.style.display="block";
+    }
 }
 
 // Criar cartas
-cardsArray.forEach(c=>{
-  board.appendChild(createCard(c));
-});
+gameCards.forEach(c => board.appendChild(createCard(c)));
 
-btnNext.addEventListener("click",()=>{
-  window.location.href="pagina4.html";
+btnNext.addEventListener("click", ()=>{
+    window.location.href="pagina4.html";
 });
 </script>
 </body>
