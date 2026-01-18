@@ -68,6 +68,8 @@ h1 {
   font-size:0.9rem;
   padding:5px;
   box-sizing:border-box;
+  overflow:hidden;
+  word-wrap: break-word;
 }
 
 .card-front {
@@ -83,7 +85,9 @@ h1 {
   align-items:center;
   justify-content:center;
   font-weight:bold;
-  font-size:1.5rem;
+  font-size:0.9rem;
+  text-align:center;
+  padding:5px;
 }
 
 #btnNext {
@@ -156,14 +160,11 @@ const imagens = [
   "Jogo/memoria10.jpg"
 ];
 
-// Criar array de cartas (10 frases + 10 imagens)
 let cardsArray = [];
 for(let i=0;i<10;i++){
   cardsArray.push({type:"frase", content:frases[i]});
   cardsArray.push({type:"foto", content:imagens[i]});
 }
-
-// Embaralhar cartas
 cardsArray = cardsArray.sort(()=>0.5-Math.random());
 
 const board = document.getElementById("board");
@@ -216,12 +217,11 @@ function criarCarta(data){
 }
 
 function checkMatch(){
-  const firstType = firstCard.querySelector(".card-back").querySelector("img") ? "foto" : "frase";
-  const secondType = secondCard.querySelector(".card-back").querySelector("img") ? "foto" : "frase";
+  const firstType = firstCard.querySelector(".card-back img") ? "foto" : "frase";
+  const secondType = secondCard.querySelector(".card-back img") ? "foto" : "frase";
 
   if(firstType===secondType){
     acertos++;
-    // Efeito corações voando
     for(let i=0;i<5;i++){
       const e=document.createElement("div");
       e.className="elogio";
@@ -233,13 +233,13 @@ function checkMatch(){
     }
     resetCards();
   } else {
-    // Cartas erradas voando MUITO BURRA
+    // Mostrar MUITO BURRA KKKKKK voando separado
     for(let i=0;i<5;i++){
       const e=document.createElement("div");
       e.className="elogio";
       e.textContent="MUITO BURRA KKKKKK";
-      e.style.left=(firstCard.offsetLeft + Math.random()*60)+"px";
-      e.style.top=(firstCard.offsetTop + Math.random()*60)+"px";
+      e.style.left=Math.random()*(window.innerWidth-100)+"px";
+      e.style.top=Math.random()*(window.innerHeight-50)+"px";
       document.body.appendChild(e);
       setTimeout(()=>e.remove(),3000);
     }
@@ -258,12 +258,10 @@ function resetCards(){
   }
 }
 
-// Criar cartas no board
 cardsArray.forEach(c=>{
   board.appendChild(criarCarta(c));
 });
 
-// Botão próximo
 document.getElementById("btnNext").addEventListener("click",()=>{
   window.location.href="pagina4.html";
 });
