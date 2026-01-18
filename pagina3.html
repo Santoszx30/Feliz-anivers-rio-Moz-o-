@@ -8,164 +8,253 @@
 body, html {
   margin:0;
   padding:0;
-  font-family: Arial, sans-serif;
+  font-family:Arial,sans-serif;
   background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
   color:white;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  min-height:100vh;
+  overflow-x:hidden;
 }
-
-h2 { margin:20px 0 10px 0; text-align:center; }
-#regras { text-align:center; margin-bottom:30px; }
-
+h2{
+  text-align:center;
+  margin:20px 0;
+}
+#regras {
+  text-align:center;
+  margin-bottom:20px;
+  font-size:1.2rem;
+}
 #board {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* antes estava 120px */
-  gap: 8px; /* dá mais espaço entre as cartas */
-  width: 95%; /* ocupa quase toda a largura */
-  max-width: 900px;
-  margin-bottom: 20px; /* pra não colar no botão */
+  display:flex;
+  flex-direction:column; /* cartas uma abaixo da outra */
+  align-items:center;
+  gap:12px;
+  width:90%;
+  margin:auto;
+  padding-bottom:20px;
 }
-
-.card { width: 100%; padding-top: 100%; position: relative; perspective: 1000px; cursor: pointer; }
-.card-inner { position:absolute; inset:0; transition: transform 0.6s; transform-style: preserve-3d; }
-.card.flipped .card-inner { transform: rotateY(180deg); }
+.card-row {
+  display:flex;
+  justify-content:center;
+  gap:12px; /* espaço entre cartas na linha */
+}
+.card {
+  width:120px;
+  height:160px;
+  perspective:1000px;
+  cursor:pointer;
+  position:relative;
+}
+.card-inner {
+  position:relative;
+  width:100%;
+  height:100%;
+  transform-style:preserve-3d;
+  transition:transform 0.6s;
+}
+.card.flip .card-inner {
+  transform: rotateY(180deg);
+}
 .card-front, .card-back {
-  position:absolute; inset:0; backface-visibility:hidden; border-radius:12px;
-  display:flex; justify-content:center; align-items:center; font-size:0.8rem; padding:5px; text-align:center;
+  position:absolute;
+  width:100%;
+  height:100%;
+  backface-visibility:hidden;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:8px;
+  box-shadow:0 0 10px rgba(180,0,255,0.5);
 }
-.card-front { background:#2a0050; color:white; }
-.card-back { background:#fff; color:#333; transform: rotateY(180deg); overflow:hidden; }
-.card-back img { width:100%; height:100%; object-fit:cover; border-radius:12px; }
-
-#btnNext {
-  display:none; margin:30px auto; padding:16px 32px;
-  font-size:1.2rem; border:none; border-radius:30px;
-  background:linear-gradient(45deg,#9b4dff,#d08cff); color:white;
-  cursor:pointer; box-shadow:0 0 15px rgba(180,0,255,0.6);
+.card-front {
+  background:#2a0050;
 }
-
-.elogio-erro {
-  position:absolute; font-size:1.3rem; font-weight:bold; opacity:0; color:#ff7ac8;
-  animation:fly 3s forwards;
+.card-back {
+  background:#4b007f;
+  transform: rotateY(180deg);
+  font-size:0.9rem;
 }
-@keyframes fly {
-  0% {opacity:0; transform:translateY(20px);}
-  20% {opacity:1;}
-  80% {opacity:1;}
-  100% {opacity:0; transform:translateY(-100px);}
+.btnNext {
+  display:none;
+  margin:20px auto;
+  padding:16px 32px;
+  font-size:1.2rem;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#9b4dff,#d08cff);
+  color:white;
+  cursor:pointer;
+  box-shadow:0 0 15px rgba(180,0,255,0.6);
 }
-
-.heart { position:absolute; bottom:0; animation:heartUp linear forwards; pointer-events:none; }
-@keyframes heartUp { 0% {opacity:0;} 10% {opacity:1;} 100% {transform:translateY(-150vh);opacity:0;} }
+.heart {
+  position:absolute;
+  animation:heartUp linear forwards;
+  pointer-events:none;
+  font-size:16px;
+}
+@keyframes heartUp {
+  0% {opacity:0;}
+  10% {opacity:1;}
+  100% {transform:translateY(-150vh);opacity:0;}
+}
+.muito-burra {
+  position:absolute;
+  animation:burraUp linear forwards;
+  pointer-events:none;
+  font-size:18px;
+  font-weight:bold;
+  color:#ff55ff;
+}
+@keyframes burraUp {
+  0% {opacity:0; transform:translateY(40px);}
+  10% {opacity:1;}
+  100% {transform:translateY(-150px); opacity:0;}
+}
 </style>
 </head>
 <body>
 
-<h2>Jogo da Memória 💜</h2>
+<h2>Jogo da Memória</h2>
 <div id="regras">
-  <p>Vire as cartas 🃏</p>
-  <p>Cada carta tem uma foto sua ❤️</p>
-  <p>Acerte todas e conclua o jogo 💜</p>
+  Vire as cartas 🃏<br>
+  Cada carta corresponde a uma foto sua ❤️<br>
+  Acerte todas e conclua o jogo 💜
 </div>
 
 <div id="board"></div>
-<button id="btnNext">Clique aqui para a próxima página 💜</button>
+<button id="btnNext" class="btnNext">Próxima Página 💜</button>
 
 <script>
-// Frases e imagens na ordem correta
-const cartasOriginais = [
-  {img:'Jogo/memoria1.jpg', frase:'Sua beleza merece cuidado em cada detalhe 💜'},
-  {img:'Jogo/memoria2.jpg', frase:'Adoro como você brinca e transforma cada momento ❤️'},
-  {img:'Jogo/memoria3.jpg', frase:'Seu sorriso ilumina meu dia 💜'},
-  {img:'Jogo/memoria4.jpg', frase:'Seu corpo é poesia ❤️'},
-  {img:'Jogo/memoria5.jpg', frase:'Sua fofura me conquista todos os dias 💜'},
-  {img:'Jogo/memoria6.jpg', frase:'Seus cachos são sua coroa de beleza ❤️'},
-  {img:'Jogo/memoria7.jpg', frase:'Sua espontaneidade torna tudo mágico 💜'},
-  {img:'Jogo/memoria8.jpg', frase:'Seu estilo é único e marcante ❤️'},
-  {img:'Jogo/memoria9.jpg', frase:'My spider girl ❤️🕷️, você é incrível 💜'},
-  {img:'Jogo/memoria10.jpg', frase:'Seus olhos dizem tudo ❤️'}
+const frases = [
+  "A beleza que você cuida me encanta.",
+  "Adoro quando você brinca e se diverte.",
+  "Seu sorriso ilumina tudo ao redor.",
+  "Seu corpo é pura poesia aos meus olhos.",
+  "Sua fofura é irresistível.",
+  "Seus cachos são perfeitos e únicos.",
+  "Adoro a sua espontaneidade e aleatoriedade.",
+  "Seu estilo é único e hipnotizante.",
+  "My spider girl ❤️🕷️",
+  "Seus olhos me deixam perdido."
 ];
 
-// Duplicar para formar pares
-let cartas = [...cartasOriginais, ...cartasOriginais];
+const imagens = [
+  "Jogo/memoria1.jpg",
+  "Jogo/memoria2.jpg",
+  "Jogo/memoria3.jpg",
+  "Jogo/memoria4.jpg",
+  "Jogo/memoria5.jpg",
+  "Jogo/memoria6.jpg",
+  "Jogo/memoria7.jpg",
+  "Jogo/memoria8.jpg",
+  "Jogo/memoria9.jpg",
+  "Jogo/memoria10.jpg"
+];
 
-// Embaralhar cartas
-cartas.sort(()=>Math.random()-0.5);
+// Criar array de cartas: cada carta tem frase + imagem
+const cardsArray = frases.map((frase,i)=>({
+  id:i,
+  frase:frase,
+  img: imagens[i]
+}));
 
-const board=document.getElementById('board');
-let firstCard=null, secondCard=null, lockBoard=false, acertos=0;
-const btnNext=document.getElementById('btnNext');
+// Duplicar para pares
+let gameCards = [...cardsArray, ...cardsArray];
 
-function createCard(carta){
-  const card=document.createElement('div'); card.className='card';
-  const inner=document.createElement('div'); inner.className='card-inner';
+// Embaralhar
+gameCards.sort(()=>Math.random()-0.5);
 
-  const front=document.createElement('div'); front.className='card-front'; front.textContent='🃏';
-  const back=document.createElement('div'); back.className='card-back';
-  
-  if(carta.img){
-    const img=document.createElement('img'); img.src=carta.img; back.appendChild(img);
-  } else {
-    back.textContent=carta.frase;
-  }
+const board = document.getElementById("board");
+let firstCard=null, secondCard=null, lockBoard=false;
+let acertos=0;
 
-  inner.appendChild(front); inner.appendChild(back); card.appendChild(inner);
+// Criar cartas
+function createCard(cardData){
+  const card = document.createElement("div");
+  card.className="card";
 
-  card.addEventListener('click', ()=>{
+  const inner = document.createElement("div");
+  inner.className="card-inner";
+
+  const front = document.createElement("div");
+  front.className="card-front";
+  front.innerHTML = `<img src="${cardData.img}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">`;
+
+  const back = document.createElement("div");
+  back.className="card-back";
+  back.textContent = cardData.frase;
+
+  inner.appendChild(front);
+  inner.appendChild(back);
+  card.appendChild(inner);
+
+  card.addEventListener("click",()=>{
     if(lockBoard || card===firstCard) return;
-    card.classList.add('flipped');
+    card.classList.add("flip");
+    if(!firstCard){
+      firstCard=card;
+      return;
+    }
+    secondCard=card;
+    lockBoard=true;
 
-    if(!firstCard){ firstCard=card; return; }
-    secondCard=card; lockBoard=true;
-
-    const idx1 = board.querySelectorAll('.card');
-    const pos1 = Array.from(idx1).indexOf(firstCard);
-    const pos2 = Array.from(idx1).indexOf(secondCard);
-
-    // Cartas correspondentes se tiverem o mesmo img ou frase
-    const correct = cartas[pos1].img===cartas[pos2].img && cartas[pos1].frase===cartas[pos2].frase;
-
-    if(correct){
-      // Corações voando
+    // Checar match
+    const firstId = gameCards[firstCard.dataset.index].id;
+    const secondId = gameCards[secondCard.dataset.index].id;
+    if(firstId===secondId){
+      // acerto: explodir corações
       for(let i=0;i<5;i++){
-        const h=document.createElement('div'); h.className='heart'; h.innerText='💜';
-        h.style.left=(Math.random()*100)+'%'; h.style.fontSize=(12+Math.random()*14)+'px';
-        h.style.animationDuration=(2+Math.random()*2)+'s'; document.body.appendChild(h);
-        setTimeout(()=>h.remove(),4000);
+        const h = document.createElement("div");
+        h.className="heart";
+        h.innerText="💜";
+        h.style.left=card.offsetLeft + Math.random()*60 + "px";
+        h.style.top=card.offsetTop + Math.random()*60 + "px";
+        h.style.fontSize = 14 + Math.random()*14 + "px";
+        document.body.appendChild(h);
+        setTimeout(()=>h.remove(),2000);
       }
       acertos++;
       resetCards();
     } else {
-      // Erro: voando
-      for(let i=0;i<5;i++){
-        const e=document.createElement('div'); e.className='elogio-erro';
-        e.innerText='MUITO BURRA KKKKKKK'; e.style.left=(Math.random()*80)+'%'; e.style.top=(Math.random()*80)+'%';
-        document.body.appendChild(e); setTimeout(()=>e.remove(),3000);
+      // erro: mostrar muito burra voando
+      for(let i=0;i<3;i++){
+        const b = document.createElement("div");
+        b.className="muito-burra";
+        b.innerText="MUITO BURRA KKKKKKK";
+        b.style.left=card.offsetLeft + Math.random()*60 + "px";
+        b.style.top=card.offsetTop + Math.random()*60 + "px";
+        document.body.appendChild(b);
+        setTimeout(()=>b.remove(),3000);
       }
-      setTimeout(()=>{
-        firstCard.classList.remove('flipped');
-        secondCard.classList.remove('flipped');
-        resetCards();
-      },800);
+      setTimeout(()=>{ firstCard.classList.remove("flip"); secondCard.classList.remove("flip"); resetCards(); },1000);
     }
   });
+
+  card.dataset.index = gameCards.indexOf(cardData);
   return card;
+}
+
+// Organizar cartas 2 por linha
+for(let i=0;i<gameCards.length;i+=2){
+  const row = document.createElement("div");
+  row.className="card-row";
+  row.appendChild(createCard(gameCards[i]));
+  if(gameCards[i+1]) row.appendChild(createCard(gameCards[i+1]));
+  board.appendChild(row);
 }
 
 function resetCards(){
   [firstCard,secondCard,lockBoard]=[null,null,false];
-  if(acertos===cartasOriginais.length){
-    btnNext.style.display="block";
+  if(acertos===cardsArray.length){
+    document.getElementById("btnNext").style.display="block";
   }
 }
 
-// Criar cartas
-cartas.forEach(c=>{ board.appendChild(createCard(c)); });
-
-btnNext.addEventListener('click', ()=>{ window.location.href="pagina4.html"; });
+// Botão conectar à página 4
+document.getElementById("btnNext").addEventListener("click",()=>{
+  window.location.href="pagina4.html";
+});
 </script>
+
 </body>
-</html>
+  </html>
