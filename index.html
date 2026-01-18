@@ -314,6 +314,49 @@ body{
   75%{transform:translateX(-55%)}
   100%{transform:translateX(-50%)}
 }
+  #page4{
+  min-height:100vh;
+  padding:40px 20px;
+  text-align:center;
+}
+
+.bloco{
+  margin-bottom:50px;
+  opacity:0;
+  animation: fadeIn 1.5s forwards;
+}
+
+.bloco img{
+  max-width:90%;
+  border-radius:16px;
+  box-shadow:0 0 20px rgba(180,0,255,0.25);
+  margin-bottom:20px;
+}
+
+.texto-digitando{
+  font-size:1.1rem;
+  line-height:1.6;
+  color:#fff;
+  max-width:700px;
+  margin:0 auto;
+  min-height:80px;
+}
+
+#btnPage5{
+  margin-top:40px;
+  padding:14px 26px;
+  font-size:1.1rem;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#9b4dff,#d08cff);
+  color:#fff;
+  cursor:pointer;
+  box-shadow:0 0 15px rgba(180,0,255,0.6);
+}
+
+@keyframes fadeIn{
+  to{opacity:1}
+  }
 </style>
 </head>
 
@@ -354,6 +397,14 @@ body{
 
   <button class="btn" id="btnNextPage">Clique aqui princesa💜</button>
 </section>
+
+  <section id="page4" class="hidden">
+  <div id="sequencia"></div>
+
+  <button id="btnPage5" class="hidden">
+    Clique aqui minha princesa 💜
+  </button>
+  </section>
 
 <script>
 /* ===== LOADING FOTOS ===== */
@@ -664,6 +715,93 @@ cartas.forEach(c=>{
     setTimeout(()=>msg.remove(),300);
   },1200);
   }
+  <script>
+const conteudosPage4 = [
+  {
+    img:"textos/texto1.jpg",
+    texto:"Ler isso me faz entender que amor não é só sentir, é permanecer. Saber que, mesmo nos dias confusos, é em mim que você encontra paz, me faz querer ser melhor todos os dias. Amar você também virou a coisa mais bonita que eu faço, porque é real, é cuidado e é escolha consciente. Seu amor me dá casa, e eu fico."
+  },
+  {
+    img:"textos/texto2.jpg",
+    texto:"Quando você fala da minha beleza desse jeito, eu percebo que você enxerga além da superfície. Você vê o que eu sou quando ninguém está olhando. E isso vale mais do que qualquer elogio comum, porque vem do coração. Se minha beleza toca você, saiba que a sua já mora em mim faz tempo."
+  },
+  {
+    img:"textos/texto3.jpg",
+    texto:"Ser chamado assim por você carrega um peso bonito, um orgulho silencioso. Saber que sou seu porto seguro me faz querer ser ainda mais firme, mais presente, mais cuidado. Com você, eu aprendi que força também é afeto, e que amor de verdade não precisa provar nada — ele só existe, firme, todos os dias."
+  },
+  {
+    img:"textos/texto4.jpg",
+    texto:"Talvez o que tornou tudo tão verdadeiro foi exatamente isso: não houve promessa, houve presença. A gente se escolheu sem perceber, foi ficando, foi criando sentido. Se o amor é pausa em meio ao caos, então você também é. E eu fico feliz de ser o lugar onde o seu coração decidiu ficar."
+  },
+  {
+    img:"textos/texto5.jpg",
+    texto:"Estar com você também me acalma. Tudo fica mais simples quando é ao seu lado, como se o tempo desacelerasse só pra gente existir melhor. Seu carinho, seu jeito e sua companhia transformam qualquer momento em algo que vale a pena guardar. Eu também amo estar com você, mais do que consigo explicar."
+  },
+  {
+    img:"textos/texto6.jpg",
+    texto:"Talvez seja isso que torna tudo tão verdadeiro: esse amor que não grita, mas permanece. Eu sinto nos detalhes, nos gestos pequenos, nos olhares que dizem mais do que palavras. Sua presença me prova todos os dias que amor não precisa ser exagerado pra ser intenso — só precisa ser sincero."
+  },
+  {
+    img:"textos/texto7.jpg",
+    texto:"O mais bonito é que foi assim pra mim também. Sem planos, sem cálculo, só sentimento crescendo e tomando espaço. Você virou parte dos meus dias sem pedir permissão, e hoje não sei mais imaginar meus pensamentos sem você neles. Se amor é cuidado e presença, então a gente acertou sem nem tentar."
+  },
+  {
+    img:"textos/texto8.jpg",
+    texto:"Mesmo quando faltam palavras, eu entendo. Porque o que você sente chega antes de qualquer explicação. Saber que sou esse lugar seguro pra você me faz sentir em casa também. Em meio a qualquer confusão, é reconfortante saber que existe esse sentimento firme entre nós — simples, verdadeiro e cheio de sentido."
+  }
+];
+
+const container = document.getElementById("sequencia");
+let indice = 0;
+
+function digitarTexto(elemento, texto, callback){
+  let i = 0;
+  const intervalo = setInterval(()=>{
+    elemento.innerHTML += texto.charAt(i);
+    i++;
+    if(i >= texto.length){
+      clearInterval(intervalo);
+      setTimeout(callback, 800);
+    }
+  },35);
+}
+
+function mostrarProximo(){
+  if(indice >= conteudosPage4.length){
+    document.getElementById("btnPage5").classList.remove("hidden");
+    return;
+  }
+
+  const bloco = document.createElement("div");
+  bloco.className = "bloco";
+
+  const img = document.createElement("img");
+  img.src = conteudosPage4[indice].img;
+
+  const textoDiv = document.createElement("div");
+  textoDiv.className = "texto-digitando";
+
+  bloco.appendChild(img);
+  bloco.appendChild(textoDiv);
+  container.appendChild(bloco);
+
+  setTimeout(()=>{
+    digitarTexto(textoDiv, conteudosPage4[indice].texto, ()=>{
+      indice++;
+      mostrarProximo();
+    });
+  },1200);
+}
+
+mostrarProximo();
+
+/* BOTÃO PAGE 5 */
+document.getElementById("btnPage5").onclick = ()=>{
+  document.getElementById("page4").classList.add("hidden");
+  document.getElementById("page5").classList.remove("hidden");
+  window.scrollTo(0,0);
+};
+</script>
 </script>
 
 </body>
