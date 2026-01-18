@@ -184,8 +184,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 });
 </script>
-  <!-- PAGE 1 -->
-<section id="page1">
+<!-- PAGE 1 -->
+<section id="page1" style="display:none;">
   <div id="texto"></div>
   <div id="fotos"></div>
   <button class="btn" id="btnFinal">Clique aqui princesinha 💜</button>
@@ -199,6 +199,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   margin:auto;
   background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
   color:white;
+  overflow-x:hidden;
 }
 
 #texto {
@@ -244,13 +245,20 @@ document.addEventListener("DOMContentLoaded", ()=>{
   color:white;
   cursor:pointer;
   box-shadow:0 0 15px rgba(180,0,255,0.6);
+  display:block;
+  text-align:center;
 }
 </style>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  // TEXTO GRANDE DA PAGE 1
+  const page1 = document.getElementById("page1");
+  const elTexto = document.getElementById("texto");
+  const containerFotos = document.getElementById("fotos");
+  const btnFinal = document.getElementById("btnFinal");
+
+  // TEXTO DA PAGE 1
   const textoCompleto = `Amar você nunca foi esforço.
 Foi encontro.
 
@@ -266,19 +274,6 @@ que me deixa completamente perdido.
 Com você, tudo faz sentido.
 E eu escolheria você
 todas as vezes.`;
-
-  const elTexto = document.getElementById("texto");
-  let t = 0;
-
-  function digitarTexto(callback){
-    const intervalo = setInterval(()=>{
-      elTexto.innerHTML += textoCompleto.charAt(t++);
-      if(t >= textoCompleto.length){
-        clearInterval(intervalo);
-        setTimeout(callback, 500); // Pequena pausa antes de mostrar fotos
-      }
-    },35);
-  }
 
   // FRASES COM FOTOS
   const frases = [
@@ -304,30 +299,41 @@ todas as vezes.`;
     "Você é perigosa do melhor jeito possível"
   ];
 
-  function mostrarFotos(){
-    const container = document.getElementById("fotos");
-    frases.forEach((f,i)=>{
+  // Mostrar page1
+  page1.style.display = "block";
+
+  // Função para digitar texto letra por letra
+  function digitarTexto(texto, callback) {
+    let i = 0;
+    elTexto.innerHTML = "";
+    const interval = setInterval(() => {
+      elTexto.innerHTML += texto.charAt(i++);
+      if (i >= texto.length) {
+        clearInterval(interval);
+        setTimeout(callback, 500); // Pequena pausa antes das fotos
+      }
+    }, 35);
+  }
+
+  // Função para mostrar fotos uma a uma
+  function mostrarFotos() {
+    frases.forEach((f, i) => {
       const bloco = document.createElement("div");
       bloco.className = "foto-bloco";
       bloco.innerHTML = `<img src="fotos/foto${i+1}.jpg"><p>${f}</p>`;
-      container.appendChild(bloco);
-      setTimeout(()=>{
-        bloco.classList.add("show");
-      }, i*800);
+      containerFotos.appendChild(bloco);
+      setTimeout(() => bloco.classList.add("show"), i*800);
     });
 
-    // Mostrar botão após todas as fotos
-    setTimeout(()=>{
-      document.getElementById("btnFinal").style.display="block";
-    }, frases.length*800 + 500);
+    // Mostrar botão depois de todas as fotos
+    setTimeout(() => btnFinal.style.display = "block", frases.length*800 + 500);
   }
 
-  // Iniciar sequência
-  digitarTexto(mostrarFotos);
+  digitarTexto(textoCompleto, mostrarFotos);
 
-  // Botão para ir pra Page 2
-  document.getElementById("btnFinal").onclick = () => {
-    document.getElementById("page1").style.display = "none";
+  // Botão para ir para Page 2
+  btnFinal.onclick = () => {
+    page1.style.display = "none";
     document.getElementById("page2").style.display = "block";
     window.scrollTo(0,0);
   }
