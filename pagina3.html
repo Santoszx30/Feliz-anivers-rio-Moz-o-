@@ -5,110 +5,114 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jogo da Memória</title>
 <style>
-body, html {
-  margin:0;
-  padding:0;
-  font-family:Arial,sans-serif;
+body {
+  font-family: Arial, sans-serif;
   background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
-  color:white;
-  overflow-x:hidden;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
 }
-h2{
+
+h2 {
   text-align:center;
-  margin:20px 0;
+  margin-bottom:20px;
 }
+
 #regras {
   text-align:center;
   margin-bottom:20px;
   font-size:1.2rem;
 }
+
 #board {
-  display:flex;
-  flex-direction:column; /* cartas uma abaixo da outra */
-  align-items:center;
-  gap:12px;
-  width:90%;
-  margin:auto;
-  padding-bottom:20px;
-}
-.card-row {
-  display:flex;
+  display: grid;
+  grid-template-columns: repeat(4, 150px);
+  gap: 15px;
   justify-content:center;
-  gap:12px; /* espaço entre cartas na linha */
 }
+
 .card {
-  width:120px;
-  height:160px;
-  perspective:1000px;
+  width: 150px;
+  height: 200px;
+  background: #2a0050;
+  border-radius: 15px;
+  perspective: 1000px;
   cursor:pointer;
-  position:relative;
+  position: relative;
 }
+
 .card-inner {
-  position:relative;
-  width:100%;
-  height:100%;
-  transform-style:preserve-3d;
-  transition:transform 0.6s;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
 }
-.card.flip .card-inner {
+
+.card.flipped .card-inner {
   transform: rotateY(180deg);
 }
+
 .card-front, .card-back {
-  position:absolute;
-  width:100%;
-  height:100%;
-  backface-visibility:hidden;
-  border-radius:12px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 15px;
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:8px;
-  box-shadow:0 0 10px rgba(180,0,255,0.5);
+  padding:10px;
+  box-sizing:border-box;
 }
+
 .card-front {
   background:#2a0050;
+  font-size:1rem;
+  color:white;
 }
+
 .card-back {
-  background:#4b007f;
+  background:#8b4dff;
+  color:white;
+  font-size:2rem;
   transform: rotateY(180deg);
-  font-size:0.9rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-.btnNext {
+
+#btnNext {
   display:none;
-  margin:20px auto;
-  padding:16px 32px;
+  margin-top:30px;
+  padding:12px 30px;
   font-size:1.2rem;
   border:none;
   border-radius:30px;
   background:linear-gradient(45deg,#9b4dff,#d08cff);
-  color:white;
   cursor:pointer;
   box-shadow:0 0 15px rgba(180,0,255,0.6);
 }
-.heart {
+
+.elogio, .error-msg {
   position:absolute;
-  animation:heartUp linear forwards;
-  pointer-events:none;
-  font-size:16px;
-}
-@keyframes heartUp {
-  0% {opacity:0;}
-  10% {opacity:1;}
-  100% {transform:translateY(-150vh);opacity:0;}
-}
-.muito-burra {
-  position:absolute;
-  animation:burraUp linear forwards;
-  pointer-events:none;
-  font-size:18px;
+  font-size:1.3rem;
   font-weight:bold;
-  color:#ff55ff;
+  opacity:0;
+  animation:fly 3s forwards;
+  pointer-events:none;
 }
-@keyframes burraUp {
-  0% {opacity:0; transform:translateY(40px);}
-  10% {opacity:1;}
-  100% {transform:translateY(-150px); opacity:0;}
+
+@keyframes fly {
+  0% {opacity:0; transform:translateY(20px);}
+  20% {opacity:1;}
+  80% {opacity:1;}
+  100% {opacity:0; transform:translateY(-100px);}
 }
 </style>
 </head>
@@ -116,29 +120,32 @@ h2{
 
 <h2>Jogo da Memória</h2>
 <div id="regras">
-  Vire as cartas 🃏<br>
-  Cada carta corresponde a uma foto sua ❤️<br>
-  Acerte todas e conclua o jogo 💜
+Vire as cartas 🃏<br>
+Cada carta corresponde a uma foto sua ❤️<br>
+Acerte todas e conclua o jogo 💜
 </div>
 
 <div id="board"></div>
-<button id="btnNext" class="btnNext">Próxima Página 💜</button>
+<button id="btnNext">Próxima Página 💜</button>
 
 <script>
+const board = document.getElementById("board");
+const btnNext = document.getElementById("btnNext");
+
 const frases = [
-  "A beleza que você cuida me encanta.",
-  "Adoro quando você brinca e se diverte.",
-  "Seu sorriso ilumina tudo ao redor.",
-  "Seu corpo é pura poesia aos meus olhos.",
-  "Sua fofura é irresistível.",
-  "Seus cachos são perfeitos e únicos.",
-  "Adoro a sua espontaneidade e aleatoriedade.",
-  "Seu estilo é único e hipnotizante.",
-  "My spider girl ❤️🕷️",
-  "Seus olhos me deixam perdido."
+  "Cada detalhe seu é puro encanto, meu cuidado é seu reflexo.",
+  "Seu jeito brincalhão ilumina meus dias, eu me divirto só em te olhar.",
+  "Seu sorriso é meu lugar seguro, onde tudo se acalma.",
+  "Seu corpo é poesia que me faz querer escrever todos os dias.",
+  "A fofura que você carrega me faz perder o chão.",
+  "Cada cacho seu dança como se fosse música, e eu quero ouvir para sempre.",
+  "Sua espontaneidade me pega de surpresa e me encanta toda vez.",
+  "Seu estilo é único, natural e irresistível, como você mesma.",
+  "My Spider Girl ❤️🕷️, você tece minha vida com amor e magia.",
+  "Seus olhos têm o brilho de mil estrelas e me guiam sempre."
 ];
 
-const imagens = [
+const fotos = [
   "Jogo/memoria1.jpg",
   "Jogo/memoria2.jpg",
   "Jogo/memoria3.jpg",
@@ -151,24 +158,18 @@ const imagens = [
   "Jogo/memoria10.jpg"
 ];
 
-// Criar array de cartas: cada carta tem frase + imagem
-const cardsArray = frases.map((frase,i)=>({
-  id:i,
-  frase:frase,
-  img: imagens[i]
-}));
-
-// Duplicar para pares
-let gameCards = [...cardsArray, ...cardsArray];
+// Criar 20 cartas (10 fotos + 10 frases)
+let cardsArray = [];
+for(let i=0;i<10;i++){
+  cardsArray.push({type:"foto", content:fotos[i]});
+  cardsArray.push({type:"frase", content:frases[i]});
+}
 
 // Embaralhar
-gameCards.sort(()=>Math.random()-0.5);
+cardsArray.sort(()=>Math.random()-0.5);
 
-const board = document.getElementById("board");
-let firstCard=null, secondCard=null, lockBoard=false;
-let acertos=0;
+let firstCard=null, secondCard=null, lockBoard=false, acertos=0;
 
-// Criar cartas
 function createCard(cardData){
   const card = document.createElement("div");
   card.className="card";
@@ -178,80 +179,107 @@ function createCard(cardData){
 
   const front = document.createElement("div");
   front.className="card-front";
-  front.innerHTML = `<img src="${cardData.img}" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">`;
+  front.innerHTML="❤️"; // verso pintado com coração
 
   const back = document.createElement("div");
   back.className="card-back";
-  back.textContent = cardData.frase;
+
+  if(cardData.type==="foto"){
+    const img = document.createElement("img");
+    img.src=cardData.content;
+    img.style.width="100%";
+    img.style.borderRadius="12px";
+    back.appendChild(img);
+  } else {
+    back.innerText = cardData.content;
+  }
 
   inner.appendChild(front);
   inner.appendChild(back);
   card.appendChild(inner);
 
   card.addEventListener("click",()=>{
-    if(lockBoard || card===firstCard) return;
-    card.classList.add("flip");
+    if(lockBoard || card===firstCard || card.classList.contains("flipped")) return;
+    card.classList.add("flipped");
+
     if(!firstCard){
-      firstCard=card;
+      firstCard = card;
       return;
     }
-    secondCard=card;
+    secondCard = card;
     lockBoard=true;
 
-    // Checar match
-    const firstId = gameCards[firstCard.dataset.index].id;
-    const secondId = gameCards[secondCard.dataset.index].id;
-    if(firstId===secondId){
-      // acerto: explodir corações
-      for(let i=0;i<5;i++){
-        const h = document.createElement("div");
-        h.className="heart";
-        h.innerText="💜";
-        h.style.left=card.offsetLeft + Math.random()*60 + "px";
-        h.style.top=card.offsetTop + Math.random()*60 + "px";
-        h.style.fontSize = 14 + Math.random()*14 + "px";
-        document.body.appendChild(h);
-        setTimeout(()=>h.remove(),2000);
-      }
-      acertos++;
-      resetCards();
-    } else {
-      // erro: mostrar muito burra voando
-      for(let i=0;i<3;i++){
-        const b = document.createElement("div");
-        b.className="muito-burra";
-        b.innerText="MUITO BURRA KKKKKKK";
-        b.style.left=card.offsetLeft + Math.random()*60 + "px";
-        b.style.top=card.offsetTop + Math.random()*60 + "px";
-        document.body.appendChild(b);
-        setTimeout(()=>b.remove(),3000);
-      }
-      setTimeout(()=>{ firstCard.classList.remove("flip"); secondCard.classList.remove("flip"); resetCards(); },1000);
-    }
+    setTimeout(()=>{
+      checkMatch(firstCard,secondCard);
+    },600);
   });
 
-  card.dataset.index = gameCards.indexOf(cardData);
   return card;
 }
 
-// Organizar cartas 2 por linha
-for(let i=0;i<gameCards.length;i+=2){
-  const row = document.createElement("div");
-  row.className="card-row";
-  row.appendChild(createCard(gameCards[i]));
-  if(gameCards[i+1]) row.appendChild(createCard(gameCards[i+1]));
-  board.appendChild(row);
+function checkMatch(c1,c2){
+  let back1=c1.querySelector(".card-back");
+  let back2=c2.querySelector(".card-back");
+
+  let match=false;
+  if(back1.innerText && back2.innerText){
+    match = (back1.innerText===back2.innerText);
+  } else if(back1.querySelector("img") && back2.querySelector("img")){
+    match = (back1.querySelector("img").src===back2.querySelector("img").src);
+  } else {
+    match = false;
+  }
+
+  if(match){
+    acertos+=2; // duas cartas acertadas
+    explodeHearts(c1);
+    explodeHearts(c2);
+  } else {
+    showError();
+    setTimeout(()=>{
+      c1.classList.remove("flipped");
+      c2.classList.remove("flipped");
+    },800);
+  }
+
+  resetCards();
+}
+
+function explodeHearts(card){
+  const e = document.createElement("div");
+  e.className="elogio";
+  e.innerText="💜";
+  e.style.left = card.offsetLeft + card.offsetWidth/2 + "px";
+  e.style.top = card.offsetTop + card.offsetHeight/2 + "px";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),3000);
+}
+
+function showError(){
+  for(let i=0;i<5;i++){
+    const e = document.createElement("div");
+    e.className="error-msg";
+    e.innerText="MUITO BURRA KKKKKKK";
+    e.style.left = Math.random()*80+"%";
+    e.style.top = Math.random()*80+"%";
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),3000);
+  }
 }
 
 function resetCards(){
   [firstCard,secondCard,lockBoard]=[null,null,false];
   if(acertos===cardsArray.length){
-    document.getElementById("btnNext").style.display="block";
+    btnNext.style.display="block";
   }
 }
 
-// Botão conectar à página 4
-document.getElementById("btnNext").addEventListener("click",()=>{
+// Criar cartas no tabuleiro
+cardsArray.forEach(c=>{
+  board.appendChild(createCard(c));
+});
+
+btnNext.addEventListener("click",()=>{
   window.location.href="pagina4.html";
 });
 </script>
