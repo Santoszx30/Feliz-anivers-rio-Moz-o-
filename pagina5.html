@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,67 +7,63 @@
 <title>Página 5</title>
 
 <style>
-  body {
-    margin: 0;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #0b0016, #2a0050, #001b3a);
-    color: white;
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(180deg, #0b0014, #000);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
 
-  h1 {
-    margin: 16px;
-    text-align: center;
-    font-size: 1.4em;
-  }
+    h1 {
+        margin: 20px 10px;
+        text-align: center;
+        font-size: 1.2rem;
+    }
 
-  #frame {
-    width: 92vw;
-    max-width: 420px;
-    border: 5px solid #7c5cff;
-    border-radius: 14px;
-    padding: 10px;
-    background: #000;
-  }
+    canvas {
+        border: 4px solid #7c4dff;
+        border-radius: 16px;
+        width: 90vw;
+        height: 70vh;
+        touch-action: none;
+        background: #000;
+    }
 
-  canvas {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 10px;
-    touch-action: none;
-  }
+    #final {
+        display: none;
+        margin: 30px 15px;
+        text-align: center;
+        animation: fadeIn 1s ease;
+    }
 
-  #finalMessage {
-    display: none;
-    margin: 30px 20px 50px;
-    text-align: center;
-    animation: fadeIn 1.5s ease;
-  }
+    #final h2 {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+    }
 
-  #finalMessage h2 {
-    font-size: 1.5em;
-    color: #e0d6ff;
-    margin-bottom: 18px;
-  }
+    #final p {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
 
-  #finalMessage button {
-    padding: 14px 30px;
-    font-size: 1em;
-    border: none;
-    border-radius: 30px;
-    background: linear-gradient(45deg,#7c5cff,#b38bff);
-    color: white;
-    cursor: pointer;
-  }
+    #final button {
+        margin-top: 20px;
+        padding: 12px 25px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 25px;
+        background: #7c4dff;
+        color: white;
+    }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 </style>
 </head>
 
@@ -75,85 +71,106 @@
 
 <h1>🎨 Pinte a maneira de como eu enxergo sua beleza</h1>
 
-<div id="frame">
-  <canvas id="canvas"></canvas>
-</div>
+<canvas id="canvas"></canvas>
 
-<div id="finalMessage">
-  <h2>
-    Feliz aniversário minha neném,<br>
-    você é tão linda como a lua e brilha tanto como o Sol,<br>
-    eu te amo 💜
-  </h2>
-  <button onclick="window.location.href='pagina6.html'">
-    Ir para a Página 6
-  </button>
+<div id="final">
+    <h2>Feliz aniversário minha neném 💜</h2>
+    <p>
+        Você é tão linda como a lua  
+        <br>e brilha tanto quanto o Sol.  
+        <br>Eu te amo.
+    </p>
+    <button onclick="window.location.href='pagina6.html'">
+        Ir para a próxima página
+    </button>
 </div>
 
 <script>
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-  const img = new Image();
-  img.src = "coracao/amor1.jpg";
+function resizeCanvas() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
-  const pixelSize = 22; // 🔧 pixels grandes e confortáveis
-  let revealed = [];
-  let total = 0;
-  let painted = 0;
+const pixelSize = 16; // ↓ menor = mais detalhe
+let cols, rows;
+let revealed = [];
 
-  img.onload = () => {
-    const maxWidth = window.innerWidth * 0.85;
-    const scale = maxWidth / img.width;
+const img = new Image();
+img.src = "coracao/amor1.jpg";
 
-    canvas.width = Math.floor(img.width * scale);
-    canvas.height = Math.floor(img.height * scale);
+img.onload = () => {
+    cols = Math.floor(canvas.width / pixelSize);
+    rows = Math.floor(canvas.height / pixelSize);
 
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    revealed = Array(cols * rows).fill(false);
 
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    draw();
+};
 
-    const cols = Math.ceil(canvas.width / pixelSize);
-    const rows = Math.ceil(canvas.height / pixelSize);
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    revealed = new Array(cols * rows).fill(false);
-    total = cols * rows;
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            const i = y * cols + x;
 
-    function paint(e) {
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      const col = Math.floor(x / pixelSize);
-      const row = Math.floor(y / pixelSize);
-      const index = row * cols + col;
-
-      if (index < 0 || index >= revealed.length) return;
-
-      if (!revealed[index]) {
-        revealed[index] = true;
-        painted++;
-
-        ctx.putImageData(
-          imageData,
-          0, 0,
-          col * pixelSize,
-          row * pixelSize,
-          pixelSize,
-          pixelSize
-        );
-
-        if (painted >= total * 0.97) {
-          document.getElementById("finalMessage").style.display = "block";
+            if (revealed[i]) {
+                ctx.drawImage(
+                    img,
+                    x * img.width / cols,
+                    y * img.height / rows,
+                    img.width / cols,
+                    img.height / rows,
+                    x * pixelSize,
+                    y * pixelSize,
+                    pixelSize,
+                    pixelSize
+                );
+            } else {
+                ctx.fillStyle = "#000";
+                ctx.fillRect(
+                    x * pixelSize,
+                    y * pixelSize,
+                    pixelSize,
+                    pixelSize
+                );
+            }
         }
-      }
     }
+}
 
-    canvas.addEventListener("pointerdown", paint);
-    canvas.addEventListener("pointermove", paint);
-  };
+function paint(e) {
+    const rect = canvas.getBoundingClientRect();
+
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    const x = Math.floor((clientX - rect.left) / pixelSize);
+    const y = Math.floor((clientY - rect.top) / pixelSize);
+
+    if (x >= 0 && y >= 0 && x < cols && y < rows) {
+        const index = y * cols + x;
+        revealed[index] = true;
+        draw();
+        checkFinish();
+    }
+}
+
+function checkFinish() {
+    if (revealed.every(v => v)) {
+        document.getElementById("final").style.display = "block";
+    }
+}
+
+canvas.addEventListener("mousedown", paint);
+canvas.addEventListener("mousemove", e => e.buttons && paint(e));
+canvas.addEventListener("touchstart", paint);
+canvas.addEventListener("touchmove", paint);
 </script>
 
 </body>
