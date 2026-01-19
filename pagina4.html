@@ -1,1 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>O Que Eu Sinto 💜</title>
 
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background: linear-gradient(135deg,#120018,#1a0033,#0a0a1f);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+}
+
+.container{
+  width:95%;
+  max-width:820px;
+  text-align:center;
+}
+
+img{
+  width:100%;
+  max-height:420px;
+  object-fit:cover;
+  border-radius:18px;
+  margin-bottom:25px;
+  box-shadow:0 0 30px rgba(180,0,255,0.55);
+}
+
+#texto{
+  font-size:1.15rem;
+  line-height:1.7;
+  min-height:220px;
+  margin-bottom:35px;
+  white-space:pre-wrap;
+}
+
+button{
+  display:none;
+  padding:15px 35px;
+  font-size:1.1rem;
+  border:none;
+  border-radius:35px;
+  background:linear-gradient(90deg,#8e2de2,#4a00e0);
+  color:white;
+  cursor:pointer;
+  box-shadow:0 0 18px rgba(180,0,255,0.7);
+}
+
+button:hover{
+  transform:scale(1.06);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <img id="imagem" src="textos/texto1.jpg">
+  <div id="texto"></div>
+  <button id="btnNext">Continuar 💜</button>
+</div>
+
+<script>
+const imagens = [
+  "textos/texto1.jpg",
+  "textos/texto2.jpg",
+  "textos/texto3.jpg",
+  "textos/texto4.jpg",
+  "textos/texto5.jpg",
+  "textos/texto6.jpg",
+  "textos/texto7.jpg",
+  "textos/texto8.jpg"
+];
+
+const textos = [
+`💌 RESPOSTA AO TEXTO 1
+Amar você também virou a coisa mais natural da minha vida. Mesmo sem perceber, você virou meu ponto de equilíbrio, meu lugar de descanso quando tudo aperta. Nos meus dias confusos, é o seu nome que vem primeiro, é em você que penso quando preciso de calma. Eu escolho você todos os dias, nos momentos leves e nos difíceis, porque meu coração já aprendeu onde ele pertence. Amar você não é esforço, é vontade, é certeza que cresce em silêncio, mas nunca diminui.`,
+
+`💌 RESPOSTA AO TEXTO 2
+Quando você fala da minha beleza assim, eu sinto que você me enxerga além do espelho. Você vê o que eu sou quando ninguém mais está olhando, e isso me deixa vulnerável e segura ao mesmo tempo. Saber que a minha presença te conforta, que meu jeito te toca, faz eu querer ser ainda mais eu com você. Se existe um lugar onde posso existir inteira, sem filtros, é no seu olhar.`,
+
+`💌 RESPOSTA AO TEXTO 3
+Ser o seu homem é uma das coisas que mais me orgulha. Saber que você encontra em mim calma, proteção e abrigo me faz querer ser ainda melhor todos os dias. Com você, eu aprendi que força também é carinho, que amar é cuidar sem precisar provar nada. Quando você me chama de seu, meu coração responde na hora. Eu sou seu, com tudo que sou, em cada dia que passa.`,
+
+`💌 RESPOSTA AO TEXTO 4
+Eu nunca precisei prometer nada, porque o que senti por você foi acontecendo, ficando, criando raízes. Quando percebi, você já fazia parte de mim de um jeito que não dava mais pra tirar. Amar você virou escolha diária, dessas que não pesam, só aquecem. No meio de tanta pressa, você é a minha pausa preferida, o lugar onde eu fico sem vontade de ir embora.`,
+
+`💌 RESPOSTA AO TEXTO 5
+Estar com você também transforma tudo pra mim. O mundo fica mais leve, o tempo passa diferente, como se tudo fizesse mais sentido quando estamos juntos. Seu jeito me acalma, sua presença me envolve, e eu me sinto exatamente onde deveria estar. Não é só gostar de estar com você… é sentir que, ao seu lado, tudo fica no lugar certo.`,
+
+`💌 RESPOSTA AO TEXTO 6
+Meu amor por você é assim também: silencioso, profundo e constante. Ele vive nos detalhes, nos momentos pequenos que só a gente entende. Não preciso de grandes declarações, porque o que sinto se prova no dia a dia, na forma como penso em você, em como você faz parte da minha rotina sem esforço. Amar você é simples, é firme, é verdadeiro.`,
+
+`💌 RESPOSTA AO TEXTO 7
+Eu também não planejei te amar, simplesmente aconteceu. Você foi chegando, ocupando espaços, ficando essencial sem fazer barulho. Hoje, você mora nos meus pensamentos, nos meus desejos, nos meus planos. Com você, eu entendi que amor não é só intensidade, é cuidado constante, é sentir falta mesmo estando perto, é querer sempre mais do mesmo abraço.`,
+
+`💌 RESPOSTA AO TEXTO 8
+Talvez eu também não saiba explicar tudo o que sinto, mas quando penso em você, meu coração entende sozinho. Você virou esse lugar seguro, essa certeza que me acompanha mesmo quando tudo parece bagunçado. Amar você me dá força, me dá calma e me faz querer construir. É em você que eu encontro firmeza, desejo e aconchego ao mesmo tempo — e isso, pra mim, é amor de verdade.`
+];
+
+let index = 0;
+let charIndex = 0;
+
+const textoDiv = document.getElementById("texto");
+const img = document.getElementById("imagem");
+const btn = document.getElementById("btnNext");
+
+function escrever(){
+  if(charIndex < textos[index].length){
+    textoDiv.innerHTML += textos[index].charAt(charIndex);
+    charIndex++;
+    setTimeout(escrever, 35);
+  } else {
+    setTimeout(proximo, 1400);
+  }
+}
+
+function proximo(){
+  index++;
+  if(index < textos.length){
+    img.src = imagens[index];
+    textoDiv.innerHTML = "";
+    charIndex = 0;
+    escrever();
+  } else {
+    btn.style.display = "inline-block";
+  }
+}
+
+escrever();
+
+btn.onclick = ()=>{
+  window.location.href = "pagina5.html";
+};
+</script>
+
+</body>
+  </html>
