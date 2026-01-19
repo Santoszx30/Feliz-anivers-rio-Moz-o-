@@ -3,205 +3,191 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Página 5</title>
+<title>Pinte o Amor</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  user-select: none;
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
-body {
-  min-height: 100vh;
-  background: linear-gradient(
-    180deg,
-    #2b1055 0%,
-    #12001f 60%,
-    #000 100%
-  );
-  font-family: Arial, sans-serif;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+body{
+  min-height:100vh;
+  font-family:Arial, sans-serif;
+  background: linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  color:white;
 }
 
-h1 {
-  margin: 20px;
-  font-size: 20px;
-  text-align: center;
+h1{
+  margin:20px 10px;
+  text-align:center;
+  font-size:1.4rem;
+  color:#e9d5ff;
 }
 
-#contador {
-  margin-bottom: 10px;
-  font-size: 14px;
-  opacity: 0.8;
+#contador{
+  margin-bottom:10px;
+  font-size:1rem;
+  color:#c4b5fd;
 }
 
-#frame {
-  border: 4px solid #7a3cff;
-  border-radius: 16px;
-  padding: 10px;
+#quadro{
+  width:90vw;
+  max-width:420px;
+  height:65vh;
+  max-height:600px;
+  background:#2a2340;
+  border-radius:18px;
+  box-shadow:0 0 25px rgba(180,0,255,.5);
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-canvas {
-  display: block;
-  border-radius: 10px;
-  touch-action: none;
+canvas{
+  border-radius:14px;
+  touch-action:none;
 }
 
-#final {
-  display: none;
-  text-align: center;
-  margin: 30px 20px;
+#final{
+  display:none;
+  text-align:center;
+  margin:30px 20px;
 }
 
-#final h2 {
-  font-size: 22px;
-  margin-bottom: 10px;
+#final h2{
+  font-size:1.6rem;
+  margin-bottom:15px;
+  color:#f5d0fe;
 }
 
-#final p {
-  font-size: 15px;
-  opacity: 0.9;
+#final p{
+  font-size:1.1rem;
+  line-height:1.6;
+  margin-bottom:25px;
 }
 
-button {
-  margin-top: 20px;
-  padding: 12px 25px;
-  border: none;
-  border-radius: 20px;
-  background: #7a3cff;
-  color: white;
-  font-size: 16px;
+button{
+  padding:15px 35px;
+  font-size:1.1rem;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  background:linear-gradient(45deg,#9b4dff,#d08cff);
+  color:white;
+  box-shadow:0 0 18px rgba(180,0,255,.6);
 }
 </style>
 </head>
 
 <body>
 
-<h1>🎨 Pinte a maneira de como eu enxergo sua beleza</h1>
-<div id="contador">Pixels pintados: 0%</div>
+<h1>Pinte a maneira de como eu enxergo sua beleza</h1>
+<div id="contador">Quadro revelado: 0%</div>
 
-<div id="frame">
+<div id="quadro">
   <canvas id="canvas"></canvas>
 </div>
 
 <div id="final">
   <h2>Feliz aniversário minha neném 💜</h2>
   <p>
-    você é tão linda como a lua e brilha tanto como o Sol.<br>
+    Você é tão linda quanto a Lua,<br>
+    brilha tanto quanto o Sol,<br>
+    e ilumina minha vida de um jeito que só você consegue.<br><br>
     Eu te amo.
   </p>
-  <button onclick="location.href='pagina6.html'">Continuar</button>
+  <button onclick="window.location.href='pagina6.html'">
+    Continuar 💜
+  </button>
 </div>
 
 <script>
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-
-const pixelSize = 15;
+const contador = document.getElementById("contador");
+const finalBox = document.getElementById("final");
 
 const img = new Image();
 img.src = "coracao/amor1.jpg";
 
-let cols, rows;
-let pixels = [];
-let totalPixels = 0;
-let paintedPixels = 0;
-
-function resizeCanvas() {
-  const maxWidth = window.innerWidth * 0.9;
-  const maxHeight = window.innerHeight * 0.65;
-
-  const scale = Math.min(
-    maxWidth / img.width,
-    maxHeight / img.height
-  );
-
-  canvas.width = Math.floor(img.width * scale);
-  canvas.height = Math.floor(img.height * scale);
-
-  cols = Math.floor(canvas.width / pixelSize);
-  rows = Math.floor(canvas.height / pixelSize);
-
-  totalPixels = cols * rows;
-}
+let painting = false;
+let revealed = 0;
+let totalArea = 0;
 
 img.onload = () => {
-  resizeCanvas();
+  const scale = Math.min(
+    canvas.parentElement.clientWidth / img.width,
+    canvas.parentElement.clientHeight / img.height
+  );
 
+  canvas.width = img.width * scale;
+  canvas.height = img.height * scale;
+
+  totalArea = canvas.width * canvas.height;
+
+  // desenha imagem base
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // camada de tinta
+  ctx.globalCompositeOperation = "source-over";
+  ctx.fillStyle = "#2a2340";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-      const px = x * pixelSize;
-      const py = y * pixelSize;
-      const i = ((py * canvas.width) + px) * 4;
-
-      pixels.push({
-        x,
-        y,
-        color: `rgb(${imageData[i]},${imageData[i+1]},${imageData[i+2]})`,
-        painted: false
-      });
-
-      ctx.fillStyle = "#000";
-      ctx.fillRect(px, py, pixelSize, pixelSize);
-    }
-  }
+  // modo pintura
+  ctx.globalCompositeOperation = "destination-out";
 };
 
-function paint(e) {
+function start(e){
+  painting = true;
+  paint(e);
+}
+
+function stop(){
+  painting = false;
+}
+
+function paint(e){
+  if(!painting) return;
+
   const rect = canvas.getBoundingClientRect();
   const touch = e.touches ? e.touches[0] : e;
 
-  const x = Math.floor((touch.clientX - rect.left) / pixelSize);
-  const y = Math.floor((touch.clientY - rect.top) / pixelSize);
+  const x = touch.clientX - rect.left;
+  const y = touch.clientY - rect.top;
 
-  pixels.forEach(p => {
-    if (p.x === x && p.y === y && !p.painted) {
-      p.painted = true;
-      paintedPixels++;
+  ctx.beginPath();
+  ctx.arc(x,y,18,0,Math.PI*2);
+  ctx.fill();
 
-      ctx.fillStyle = p.color;
-      ctx.fillRect(
-        p.x * pixelSize,
-        p.y * pixelSize,
-        pixelSize,
-        pixelSize
-      );
-
-      updateCounter();
-    }
-  });
+  revealed += 18*18;
+  updateProgress();
 }
 
-function updateCounter() {
-  const percent = Math.floor((paintedPixels / totalPixels) * 100);
-  document.getElementById("contador").innerText =
-    `Pixels pintados: ${percent}%`;
+function updateProgress(){
+  const percent = Math.min(
+    Math.floor((revealed / totalArea) * 100),
+    100
+  );
 
-  if (percent >= 100) {
-    document.getElementById("final").style.display = "block";
+  contador.innerText = `Quadro revelado: ${percent}%`;
+
+  if(percent >= 95){
+    finalBox.style.display = "block";
   }
 }
 
-canvas.addEventListener("touchstart", paint);
-canvas.addEventListener("touchmove", paint);
-canvas.addEventListener("mousedown", e => {
-  paint(e);
-  canvas.addEventListener("mousemove", paint);
-});
-window.addEventListener("mouseup", () => {
-  canvas.removeEventListener("mousemove", paint);
-});
+canvas.addEventListener("touchstart",start);
+canvas.addEventListener("touchmove",paint);
+canvas.addEventListener("touchend",stop);
+
+canvas.addEventListener("mousedown",start);
+canvas.addEventListener("mousemove",paint);
+window.addEventListener("mouseup",stop);
 </script>
 
 </body>
