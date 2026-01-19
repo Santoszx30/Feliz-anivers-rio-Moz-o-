@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Página 5</title>
 
 <style>
@@ -19,33 +18,34 @@ body{
 }
 
 h1{
-  margin:30px 20px 10px;
+  margin:25px 15px 8px;
   text-align:center;
   font-size:22px;
 }
 
 #contador{
-  margin-bottom:15px;
+  margin-bottom:12px;
   font-size:16px;
   opacity:0.85;
 }
 
-#canvasContainer{
-  width:90vw;
-  max-width:420px;
-  aspect-ratio:3/4;
-  background:#eee;
-  border-radius:14px;
-  box-shadow:0 0 25px rgba(0,0,0,0.4);
-  position:relative;
+#quadro{
+  width:94vw;
+  height:70vh;
+  max-width:460px;
+  border-radius:16px;
   overflow:hidden;
-  touch-action:none;
+  box-shadow:0 0 30px rgba(0,0,0,0.45);
+  background:#ddd;
+  position:relative;
 }
 
 canvas{
+  position:absolute;
+  top:0;
+  left:0;
   width:100%;
   height:100%;
-  display:block;
 }
 
 #finalBox{
@@ -57,7 +57,6 @@ canvas{
 
 #finalBox h2{
   font-size:26px;
-  margin-bottom:10px;
 }
 
 #finalBox p{
@@ -67,7 +66,7 @@ canvas{
 
 #finalBox button{
   margin-top:20px;
-  padding:14px 28px;
+  padding:14px 30px;
   font-size:16px;
   border:none;
   border-radius:30px;
@@ -87,99 +86,92 @@ canvas{
 <h1>Pinte a maneira de como eu enxergo sua beleza</h1>
 <div id="contador">Quadro revelado: 0%</div>
 
-<div id="canvasContainer">
-  <canvas id="paint"></canvas>
+<div id="quadro">
+  <canvas id="base"></canvas>
+  <canvas id="mask"></canvas>
 </div>
 
 <div id="finalBox">
   <h2>Feliz aniversário minha neném 💜</h2>
-  <p>
-    Você é tão linda como a lua e brilha tanto como o Sol.  
-    Eu te amo.
-  </p>
-  <button onclick="irPagina6()">Ir para a página 6</button>
+  <p>Você é tão linda como a lua e brilha tanto como o Sol. Eu te amo.</p>
+  <button onclick="window.location.href='page6.html'">Ir para a página 6</button>
 </div>
 
 <script>
-const canvas = document.getElementById("paint");
-const ctx = canvas.getContext("2d");
+const base = document.getElementById("base");
+const mask = document.getElementById("mask");
+const ctxBase = base.getContext("2d");
+const ctxMask = mask.getContext("2d");
+
 const contador = document.getElementById("contador");
 const finalBox = document.getElementById("finalBox");
+
+let painting = false;
+const brush = 30;
 
 const img = new Image();
 img.src = "coracao/amor1.jpg";
 
-let painting = false;
-const brushSize = 35;
-
 img.onload = () => {
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = rect.width;
-  canvas.height = rect.height;
+  const w = base.clientWidth;
+  const h = base.clientHeight;
 
-  // desenha imagem escondida
-  ctx.drawImage(img,0,0,canvas.width,canvas.height);
+  base.width = mask.width = w;
+  base.height = mask.height = h;
 
-  // camada clara por cima
-  ctx.globalCompositeOperation = "source-over";
-  ctx.fillStyle = "#eaeaea";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctxBase.drawImage(img, 0, 0, w, h);
 
-  ctx.globalCompositeOperation = "destination-out";
+  ctxMask.fillStyle = "#e6e6e6";
+  ctxMask.fillRect(0, 0, w, h);
+
+  ctxMask.globalCompositeOperation = "destination-out";
 };
 
-function getPos(e){
-  const rect = canvas.getBoundingClientRect();
-  const touch = e.touches ? e.touches[0] : e;
-  return {
-    x: touch.clientX - rect.left,
-    y: touch.clientY - rect.top
-  };
+function pos(e){
+  const r = mask.getBoundingClientRect();
+  const t = e.touches ? e.touches[0] : e;
+  return { x: t.clientX - r.left, y: t.clientY - r.top };
 }
 
 function paint(e){
   if(!painting) return;
   e.preventDefault();
 
-  const pos = getPos(e);
+  const p = pos(e);
+  ctxMask.beginPath();
+  ctxMask.arc(p.x, p.y, brush, 0, Math.PI*2);
+  ctxMask.fill();
 
-  ctx.beginPath();
-  ctx.arc(pos.x,pos.y,brushSize,0,Math.PI*2);
-  ctx.fill();
-
-  updateProgress();
+  calc();
 }
 
-function updateProgress(){
-  const data = ctx.getImageData(0,0,canvas.width,canvas.height).data;
-  let transparent = 0;
+function calc(){
+  const data = ctxMask.getImageData(0,0,mask.width,mask.height).data;
+  let cleared = 0;
 
   for(let i=3;i<data.length;i+=4){
-    if(data[i] === 0) transparent++;
+    if(data[i] === 0) cleared++;
   }
 
-  const percent = Math.floor((transparent / (data.length/4)) * 100);
+  const total = mask.width * mask.height;
+  const percent = Math.min(100, Math.floor((cleared / total) * 100));
+
   contador.innerText = `Quadro revelado: ${percent}%`;
 
-  if(percent >= 95){
+  if(percent === 100){
     finalBox.style.display = "block";
   }
 }
 
-canvas.addEventListener("mousedown",()=>painting=true);
-canvas.addEventListener("mouseup",()=>painting=false);
-canvas.addEventListener("mouseleave",()=>painting=false);
-canvas.addEventListener("mousemove",paint);
+mask.addEventListener("mousedown",()=>painting=true);
+mask.addEventListener("mouseup",()=>painting=false);
+mask.addEventListener("mouseleave",()=>painting=false);
+mask.addEventListener("mousemove",paint);
 
-canvas.addEventListener("touchstart",()=>painting=true);
-canvas.addEventListener("touchend",()=>painting=false);
-canvas.addEventListener("touchcancel",()=>painting=false);
-canvas.addEventListener("touchmove",paint);
-
-function irPagina6(){
-  // ajuste conforme sua navegação
-  window.location.href = "page6.html";
-}
+mask.addEventListener("touchstart",()=>painting=true);
+mask.addEventListener("touchend",()=>painting=false);
+mask.addEventListener("touchcancel",()=>painting=false);
+mask.addEventListener("touchmove",paint);
 </script>
 
 </body>
