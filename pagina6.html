@@ -1,1 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Página 6 – Quebra-cabeça</title>
 
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(135deg,#0b0016,#2a0050,#001b3a);
+  color:white;
+  overflow-x:hidden;
+}
+
+/* Título */
+h1{
+  text-align:center;
+  padding:20px;
+  font-size:1.4rem;
+}
+
+/* Área do quebra-cabeça */
+#puzzle-area{
+  position:relative;
+  width:90vw;
+  max-width:420px;
+  aspect-ratio:1/1;
+  margin:20px auto;
+  border:3px dashed rgba(255,255,255,0.4);
+}
+
+/* Grade guia */
+.slot{
+  position:absolute;
+  border:1px dashed rgba(255,255,255,0.2);
+}
+
+/* Peças */
+.piece{
+  position:absolute;
+  background-image:url("quebra/cabeca.jpg");
+  background-size:100% 100%;
+  cursor:grab;
+  touch-action:none;
+}
+
+/* Texto final */
+#final-text{
+  max-width:800px;
+  margin:60px auto;
+  padding:20px;
+  font-size:1.3rem;
+  line-height:1.9;
+  white-space:pre-wrap;
+}
+
+/* Botão */
+.btn{
+  display:none;
+  margin:40px auto;
+  padding:16px 34px;
+  font-size:1.2rem;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#9b4dff,#d08cff);
+  color:white;
+  cursor:pointer;
+  box-shadow:0 0 15px rgba(180,0,255,0.6);
+}
+</style>
+</head>
+
+<body>
+
+<h1>Monte a imagem… 💜</h1>
+
+<div id="puzzle-area"></div>
+
+<div id="final-text"></div>
+<button class="btn" id="nextBtn">Continuar 💜</button>
+
+<script>
+const rows = 3;
+const cols = 3;
+const total = rows * cols;
+const puzzle = document.getElementById("puzzle-area");
+const placed = new Set();
+
+/* Criar slots guia */
+for(let y=0;y<rows;y++){
+  for(let x=0;x<cols;x++){
+    const s=document.createElement("div");
+    s.className="slot";
+    s.style.width=100/cols+"%";
+    s.style.height=100/rows+"%";
+    s.style.left=(x*100/cols)+"%";
+    s.style.top=(y*100/rows)+"%";
+    puzzle.appendChild(s);
+  }
+}
+
+/* Criar peças */
+for(let i=0;i<total;i++){
+  const p=document.createElement("div");
+  p.className="piece";
+  p.dataset.index=i;
+
+  const x=i%cols;
+  const y=Math.floor(i/cols);
+
+  p.style.width=100/cols+"%";
+  p.style.height=100/rows+"%";
+  p.style.backgroundPosition=`${(x/(cols-1))*100}% ${(y/(rows-1))*100}%`;
+
+  p.style.left=Math.random()*60+"vw";
+  p.style.top=(Math.random()*40+40)+"vh";
+
+  puzzle.appendChild(p);
+  drag(p,x,y);
+}
+
+/* Drag */
+function drag(el,x,y){
+  let ox,oy;
+
+  el.addEventListener("pointerdown",e=>{
+    ox=e.clientX-el.offsetLeft;
+    oy=e.clientY-el.offsetTop;
+    el.setPointerCapture(e.pointerId);
+  });
+
+  el.addEventListener("pointermove",e=>{
+    if(!el.hasPointerCapture(e.pointerId))return;
+    el.style.left=e.clientX-ox+"px";
+    el.style.top=e.clientY-oy+"px";
+  });
+
+  el.addEventListener("pointerup",()=>{
+    const targetX = puzzle.offsetLeft + puzzle.clientWidth*(x/cols);
+    const targetY = puzzle.offsetTop + puzzle.clientHeight*(y/rows);
+
+    const dx = Math.abs(el.getBoundingClientRect().left - targetX);
+    const dy = Math.abs(el.getBoundingClientRect().top - targetY);
+
+    if(dx<30 && dy<30){
+      el.style.left=(x*100/cols)+"%";
+      el.style.top=(y*100/rows)+"%";
+      el.style.pointerEvents="none";
+      placed.add(el.dataset.index);
+
+      if(placed.size===total){
+        startText();
+      }
+    }
+  });
+}
+
+/* Texto letra por letra */
+const text = `Montar essa imagem foi só um detalhe…
+porque a verdade é que nós dois já nos encaixamos muito antes disso.
+
+Cada pedaço seu combina com um pedaço meu.
+O seu corpo entende o meu,
+o seu toque conversa com o meu desejo,
+e quando você chega perto, tudo em mim responde.
+
+Nós dois juntos não é só amor,
+é tensão boa,
+é vontade que cresce no silêncio,
+é esse arrepio que nasce quando nossos olhares se encontram
+e dizem mais do que qualquer palavra.
+
+Eu amo a forma como você me provoca sem perceber,
+como seu jeito me prende,
+como seu corpo me chama
+e sua presença me domina com doçura.
+
+Você é conforto e tentação ao mesmo tempo.
+É abraço que acalma
+e desejo que aperta.
+
+E quando eu olho pra nós dois assim, completos,
+eu só tenho uma certeza:
+eu quero você inteira, perto,
+do meu jeito…
+e pra sempre.`;
+
+function startText(){
+  const box=document.getElementById("final-text");
+  let i=0;
+
+  const int=setInterval(()=>{
+    box.textContent+=text[i];
+    window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+    i++;
+    if(i>=text.length){
+      clearInterval(int);
+      document.getElementById("nextBtn").style.display="block";
+    }
+  },40);
+}
+
+document.getElementById("nextBtn").onclick=()=>{
+  window.location.href="pagina7.html";
+};
+</script>
+
+</body>
+  </html>
