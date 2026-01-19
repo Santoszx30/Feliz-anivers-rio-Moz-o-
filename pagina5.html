@@ -7,171 +7,201 @@
 <title>Página 5</title>
 
 <style>
-    body {
-        margin: 0;
-        min-height: 100vh;
-        background: linear-gradient(180deg, #0b0014, #000);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        color: white;
-        font-family: Arial, sans-serif;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
 
-    h1 {
-        margin: 20px 10px;
-        text-align: center;
-        font-size: 1.2rem;
-    }
+body {
+  min-height: 100vh;
+  background: linear-gradient(
+    180deg,
+    #2b1055 0%,
+    #12001f 60%,
+    #000 100%
+  );
+  font-family: Arial, sans-serif;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    canvas {
-        border: 4px solid #7c4dff;
-        border-radius: 16px;
-        width: 90vw;
-        height: 70vh;
-        touch-action: none;
-        background: #000;
-    }
+h1 {
+  margin: 20px;
+  font-size: 20px;
+  text-align: center;
+}
 
-    #final {
-        display: none;
-        margin: 30px 15px;
-        text-align: center;
-        animation: fadeIn 1s ease;
-    }
+#contador {
+  margin-bottom: 10px;
+  font-size: 14px;
+  opacity: 0.8;
+}
 
-    #final h2 {
-        font-size: 1.4rem;
-        margin-bottom: 10px;
-    }
+#frame {
+  border: 4px solid #7a3cff;
+  border-radius: 16px;
+  padding: 10px;
+}
 
-    #final p {
-        font-size: 1rem;
-        line-height: 1.4;
-    }
+canvas {
+  display: block;
+  border-radius: 10px;
+  touch-action: none;
+}
 
-    #final button {
-        margin-top: 20px;
-        padding: 12px 25px;
-        font-size: 1rem;
-        border: none;
-        border-radius: 25px;
-        background: #7c4dff;
-        color: white;
-    }
-background: linear-gradient(180deg, #6a00ff, #12001f);
+#final {
+  display: none;
+  text-align: center;
+  margin: 30px 20px;
+}
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+#final h2 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+#final p {
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 20px;
+  background: #7a3cff;
+  color: white;
+  font-size: 16px;
+}
 </style>
 </head>
 
 <body>
 
 <h1>🎨 Pinte a maneira de como eu enxergo sua beleza</h1>
+<div id="contador">Pixels pintados: 0%</div>
 
-<canvas id="canvas"></canvas>
+<div id="frame">
+  <canvas id="canvas"></canvas>
+</div>
 
 <div id="final">
-    <h2>Feliz aniversário minha neném 💜</h2>
-    <p>
-        Você é tão linda como a lua  
-        <br>e brilha tanto quanto o Sol.  
-        <br>Eu te amo.
-    </p>
-    <button onclick="window.location.href='pagina6.html'">
-        Ir para a próxima página
-    </button>
+  <h2>Feliz aniversário minha neném 💜</h2>
+  <p>
+    você é tão linda como a lua e brilha tanto como o Sol.<br>
+    Eu te amo.
+  </p>
+  <button onclick="location.href='pagina6.html'">Continuar</button>
 </div>
 
 <script>
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-function resizeCanvas() {
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-}
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
-
-const pixelSize = 19; // ↓ menor = mais detalhe
-let cols, rows;
-let revealed = [];
+const pixelSize = 22;
 
 const img = new Image();
 img.src = "coracao/amor1.jpg";
 
+let cols, rows;
+let pixels = [];
+let totalPixels = 0;
+let paintedPixels = 0;
+
+function resizeCanvas() {
+  const maxWidth = window.innerWidth * 0.9;
+  const maxHeight = window.innerHeight * 0.65;
+
+  const scale = Math.min(
+    maxWidth / img.width,
+    maxHeight / img.height
+  );
+
+  canvas.width = Math.floor(img.width * scale);
+  canvas.height = Math.floor(img.height * scale);
+
+  cols = Math.floor(canvas.width / pixelSize);
+  rows = Math.floor(canvas.height / pixelSize);
+
+  totalPixels = cols * rows;
+}
+
 img.onload = () => {
-    cols = Math.floor(canvas.width / pixelSize);
-    rows = Math.floor(canvas.height / pixelSize);
+  resizeCanvas();
 
-    revealed = Array(cols * rows).fill(false);
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
 
-    draw();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      const px = x * pixelSize;
+      const py = y * pixelSize;
+      const i = ((py * canvas.width) + px) * 4;
+
+      pixels.push({
+        x,
+        y,
+        color: `rgb(${imageData[i]},${imageData[i+1]},${imageData[i+2]})`,
+        painted: false
+      });
+
+      ctx.fillStyle = "#000";
+      ctx.fillRect(px, py, pixelSize, pixelSize);
+    }
+  }
 };
 
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-            const i = y * cols + x;
-
-            if (revealed[i]) {
-                ctx.drawImage(
-                    img,
-                    x * img.width / cols,
-                    y * img.height / rows,
-                    img.width / cols,
-                    img.height / rows,
-                    x * pixelSize,
-                    y * pixelSize,
-                    pixelSize,
-                    pixelSize
-                );
-            } else {
-                ctx.fillStyle = "#000";
-                ctx.fillRect(
-                    x * pixelSize,
-                    y * pixelSize,
-                    pixelSize,
-                    pixelSize
-                );
-            }
-        }
-    }
-}
-
 function paint(e) {
-    const rect = canvas.getBoundingClientRect();
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches ? e.touches[0] : e;
 
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const x = Math.floor((touch.clientX - rect.left) / pixelSize);
+  const y = Math.floor((touch.clientY - rect.top) / pixelSize);
 
-    const x = Math.floor((clientX - rect.left) / pixelSize);
-    const y = Math.floor((clientY - rect.top) / pixelSize);
+  pixels.forEach(p => {
+    if (p.x === x && p.y === y && !p.painted) {
+      p.painted = true;
+      paintedPixels++;
 
-    if (x >= 0 && y >= 0 && x < cols && y < rows) {
-        const index = y * cols + x;
-        revealed[index] = true;
-        draw();
-        checkFinish();
+      ctx.fillStyle = p.color;
+      ctx.fillRect(
+        p.x * pixelSize,
+        p.y * pixelSize,
+        pixelSize,
+        pixelSize
+      );
+
+      updateCounter();
     }
+  });
 }
 
-function checkFinish() {
-    if (revealed.every(v => v)) {
-        document.getElementById("final").style.display = "block";
-    }
+function updateCounter() {
+  const percent = Math.floor((paintedPixels / totalPixels) * 100);
+  document.getElementById("contador").innerText =
+    `Pixels pintados: ${percent}%`;
+
+  if (percent >= 100) {
+    document.getElementById("final").style.display = "block";
+  }
 }
 
-canvas.addEventListener("mousedown", paint);
-canvas.addEventListener("mousemove", e => e.buttons && paint(e));
 canvas.addEventListener("touchstart", paint);
 canvas.addEventListener("touchmove", paint);
+canvas.addEventListener("mousedown", e => {
+  paint(e);
+  canvas.addEventListener("mousemove", paint);
+});
+window.addEventListener("mouseup", () => {
+  canvas.removeEventListener("mousemove", paint);
+});
 </script>
 
 </body>
