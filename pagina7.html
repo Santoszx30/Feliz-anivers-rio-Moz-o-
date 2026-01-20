@@ -150,6 +150,31 @@ function playerHasCapture() {
   }
   return false;
   }
+
+  function pieceHasCapture(x, y) {
+  const piece = state[y][x];
+  if (!piece) return false;
+
+  const directions = piece.king
+    ? [-2, 2]
+    : [-2];
+
+  for (let dy of directions) {
+    for (let dx of [-2, 2]) {
+      const nx = x + dx;
+      const ny = y + dy;
+
+      if (
+        nx >= 0 && nx < SIZE &&
+        ny >= 0 && ny < SIZE &&
+        isMoveValid(x, y, nx, ny)
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
+      }
   
 function onCellClick(x, y) {
   if (turn !== "player") return;
@@ -160,10 +185,12 @@ function onCellClick(x, y) {
 
   if (selected && isMoveValid(selected.x, selected.y, x, y)) {
     movePiece(selected.x, selected.y, x, y);
-    selected = null;
-    turn = "ai";
-    setTimeout(aiMove, 600);
-    return;
+
+if (turn !== "player") {
+  turn = "ai";
+  setTimeout(aiMove, 600);
+}
+return;
   }
 
   if (piece && piece.type === "player") {
@@ -205,14 +232,31 @@ function movePiece(x1, y1, x2, y2) {
   state[y2][x2] = piece;
   state[y1][x1] = null;
 
+  let captured = false;
+
   if (Math.abs(x2 - x1) === 2) {
     const mx = (x1 + x2) / 2;
     const my = (y1 + y2) / 2;
     state[my][mx] = null;
+    captured = true;
   }
 
-  if (y2 === 0) piece.king = true;
+  // VIRA DAMA
+  if (piece.type === "player" && y2 === 0) piece.king = true;
+  if (piece.type === "ai" && y2 === SIZE - 1) piece.king = true;
+
   render();
+  clearHighlights();
+
+  // MULTICAPTURA
+  if (captured && piece.type === "player" && pieceHasCapture(x2, y2)) {
+    selected = { x: x2, y: y2 };
+    highlightMoves(x2, y2);
+    turn = "player";
+    return;
+  }
+
+  selected = null;
 }
 
 function highlightMoves(x, y) {
