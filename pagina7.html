@@ -3,14 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Página 7 ♟️</title>
+<title>Damas</title>
 
 <style>
+*{box-sizing:border-box}
+
 body{
   margin:0;
-  font-family:Poppins, sans-serif;
-  background:radial-gradient(circle at top,#3b0a57,#12001a);
-  color:white;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:radial-gradient(circle,#3b0a57,#12001a);
+  font-family:Arial, sans-serif;
+}
+
+/* CONTAINER */
+#game{
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -18,252 +27,147 @@ body{
 
 /* TABULEIRO */
 #board{
-  margin-top:20px;
-  width:90vw;
-  max-width:420px;
-  aspect-ratio:1;
+  width:420px;
+  height:420px;
   display:grid;
   grid-template-columns:repeat(8,1fr);
   border:4px solid #a855f7;
-  box-shadow:0 0 30px rgba(180,0,255,.6);
+  box-shadow:0 0 25px rgba(180,0,255,.6);
 }
 
 /* CASAS */
 .cell{
-  width:100%;
-  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   background:#111;
 }
-.cell.dark{ background:#000; }
-.cell.highlight{ outline:3px solid #a855f7; }
+.cell.dark{background:#000}
+.cell.highlight{outline:3px solid #a855f7}
 
 /* PEÇAS */
 .piece{
-  width:80%;
-  height:80%;
-  margin:10%;
+  width:70%;
+  height:70%;
   border-radius:50%;
 }
-.purple{ background:#a855f7; }
-.red{ background:#dc2626; }
-.king{ box-shadow:0 0 10px gold inset; }
-
-/* OVERLAY */
-#overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.8);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  z-index:10;
-}
-#overlay img{
-  max-width:80%;
-  border-radius:15px;
-  box-shadow:0 0 30px rgba(180,0,255,.8);
-}
-#overlay p{
-  margin-top:20px;
-  font-size:1.1rem;
-  text-align:center;
-  max-width:85%;
-}
-
-/* FINAL */
-#final{
-  display:none;
-  text-align:center;
-  margin-top:40px;
-}
-#final img{
-  width:80%;
-  border-radius:20px;
-  box-shadow:0 0 40px rgba(180,0,255,.8);
-}
-#final p{
-  margin:20px;
-  font-size:1.2rem;
-}
-button{
-  padding:15px 35px;
-  border:none;
-  border-radius:25px;
-  background:linear-gradient(45deg,#a855f7,#7c3aed);
-  color:white;
-  font-size:1.1rem;
-}
+.purple{background:#a855f7}
+.red{background:#dc2626}
+.king{outline:3px solid gold}
 </style>
 </head>
 
 <body>
-
-<h2>As damas do nosso amor bb ♟️💜</h2>
-
-<div id="board"></div>
-
-<div id="overlay">
-  <img id="capImg">
-  <p id="capText"></p>
-</div>
-
-<div id="final">
-  <img src="damas/final.jpg">
-  <p>
-    No tabuleiro da vida, você não é só uma peça.<br>
-    Você é a jogada que muda tudo.<br><br>
-    Linda, intensa, irresistível — minha rainha.
-  </p>
-  <button onclick="location.href='pagina8.html'">Página 8 💜</button>
+<div id="game">
+  <h2 style="color:white">Damas ♟️</h2>
+  <div id="board"></div>
 </div>
 
 <script>
 const board=document.getElementById("board");
-const overlay=document.getElementById("overlay");
-const capImg=document.getElementById("capImg");
-const capText=document.getElementById("capText");
-
 let selected=null;
-let captures=0;
 
-const phrases=[
-"Te capturar é fácil… difícil é parar de te desejar.",
-"Cada movimento seu me deixa mais preso.",
-"Você domina esse jogo e o meu corpo.",
-"Ser vencido por você é prazer.",
-"Você joga com charme e ganha com beleza.",
-"Cada captura sua me tira o fôlego.",
-"Você não joga, você provoca.",
-"Você é perigo em forma de mulher.",
-"Te enfrentar é perder gostoso.",
-"Você é a rainha antes mesmo da coroa.",
-"Seu toque desmonta tudo.",
-"Você ganha porque nasceu pra dominar."
-];
+/* ESTADO */
+let state=Array(64).fill(null);
 
-/* CRIAR TABULEIRO */
-let state=[];
+function idx(r,c){return r*8+c}
+
+/* CRIA TABULEIRO */
 for(let r=0;r<8;r++){
- for(let c=0;c<8;c++){
-  const cell=document.createElement("div");
-  cell.className="cell "+((r+c)%2?"dark":"");
-  cell.dataset.r=r;
-  cell.dataset.c=c;
-  board.appendChild(cell);
-  state.push(null);
- }
+  for(let c=0;c<8;c++){
+    const cell=document.createElement("div");
+    cell.className="cell "+((r+c)%2?"dark":"");
+    cell.dataset.i=idx(r,c);
+    cell.onclick=()=>cellClick(idx(r,c));
+    board.appendChild(cell);
+  }
 }
 
 /* PEÇAS INICIAIS */
-function idx(r,c){ return r*8+c; }
+for(let r=0;r<3;r++)
+ for(let c=0;c<8;c++)
+  if((r+c)%2) state[idx(r,c)]={color:"red",king:false};
 
-for(let i=0;i<24;i++){
- if(i<12){
-  state[idx(Math.floor(i/4),i%4*2+1)]=
-   {color:"red",king:false};
- }else{
-  state[idx(7-Math.floor((i-12)/4),(i-12)%4*2)]=
-   {color:"purple",king:false};
- }
-}
+for(let r=5;r<8;r++)
+ for(let c=0;c<8;c++)
+  if((r+c)%2) state[idx(r,c)]={color:"purple",king:false};
 
 function render(){
- board.querySelectorAll(".piece").forEach(p=>p.remove());
- board.querySelectorAll(".highlight").forEach(h=>h.classList.remove("highlight"));
+  board.querySelectorAll(".piece").forEach(p=>p.remove());
+  board.querySelectorAll(".highlight").forEach(h=>h.classList.remove("highlight"));
 
- state.forEach((p,i)=>{
-  if(p){
-   const cell=board.children[i];
-   const el=document.createElement("div");
-   el.className="piece "+p.color+(p.king?" king":"");
-   el.onclick=()=>select(i);
-   cell.appendChild(el);
-  }
- });
+  state.forEach((p,i)=>{
+    if(p){
+      const el=document.createElement("div");
+      el.className="piece "+p.color+(p.king?" king":"");
+      board.children[i].appendChild(el);
+    }
+  });
 }
 render();
 
-/* SELEÇÃO */
-function select(i){
- if(!state[i]||state[i].color!=="purple")return;
- selected=i;
- highlight(i);
-}
-
-/* DESTAQUES */
-function highlight(i){
- board.querySelectorAll(".highlight").forEach(h=>h.classList.remove("highlight"));
- const r=Math.floor(i/8),c=i%8;
- [-1,1].forEach(dr=>{
-  [-1,1].forEach(dc=>{
-   const nr=r+dr,nc=c+dc;
-   if(nr>=0&&nr<8&&nc>=0&&nc<8){
-    const ni=idx(nr,nc);
-    if(!state[ni]){
-     board.children[ni].classList.add("highlight");
-     board.children[ni].onclick=()=>move(i,ni);
+/* CLIQUE */
+function cellClick(i){
+  if(selected===null){
+    if(state[i] && state[i].color==="purple"){
+      selected=i;
+      highlightMoves(i);
     }
-   }
-  });
- });
-}
-
-/* MOVIMENTO */
-function move(from,to){
- state[to]=state[from];
- state[from]=null;
-
- /* DAMA */
- const r=Math.floor(to/8);
- if(r===0) state[to].king=true;
-
- /* CAPTURA */
- const fr=Math.floor(from/8),fc=from%8;
- const tr=Math.floor(to/8),tc=to%8;
- if(Math.abs(fr-tr)===2){
-  const mi=idx((fr+tr)/2,(fc+tc)/2);
-  state[mi]=null;
-  showCapture();
- }
-
- render();
- setTimeout(aiMove,600);
-}
-
-/* CAPTURA VISUAL */
-function showCapture(){
- overlay.style.display="flex";
- capImg.src=`damas/captura${captures+1}.jpg`;
- capText.innerText=phrases[captures];
- captures++;
- setTimeout(()=>overlay.style.display="none",2200);
-}
-
-/* IA BURRA */
-function aiMove(){
- const reds=state.map((p,i)=>p&&p.color==="red"?i:null).filter(x=>x!==null);
- if(!reds.length){
-  document.getElementById("final").style.display="block";
-  return;
- }
- const from=reds[Math.floor(Math.random()*reds.length)];
- const r=Math.floor(from/8),c=from%8;
- const moves=[[1,-1],[1,1]];
- for(const [dr,dc] of moves){
-  const nr=r+dr,nc=c+dc;
-  if(nr>=0&&nr<8&&nc>=0&&nc<8){
-   const ni=idx(nr,nc);
-   if(!state[ni]){
-    state[ni]=state[from];
-    state[from]=null;
+  }else{
+    if(board.children[i].classList.contains("highlight")){
+      move(selected,i);
+    }
+    selected=null;
     render();
-    return;
-   }
+    setTimeout(aiMove,500);
   }
- }
+}
+
+/* MOVIMENTOS */
+function highlightMoves(i){
+  const p=state[i];
+  const r=Math.floor(i/8),c=i%8;
+  const dirs=p.king?[-1,1]:[-1];
+
+  dirs.forEach(dr=>{
+    [-1,1].forEach(dc=>{
+      const nr=r+dr,nc=c+dc;
+      if(nr>=0&&nr<8&&nc>=0&&nc<8){
+        const ni=idx(nr,nc);
+        if(!state[ni]) board.children[ni].classList.add("highlight");
+      }
+    });
+  });
+}
+
+function move(from,to){
+  state[to]=state[from];
+  state[from]=null;
+
+  if(Math.floor(to/8)===0) state[to].king=true;
+}
+
+/* IA SIMPLES */
+function aiMove(){
+  const reds=state.map((p,i)=>p&&p.color==="red"?i:null).filter(i=>i!==null);
+  if(!reds.length) return;
+
+  for(const from of reds){
+    const r=Math.floor(from/8),c=from%8;
+    for(const dc of [-1,1]){
+      const nr=r+1,nc=c+dc;
+      if(nr<8&&nc>=0&&nc<8){
+        const ni=idx(nr,nc);
+        if(!state[ni]){
+          state[ni]=state[from];
+          state[from]=null;
+          render();
+          return;
+        }
+      }
+    }
+  }
 }
 </script>
-
 </body>
 </html>
