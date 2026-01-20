@@ -112,7 +112,7 @@ body {
 </style>
 </head>
 <body>
-<div id="title">as damas do nosso amor bb</div>
+<div id="title">jogue, ganhe e se prepare pra o final minha neném 💜</div>
 <div id="board"></div>
 
 <script>
@@ -123,6 +123,7 @@ let cells = [];
 let selected = null;
 let turn = "player";
 let gameOver = false;
+let captureIndex = 0;
 
 function createBoard(){
   board.innerHTML=""; cells=[];
@@ -199,7 +200,7 @@ function movePiece(x1,y1,x2,y2,isPlayerMove=true){
       if(state[cy][cx] && state[cy][cx].type!==piece.type){
         state[cy][cx]=null;
         captured=true;
-        if(isPlayerMove) showCaptureEffect(cx,cy,piece.type==="player"?"#9333ea":"#dc2626");
+        if(isPlayerMove) showCaptureEffectWithPhoto(cx,cy);
         break;
       }
       cx+=stepX; cy+=stepY;
@@ -211,21 +212,25 @@ function movePiece(x1,y1,x2,y2,isPlayerMove=true){
   render();
   clearHighlights();
 
+  let turnedToKing = false;
   if(piece.type==="player" && y2===0 && !piece.king){
     piece.king=true;
-    showCaptureText("Você sempre será minha rainha dentro e fora do jogo");
+    turnedToKing = true;
   }
   if(piece.type==="ai" && y2===SIZE-1) piece.king=true;
 
   if(captured && pieceHasCapture(x2,y2)){
     selected={x:x2,y:y2};
     highlightMoves(x2,y2);
-    turn = piece.type; 
+    turn = piece.type;
     return;
   }
 
   selected=null;
   checkGameOver();
+
+  if(turnedToKing) showCaptureTextAbovePhoto("Você sempre será minha rainha dentro e fora do jogo");
+
   if(!gameOver){
     turn = piece.type==="player" ? "ai" : "player";
     if(turn==="ai") setTimeout(()=>aiMove(false),600);
@@ -309,20 +314,52 @@ function aiMove(showCapture=false){
   }
 }
 
-function showCaptureEffect(x,y,color="#9333ea"){
-  // Agora só efeito visual sem foto/frase
-  const cell = cells[y*SIZE+x];
-  cell.style.outline=`3px solid ${color}`;
-  setTimeout(()=>cell.style.outline="",500);
-}
-
-function showCaptureText(text){
+function showCaptureEffectWithPhoto(x,y){
   const effect=document.createElement("div");
   effect.className="capture-effect";
+
+  const img=document.createElement("img");
+  img.src=`damas/captura${captureIndex%12+1}.jpg`;
+
   const p=document.createElement("p");
-  p.textContent=text;
+  const captureTexts = [
+    "Seu olhar me derrete.",
+    "Quero sentir você perto.",
+    "Cada curva sua me provoca.",
+    "Não consigo tirar você da cabeça.",
+    "Você é desejo puro.",
+    "Sinto sua falta mesmo perto.",
+    "Quero explorar cada detalhe seu.",
+    "Seu corpo me chama.",
+    "Você é minha tentação favorita.",
+    "Cada toque seu me enlouquece.",
+    "Você é linda demais para palavras.",
+    "Quero te ter só para mim."
+  ];
+  p.textContent = captureTexts[captureIndex%12];
+  captureIndex++;
+
   effect.appendChild(p);
+  effect.appendChild(img);
   document.body.appendChild(effect);
+
+  setTimeout(()=>effect.remove(),3000);
+}
+
+function showCaptureTextAbovePhoto(text){
+  const effect=document.createElement("div");
+  effect.className="capture-effect";
+
+  const p=document.createElement("p");
+  p.textContent = text;
+
+  const img=document.createElement("img");
+  img.src = `damas/captura${captureIndex%12+1}.jpg`;
+
+  effect.appendChild(p);
+  effect.appendChild(img);
+  document.body.appendChild(effect);
+
   setTimeout(()=>effect.remove(),3000);
 }
 
