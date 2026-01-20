@@ -3,207 +3,228 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Página 6</title>
+
+<title>Página 6 💜</title>
 
 <style>
-/* ===== FUNDO ===== */
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 body {
   margin: 0;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #1a002a, #3b0066);
-  font-family: Arial, sans-serif;
+  min-height: 200vh;
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top, #3b0a57, #12001a);
   color: white;
   overflow-x: hidden;
 }
 
-/* ===== TÍTULO ===== */
+/* TÍTULO */
 h1 {
   text-align: center;
-  margin-top: 30px;
-  font-size: 1.6rem;
+  margin: 25px 15px;
+  font-size: 1.4rem;
 }
 
-/* ===== TABULEIRO ===== */
+/* TABULEIRO */
 #board {
-  width: 90vw;
-  max-width: 420px;
-  aspect-ratio: 1 / 1;
-  margin: 30px auto;
+  width: 95vw;
+  height: 95vw;
+  max-width: 95vw;
+  max-height: 95vw;
+  margin: 20px auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
   border: 2px dashed rgba(255,255,255,0.5);
+  position: relative;
 }
 
-/* ===== SLOTS ===== */
+/* SLOT */
 .slot {
-  border: 1px dashed rgba(255,255,255,0.3);
+  border: 1px dashed rgba(255,255,255,0.2);
 }
 
-/* ===== PEÇAS ===== */
+/* ÁREA DAS PEÇAS */
+#pieces {
+  position: relative;
+  width: 100%;
+  height: 120vh;
+}
+
+/* PEÇAS */
 .piece {
-  width: 22vw;
-  max-width: 90px;
-  aspect-ratio: 1 / 1;
+  width: calc(95vw / 4);
+  height: calc(95vw / 4);
   background-image: url("quebra/cabeca.jpg");
   background-size: 400% 400%;
   position: absolute;
   touch-action: none;
   cursor: grab;
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 
-/* ===== ÁREA DE PEÇAS ===== */
-#pieces {
-  position: relative;
-  height: 320px;
-}
-
-/* ===== TEXTO ===== */
-#textBox {
+/* TEXTO FINAL */
+#finalText {
   max-width: 90%;
-  margin: 60px auto;
-  font-size: 1.15rem;
-  line-height: 1.6;
-  display: none;
+  margin: 80px auto;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  opacity: 0;
+  transition: opacity 1s;
 }
 
-/* ===== BOTÃO ===== */
-#btnNext {
+/* BOTÃO */
+#nextBtn {
   display: none;
-  margin: 50px auto;
-  padding: 15px 35px;
-  font-size: 1.1rem;
-  background: linear-gradient(135deg, #ff4dd8, #ff85e1);
-  color: white;
+  margin: 40px auto 80px;
+  padding: 14px 35px;
+  background: linear-gradient(135deg, #9b4dff, #5e17eb);
   border: none;
-  border-radius: 30px;
+  border-radius: 25px;
+  color: white;
+  font-size: 1rem;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Monte a imagem… 💜</h1>
+<h1>Monte a imagem... 💜</h1>
 
 <div id="board"></div>
+
 <div id="pieces"></div>
 
-<div id="textBox"></div>
+<div id="finalText"></div>
 
-<button id="btnNext" onclick="window.location.href='page7.html'">
-  Continuar
+<button id="nextBtn" onclick="window.location.href='pagina7.html'">
+  Ir para a página 7
 </button>
 
 <script>
 const board = document.getElementById("board");
 const piecesArea = document.getElementById("pieces");
-const textBox = document.getElementById("textBox");
-const btnNext = document.getElementById("btnNext");
+const finalText = document.getElementById("finalText");
+const nextBtn = document.getElementById("nextBtn");
 
+const rows = 4;
+const cols = 4;
+const total = rows * cols;
 let placed = 0;
-const total = 16;
 
-/* ===== CRIA SLOTS ===== */
+/* CRIA SLOTS */
 for (let i = 0; i < total; i++) {
   const slot = document.createElement("div");
   slot.className = "slot";
-  slot.dataset.index = i;
   board.appendChild(slot);
 }
 
-/* ===== CRIA PEÇAS ===== */
+/* CRIA PEÇAS */
 for (let i = 0; i < total; i++) {
   const piece = document.createElement("div");
   piece.className = "piece";
   piece.dataset.index = i;
 
-  const x = (i % 4) * 33.33;
-  const y = Math.floor(i / 4) * 33.33;
-  piece.style.backgroundPosition = `${x}% ${y}%`;
+  const x = i % cols;
+  const y = Math.floor(i / cols);
 
-  piece.style.left = Math.random() * 70 + "vw";
-  piece.style.top = Math.random() * 220 + "px";
+  piece.style.backgroundPosition = `${x * 33.33}% ${y * 33.33}%`;
 
-  enableDrag(piece);
+  piece.style.left = Math.random() * (window.innerWidth - 120) + "px";
+  piece.style.top = (board.offsetHeight + 100 + Math.random() * 400) + "px";
+
   piecesArea.appendChild(piece);
+  dragPiece(piece);
 }
 
-/* ===== DRAG ===== */
-function enableDrag(el) {
-  let offsetX, offsetY;
+/* DRAG */
+function dragPiece(piece) {
+  let offsetX = 0;
+  let offsetY = 0;
 
-  el.addEventListener("pointerdown", e => {
-    offsetX = e.clientX - el.offsetLeft;
-    offsetY = e.clientY - el.offsetTop;
-    el.setPointerCapture(e.pointerId);
+  piece.addEventListener("pointerdown", e => {
+    offsetX = e.clientX - piece.offsetLeft;
+    offsetY = e.clientY - piece.offsetTop;
+    piece.setPointerCapture(e.pointerId);
+    piece.style.zIndex = 1000;
   });
 
-  el.addEventListener("pointermove", e => {
-    if (e.pressure === 0) return;
-    el.style.left = e.clientX - offsetX + "px";
-    el.style.top = e.clientY - offsetY + "px";
+  piece.addEventListener("pointermove", e => {
+    if (!piece.hasPointerCapture(e.pointerId)) return;
+    piece.style.left = e.clientX - offsetX + "px";
+    piece.style.top = e.clientY - offsetY + "px";
   });
 
-  el.addEventListener("pointerup", e => {
-    el.releasePointerCapture(e.pointerId);
-    checkSnap(el);
+  piece.addEventListener("pointerup", () => {
+    checkSnap(piece);
+    piece.releasePointerCapture;
   });
 }
 
-/* ===== SNAP ===== */
+/* SNAP CORRETO */
 function checkSnap(piece) {
   const index = piece.dataset.index;
   const slot = board.children[index];
-  const r1 = piece.getBoundingClientRect();
-  const r2 = slot.getBoundingClientRect();
 
-  if (
-    Math.abs(r1.left - r2.left) < 25 &&
-    Math.abs(r1.top - r2.top) < 25
-  ) {
-    piece.style.left = r2.left + "px";
-    piece.style.top = r2.top + "px";
+  const pieceRect = piece.getBoundingClientRect();
+  const slotRect = slot.getBoundingClientRect();
+  const containerRect = piecesArea.getBoundingClientRect();
+
+  const distance =
+    Math.abs(pieceRect.left - slotRect.left) +
+    Math.abs(pieceRect.top - slotRect.top);
+
+  if (distance < 60) {
+    piece.style.left = (slotRect.left - containerRect.left) + "px";
+    piece.style.top = (slotRect.top - containerRect.top) + "px";
     piece.style.pointerEvents = "none";
-    placed++;
+    piece.style.zIndex = 0;
 
+    placed++;
     if (placed === total) startText();
   }
 }
 
-/* ===== TEXTO ===== */
+/* TEXTO FINAL */
 const text = `
-Quando nossos corpos se encaixam assim,
-não é só pele com pele…
+Quando nossas partes se encaixam assim,
+não é só uma imagem que se completa…
 
-É desejo que reconhece desejo,
-é meu toque encontrando o lugar exato do teu corpo.
+É o meu corpo lembrando do seu,
+é o toque que começa lento,
+mas nunca quer parar.
 
-Cada detalhe teu me chama,
-cada aproximação me deixa sem controle.
+Cada detalhe seu me prende,
+me provoca,
+me faz querer você ainda mais perto.
 
-E quando eu te tenho perto,
-o mundo some…
-sobra só a vontade,
-o calor,
-e essa conexão que é só nossa.
+Você não é só linda…
+você é desejo,
+é vontade,
+é tudo o que eu quero sentir de novo.
 `;
 
 let i = 0;
-function startText() {
-  textBox.style.display = "block";
-  type();
-}
 
-function type() {
-  if (i < text.length) {
-    textBox.innerHTML += text.charAt(i);
+function startText() {
+  finalText.style.opacity = 1;
+
+  const interval = setInterval(() => {
+    finalText.innerHTML += text.charAt(i);
+    window.scrollBy(0, 1.5);
     i++;
-    window.scrollBy(0, 1);
-    setTimeout(type, 35);
-  } else {
-    btnNext.style.display = "block";
-    btnNext.scrollIntoView({ behavior: "smooth" });
-  }
+
+    if (i >= text.length) {
+      clearInterval(interval);
+      nextBtn.style.display = "block";
+      nextBtn.scrollIntoView({ behavior: "smooth" });
+    }
+  }, 45);
 }
 </script>
 
