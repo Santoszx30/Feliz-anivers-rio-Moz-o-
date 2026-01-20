@@ -62,18 +62,239 @@ body {
 .highlight {
   outline: 3px solid #22c55e;
 }
+  .capture-flash {
+  position: fixed;
+  inset: 0;
+  background: rgba(168, 85, 247, 0.25);
+  animation: flash 0.3s ease;
+  pointer-events: none;
+  z-index: 999;
+}
+
+@keyframes flash {
+  from { opacity: 8; }
+  to { opacity: 0; }
+}
+  .capture-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.capture-overlay img {
+  max-width: 80%;
+  max-height: 80%;
+  animation: zoomIn 0.4s ease;
+  border-radius: 12px;
+  box-shadow: 0 0 30px #a855f7;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+                   }
+  #captureOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+  z-index: 999;
+}
+
+#captureOverlay.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+#captureImage {
+  width: 70vmin;
+  max-width: 90%;
+  border-radius: 16px;
+  transform: scale(0.6);
+  transition: transform 0.5s ease;
+  box-shadow: 0 0 40px rgba(168,85,247,0.8);
+}
+
+#captureOverlay.show #captureImage {
+  transform: scale(1);
+}
+
+#captureText {
+  margin-top: 20px;
+  max-width: 80%;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #f5d0fe;
+}
+  /* FLASH + QUEBRA */
+.capture-flash {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.4);
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  animation: flash 0.3s ease forwards;
+}
+
+@keyframes flash {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.break-piece {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background-color: #9333ea; /* peça roxa, muda para a sua classe */
+  top: 0;
+  left: 0;
+  transform-origin: center;
+  animation: breakAnim 0.6s forwards;
+  z-index: 999;
+}
+
+@keyframes breakAnim {
+  0% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.2) rotate(30deg); opacity: 1; }
+  100% { transform: scale(0) rotate(120deg); opacity: 0; }
+}
+  /* FOTO + FRASE AO CAPTURAR */
+.capture-effect {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 15px;
+  overflow: hidden;
+  transform: scale(0);
+  top: 50%;
+  left: 50%;
+  margin-left: -100px; /* metade da largura */
+  margin-top: -100px;  /* metade da altura */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+  animation: capturePop 0.7s forwards;
+  z-index: 1000;
+}
+
+.capture-effect img {
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
+}
+
+.capture-effect p {
+  color: white;
+  text-align: center;
+  padding: 5px;
+  font-size: 0.9rem;
+}
+
+@keyframes capturePop {
+  0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+  50% { transform: scale(1.1) rotate(10deg); opacity: 1; }
+  70% { transform: scale(0.95) rotate(-5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+                          }
+  /* TABULEIRO EXPLOSIVO */
+#board.explode {
+  animation: boardZoomRupture 1.2s forwards;
+}
+
+@keyframes boardZoomRupture {
+  0% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.5) rotate(15deg); opacity: 0.8; }
+  70% { transform: scale(1.2) rotate(-10deg); opacity: 0.5; }
+  100% { transform: scale(2) rotate(30deg); opacity: 0; }
+}
+
+/* PEÇAS CAINDO */
+.piece.fall {
+  animation: fallPiece 1s forwards;
+}
+
+@keyframes fallPiece {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(200px) rotate(720deg); opacity: 0; }
+}
+
+/* FOTO FINAL + TEXTO */
+#finalEffect {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 300px;
+  max-width: 90vw;
+  text-align: center;
+  z-index: 2000;
+  animation: finalPop 1s forwards;
+}
+
+#finalEffect img {
+  width: 100%;
+  border-radius: 15px;
+  margin-bottom: 10px;
+}
+
+#finalEffect p {
+  color: white;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* ANIMAÇÃO POP */
+@keyframes finalPop {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+  70% { transform: translate(-50%, -50%) scale(0.95); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+    }
 </style>
 </head>
 
 <body>
 
 <div id="board"></div>
+  <div id="captureOverlay">
+  <img id="captureImage">
+  <p id="captureText"></p>
+  </div>
 
 <script>
 const board = document.getElementById("board");
 let cells = [];
 let selected = null;
 let turn = "player";
+  let waitingAI = false;
 
 const SIZE = 8;
 
@@ -175,9 +396,9 @@ function playerHasCapture() {
   }
   return false;
       }
-  
-function onCellClick(x, y) {
+  function onCellClick(x, y) {
   if (turn !== "player") return;
+  if (waitingAI) return;
 
   clearHighlights();
 
@@ -187,8 +408,14 @@ function onCellClick(x, y) {
     movePiece(selected.x, selected.y, x, y);
 
 if (turn !== "player") {
-  turn = "ai";
-  setTimeout(aiMove, 600);
+  waitingAI = true;
+turn = "ai";
+
+setTimeout(() => {
+  aiMove();
+  waitingAI = false;
+  turn = "player";
+}, 600);
 }
 return;
   }
@@ -207,39 +434,181 @@ function isMoveValid(x1, y1, x2, y2) {
   const dx = x2 - x1;
   const dy = y2 - y1;
 
-  if (!piece.king && dy !== -1 && dy !== -2) return false;
+  // MOVIMENTO SIMPLES
+  if (!piece.king) {
+    if (piece.type === "player" && dy !== -1 && dy !== -2) return false;
+    if (piece.type === "ai" && dy !== 1 && dy !== 2) return false;
+
+    if (Math.abs(dx) === 1 && Math.abs(dy) === 1) return true;
+
+    if (Math.abs(dx) === 2 && Math.abs(dy) === 2) {
+      const mx = (x1 + x2) / 2;
+      const my = (y1 + y2) / 2;
+      return state[my][mx] && state[my][mx].type !== piece.type;
+    }
+
+    return false;
+  }
+
+  // DAMA
   if (Math.abs(dx) !== Math.abs(dy)) return false;
 
-  const hasCapture = playerHasCapture();
+  const stepX = dx > 0 ? 1 : -1;
+  const stepY = dy > 0 ? 1 : -1;
 
-  // CAPTURA
-  if (Math.abs(dx) === 2) {
-    const mx = (x1 + x2) / 2;
-    const my = (y1 + y2) / 2;
-    return state[my][mx] && state[my][mx].type === "ai";
+  let cx = x1 + stepX;
+  let cy = y1 + stepY;
+  let enemyFound = null;
+
+  while (cx !== x2 && cy !== y2) {
+    if (state[cy][cx]) {
+      if (state[cy][cx].type === piece.type) return false;
+      if (enemyFound) return false;
+      enemyFound = { x: cx, y: cy };
+    }
+    cx += stepX;
+    cy += stepY;
   }
 
-  // MOVIMENTO SIMPLES (bloqueado se existir captura)
-  if (Math.abs(dx) === 1 && !hasCapture) {
-    return true;
-  }
-
-  return false;
+  return true;
 }
+
+// Array de frases para cada captura
+const captureTexts = [
+  "Seu olhar me derrete.",
+  "Quero sentir você perto.",
+  "Cada curva sua me provoca.",
+  "Não consigo tirar você da cabeça.",
+  "Você é desejo puro.",
+  "Sinto sua falta mesmo perto.",
+  "Quero explorar cada detalhe seu.",
+  "Seu corpo me chama.",
+  "Você é minha tentação favorita.",
+  "Cada toque seu me enlouquece.",
+  "Você é linda demais para palavras.",
+  "Quero te ter só para mim."
+];
+
+let captureIndex = 0;
+
+function showCaptureEffect(x, y, color = "#9333ea") {
+  // FLASH
+  const flash = document.createElement("div");
+  flash.className = "capture-flash";
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 300);
+
+  // PEÇA QUEBRANDO
+  const pieceBreak = document.createElement("div");
+  pieceBreak.className = "break-piece";
+  pieceBreak.style.backgroundColor = color;
+
+  const cell = cells[y * SIZE + x];
+  const rect = cell.getBoundingClientRect();
+  pieceBreak.style.top = rect.top + "px";
+  pieceBreak.style.left = rect.left + "px";
+  document.body.appendChild(pieceBreak);
+  setTimeout(() => pieceBreak.remove(), 600);
+
+  // FOTO + FRASE
+  if (captureIndex < 12) {
+    const effect = document.createElement("div");
+    effect.className = "capture-effect";
+
+    const img = document.createElement("img");
+    img.src = `captura/captura${captureIndex + 1}.jpg`;
+    effect.appendChild(img);
+
+    const p = document.createElement("p");
+    p.textContent = captureTexts[captureIndex];
+    effect.appendChild(p);
+
+    document.body.appendChild(effect);
+    captureIndex++;
+
+    // Remove após 2,5s
+    setTimeout(() => effect.remove(), 2500);
+  }
+}
+  
+function showCaptureImage() {
+  if (captureIndex > 12) return;
+
+  const overlay = document.createElement("div");
+  overlay.className = "capture-overlay";
+
+  const box = document.createElement("div");
+  box.style.textAlign = "center";
+
+  const img = document.createElement("img");
+  img.src = `damas/captura${captureIndex}.jpg`;
+
+  const text = document.createElement("div");
+  text.textContent = capturePhrases[captureIndex - 1];
+  text.style.color = "#e9d5ff";
+  text.style.marginTop = "16px";
+  text.style.fontSize = "1.1rem";
+  text.style.textShadow = "0 0 10px #a855f7";
+
+  box.appendChild(img);
+  box.appendChild(text);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  captureIndex++;
+
+  setTimeout(() => {
+    overlay.remove();
+  }, 1200);
+}
+
 
 function movePiece(x1, y1, x2, y2) {
   const piece = state[y1][x1];
-  state[y2][x2] = piece;
   state[y1][x1] = null;
 
   let captured = false;
 
-  if (Math.abs(x2 - x1) === 2) {
-    const mx = (x1 + x2) / 2;
-    const my = (y1 + y2) / 2;
-    state[my][mx] = null;
-    captured = true;
+  if (piece.king) {
+    const stepX = x2 > x1 ? 1 : -1;
+    const stepY = y2 > y1 ? 1 : -1;
+
+    let cx = x1 + stepX;
+    let cy = y1 + stepY;
+
+    while (cx !== x2 && cy !== y2) {
+      if (state[cy][cx] && state[cy][cx].type !== piece.type) {
+        state[cy][cx] = null;
+        captured = true;
+        break;
+      }
+      cx += stepX;
+      cy += stepY;
+    }
+if (Math.abs(x2 - x1) === 2) {
+  const mx = (x1 + x2) / 2;
+  const my = (y1 + y2) / 2;
+  
+  const color = state[my][mx].type === "ai" ? "#dc2626" : "#9333ea";
+
+  // Remove do tabuleiro
+  state[my][mx] = null;
+
+  captured = true;
+
+  // Mostra efeito com quebra + foto + frase
+  showCaptureEffect(mx, my, color);
   }
+
+  if (piece.type === "player" && eaten.type === "ai") {
+    showCaptureEffect();
+  }
+      }
+    showCaptureEffect();
+    showCaptureImage();
+  }
+
+  state[y2][x2] = piece;
 
   // VIRA DAMA
   if (piece.type === "player" && y2 === 0) piece.king = true;
@@ -248,26 +617,47 @@ function movePiece(x1, y1, x2, y2) {
   render();
   clearHighlights();
 
-  // MULTICAPTURA
   if (captured && piece.type === "player" && pieceHasCapture(x2, y2)) {
     selected = { x: x2, y: y2 };
     highlightMoves(x2, y2);
     turn = "player";
     return;
   }
-
+turn = "ai";
   selected = null;
-}
+      }
 
 function highlightMoves(x, y) {
-  for (let dy of [-1, -2]) {
-    for (let dx of [-2, -1, 1, 2]) {
-      const nx = x + dx;
-      const ny = y + dy;
-      if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE) {
-        if (isMoveValid(x, y, nx, ny)) {
-          cells[ny * SIZE + nx].classList.add("highlight");
-        }
+  const piece = state[y][x];
+  if (!piece) return;
+
+  const directions = piece.king ? [-1, 1] : piece.type === "player" ? [-1] : [1];
+
+  for (let dy of directions) {
+    for (let dx of [-1, 1]) {
+      let nx = x + dx;
+      let ny = y + dy;
+
+      while (
+        nx >= 0 && nx < SIZE &&
+        ny >= 0 && ny < SIZE &&
+        !state[ny][nx]
+      ) {
+        cells[ny * SIZE + nx].classList.add("highlight");
+        if (!piece.king) break;
+        nx += dx;
+        ny += dy;
+      }
+
+      const jumpX = x + dx * 2;
+      const jumpY = y + dy * 2;
+
+      if (
+        jumpX >= 0 && jumpX < SIZE &&
+        jumpY >= 0 && jumpY < SIZE &&
+        isMoveValid(x, y, jumpX, jumpY)
+      ) {
+        cells[jumpY * SIZE + jumpX].classList.add("highlight");
       }
     }
   }
@@ -308,6 +698,49 @@ function aiMove() {
 createBoard();
 placePieces();
 render();
+
+  function triggerVictory() {
+  // 1. Explode o tabuleiro
+  board.classList.add("explode");
+
+  // 2. Faz todas as peças caírem
+  cells.forEach((cell, i) => {
+    const piece = cell.querySelector(".piece");
+    if (piece) piece.classList.add("fall");
+  });
+
+  // 3. Mostra a foto final + texto
+  setTimeout(() => {
+    const finalDiv = document.createElement("div");
+    finalDiv.id = "finalEffect";
+
+    const img = document.createElement("img");
+    img.src = "captura/final.jpg";
+    finalDiv.appendChild(img);
+
+    const p = document.createElement("p");
+    p.innerHTML = "Você venceu e, assim como no jogo, <br> sua beleza é estratégica, irresistível e única. <br> Te amo 💜";
+    finalDiv.appendChild(p);
+    if (checkPlayerVictory()) { // sua função que verifica vitória
+  triggerVictory();
+  }
+
+    document.body.appendChild(finalDiv);
+
+    // 4. Botão para página 8
+    const btn = document.createElement("button");
+    btn.textContent = "Ir para a página 8";
+    btn.style.marginTop = "20px";
+    btn.style.padding = "10px 25px";
+    btn.style.background = "linear-gradient(135deg, #9b4dff, #5e17eb)";
+    btn.style.color = "white";
+    btn.style.border = "none";
+    btn.style.borderRadius = "25px";
+    btn.style.fontSize = "1rem";
+    btn.onclick = () => window.location.href = "pagina8.html";
+    finalDiv.appendChild(btn);
+  }, 1200); // espera animação do tabuleiro
+          }
 </script>
 
 </body>
