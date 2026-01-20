@@ -33,6 +33,7 @@ body {
   box-shadow: 0 0 25px #a855f7;
   position: relative;
   pointer-events: auto;
+  transition: transform 1s ease;
 }
 
 .cell { width: 100%; height: 100%; }
@@ -52,51 +53,24 @@ body {
 
 .highlight { outline: 3px solid #22c55e; }
 
-.capture-flash {
-  position: absolute; inset: 0;
-  background: rgba(255,255,255,0.25);
-  animation: flash 0.4s ease forwards;
-  pointer-events: none;
-  z-index: 1000;
-}
-
-@keyframes flash {
-  0% { opacity: 0; }
-  50% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-.break-piece {
-  position: absolute;
-  width: 80%; height: 80%;
-  border-radius: 50%;
-  transform-origin: center;
-  animation: breakAnim 0.6s forwards;
-  z-index: 1000;
-}
-
-@keyframes breakAnim {
-  0% { transform: scale(1) rotate(0deg); opacity: 1; }
-  50% { transform: scale(1.2) rotate(30deg); opacity: 1; }
-  100% { transform: scale(0) rotate(120deg); opacity: 0; }
-}
+.break-piece { display: none; } /* remove animação de peça quebrando */
 
 .capture-effect {
   position: fixed;
   top: 50%; left: 50%;
-  width: 220px; height: 220px;
-  margin-left: -110px; margin-top: -110px;
+  width: 60vmin; height: 60vmin; /* 2/3 do tabuleiro */
+  margin-left: -30vmin; margin-top: -30vmin;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: flex-end;
+  align-items: center; justify-content: center;
   pointer-events: none;
   opacity: 0;
   transform: scale(0);
   animation: capturePop 0.7s forwards;
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .capture-effect img {
-  width: 100%; height: auto; /* Mantém a foto inteira */
+  width: 100%; height: auto; 
   max-height: 80%;
   object-fit: contain;
   border-radius: 12px;
@@ -107,16 +81,14 @@ body {
 .capture-effect p {
   color: white;
   text-align: center;
-  padding: 5px;
-  font-size: 0.9rem;
+  padding: 10px;
+  font-size: 4vmin; /* ajusta conforme tamanho da imagem */
+  font-weight: bold;
   opacity: 0;
   animation: fadeIn 0.5s forwards 0.5s;
 }
 
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
-
+@keyframes fadeIn { to { opacity: 1; } }
 @keyframes capturePop {
   0% { transform: scale(0) rotate(-20deg); opacity: 0; }
   50% { transform: scale(1.1) rotate(10deg); opacity: 1; }
@@ -127,23 +99,18 @@ body {
 #finalEffect {
   position: fixed;
   top: 50%; left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  width: 300px; max-width: 90vw;
-  text-align: center; z-index: 2000;
+  width: 60vmin; height: 60vmin;
+  margin-left: -30vmin; margin-top: -30vmin;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 3000;
+  text-align: center;
 }
 
-#finalEffect img { width: 100%; border-radius: 15px; margin-bottom: 10px; }
-#finalEffect p { color: white; font-size: 1rem; line-height: 1.5; }
+#finalEffect img { width: 100%; height: auto; object-fit: contain; border-radius: 15px; margin-bottom: 15px; }
+#finalEffect p { color: white; font-size: 4vmin; font-weight: bold; line-height: 1.3; }
 
-@keyframes finalPop {
-  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-  70% { transform: translate(-50%, -50%) scale(0.95); }
-  100% { transform: translate(-50%, -50%) scale(1); }
-}
-
-/* Bloqueia o tabuleiro quando o jogo termina */
-#board.game-over { pointer-events: none; opacity: 0.6; }
+#board.game-over { pointer-events: none; opacity: 0.8; }
 </style>
 </head>
 <body>
@@ -213,8 +180,6 @@ function isMoveValid(x1,y1,x2,y2){
   const piece=state[y1][x1];
   if(!piece || state[y2][x2]) return false;
   const dx=x2-x1, dy=y2-y1;
-
-  // jogador normal
   if(!piece.king){
     if(piece.type==="player" && ![-1,-2].includes(dy)) return false;
     if(piece.type==="ai" && ![1,2].includes(dy)) return false;
@@ -225,8 +190,6 @@ function isMoveValid(x1,y1,x2,y2){
     }
     return false;
   }
-
-  // dama captura à distância
   if(Math.abs(dx)!==Math.abs(dy)) return false;
   const stepX=dx>0?1:-1, stepY=dy>0?1:-1;
   let cx=x1+stepX, cy=y1+stepY, enemyFound=null;
@@ -244,21 +207,18 @@ function isMoveValid(x1,y1,x2,y2){
 
 function movePiece(x1,y1,x2,y2){
   if(gameOver) return;
-
   const piece=state[y1][x1];
   let captured=false;
 
-  // captura
   const dx=x2-x1, dy=y2-y1;
   if(Math.abs(dx)>1){
     const stepX=dx>0?1:-1, stepY=dy>0?1:-1;
     let cx=x1+stepX, cy=y1+stepY;
     while(cx!==x2 && cy!==y2){
       if(state[cy][cx] && state[cy][cx].type!==piece.type){
-        const color=state[cy][cx].type==="ai"?"#dc2626":"#9333ea";
         state[cy][cx]=null;
         captured=true;
-        showCaptureEffect(cx,cy,color);
+        showCaptureEffect(cx,cy,piece.type==="player"?"#9333ea":"#dc2626");
         break;
       }
       cx+=stepX; cy+=stepY;
@@ -267,18 +227,15 @@ function movePiece(x1,y1,x2,y2){
 
   state[y2][x2]=piece;
   state[y1][x1]=null;
-
   render();
   clearHighlights();
 
-  // virar dama
   if(piece.type==="player" && y2===0 && !piece.king){
     piece.king=true;
     setTimeout(()=>showCaptureText("Você sempre será minha rainha dentro e fora do jogo"),200);
   }
   if(piece.type==="ai" && y2===SIZE-1) piece.king=true;
 
-  // multicaptura
   if(captured && pieceHasCapture(x2,y2)){
     selected={x:x2,y:y2};
     highlightMoves(x2,y2);
@@ -288,7 +245,9 @@ function movePiece(x1,y1,x2,y2){
 
   selected=null;
   checkGameOver();
-  if(turn==="player") turn="ai", setTimeout(aiMove,600);
+  if(!gameOver){
+    turn="ai"; setTimeout(aiMove,600);
+  }
 }
 
 function pieceHasCapture(x,y){
@@ -333,65 +292,54 @@ function onCellClick(x,y){
 
 function aiMove(){
   if(gameOver) return;
+
   let moves=[];
   for(let y=0;y<SIZE;y++) for(let x=0;x<SIZE;x++){
     const p=state[y][x];
     if(p && p.type==="ai"){
       for(let dx of [-1,1]) for(let dy of [1]){
         const nx=x+dx,ny=y+dy;
-        if(nx>=0 && nx<SIZE && ny>=0 && ny<SIZE && !state[ny][nx]) moves.push({x1:x,y1:y,x2:nx,y2:ny});
+        if(nx>=0 && nx<SIZE && ny>=0 && ny<SIZE && !state[ny][nx])
+          moves.push({x1:x,y1:y,x2:nx,y2:ny});
       }
     }
   }
+
   if(moves.length){
     const m=moves[Math.floor(Math.random()*moves.length)];
     movePiece(m.x1,m.y1,m.x2,m.y2);
+  } else {
+    // IA sem jogadas: jogador vence
+    gameOver=true;
+    board.classList.add("game-over");
+    showFinalEffect("Com toda a certeza, em todas as jogadas da vida, eu sempre escolherei você, por inteira e completa, eu te amo 💜!");
   }
+
   turn="player";
 }
 
 function showCaptureEffect(x,y,color="#9333ea"){
-  const flash=document.createElement("div");
-  flash.className="capture-flash";
-  document.body.appendChild(flash);
-  setTimeout(()=>flash.remove(),400);
+  const effect=document.createElement("div");
+  effect.className="capture-effect";
 
-  const pieceBreak=document.createElement("div");
-  pieceBreak.className="break-piece";
-  pieceBreak.style.backgroundColor=color;
+  const img=document.createElement("img");
+  img.src=`damas/captura${captureIndex%12+1}.jpg`;
 
-  const rect=cells[y*SIZE+x].getBoundingClientRect();
-  pieceBreak.style.top=(rect.top+window.scrollY)+"px";
-  pieceBreak.style.left=(rect.left+window.scrollX)+"px";
-  document.body.appendChild(pieceBreak);
-  setTimeout(()=>pieceBreak.remove(),600);
+  const p=document.createElement("p");
+  p.textContent=captureTexts[captureIndex%12];
+  captureIndex++;
 
-  if(captureIndex<12){
-    const effect=document.createElement("div");
-    effect.className="capture-effect";
-
-    const img=document.createElement("img");
-    img.src=`damas/captura${captureIndex+1}.jpg`;
-
-    const p=document.createElement("p");
-    p.textContent=captureTexts[captureIndex];
-
-    effect.appendChild(img);
-    effect.appendChild(p);
-    document.body.appendChild(effect);
-    captureIndex++;
-    setTimeout(()=>effect.remove(),3000);
-  }
+  effect.appendChild(img);
+  effect.appendChild(p);
+  document.body.appendChild(effect);
+  setTimeout(()=>effect.remove(),3000);
 }
 
 function showCaptureText(text){
   const effect=document.createElement("div");
   effect.className="capture-effect";
-
   const p=document.createElement("p");
   p.textContent=text;
-  p.style.fontWeight="bold";
-  p.style.fontSize="1rem";
   effect.appendChild(p);
   document.body.appendChild(effect);
   setTimeout(()=>effect.remove(),3000);
@@ -400,15 +348,14 @@ function showCaptureText(text){
 function checkGameOver(){
   const aiPieces = state.flat().filter(p=>p && p.type==="ai").length;
   const playerPieces = state.flat().filter(p=>p && p.type==="player").length;
-  if(aiPieces===0){
+  if(aiPieces===0 || playerPieces===0){
     gameOver=true;
     board.classList.add("game-over");
-    showFinalEffect("Parabéns! Você venceu!");
-  }
-  if(playerPieces===0){
-    gameOver=true;
-    board.classList.add("game-over");
-    showFinalEffect("Que pena! A IA venceu!");
+    let msg = aiPieces===0 ? 
+      "Com toda a certeza, em todas as jogadas da vida, eu sempre escolherei você, por inteira e completa, eu te amo 💜!" 
+      : "Que pena! A IA venceu!";
+    board.style.transform="scale(1.2)"; // zoom tabuleiro
+    showFinalEffect(msg);
   }
 }
 
@@ -416,11 +363,15 @@ function showFinalEffect(text){
   const effect=document.createElement("div");
   effect.id="finalEffect";
 
+  const img=document.createElement("img");
+  img.src=`damas/captura${captureIndex%12+1}.jpg`;
+
   const p=document.createElement("p");
   p.textContent=text;
+
+  effect.appendChild(img);
   effect.appendChild(p);
   document.body.appendChild(effect);
-  effect.style.animation="finalPop 1s forwards";
 }
 
 // inicializa
