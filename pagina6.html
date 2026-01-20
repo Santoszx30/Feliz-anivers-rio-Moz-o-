@@ -16,22 +16,21 @@ body {
   font-family: 'Poppins', sans-serif;
   background: radial-gradient(circle at top, #3b0a57, #12001a);
   color: white;
-  overflow-x: hidden;
 }
 
 /* TÍTULO */
 h1 {
   text-align: center;
-  margin: 25px 15px;
+  margin: 25px 10px;
   font-size: 1.4rem;
 }
 
 /* TABULEIRO */
 #board {
-  width: 95vw;
-  height: 95vw;
-  max-width: 420px;
-  max-height: 420px;
+  width: 90vw;
+  height: 90vw;
+  max-width: 360px;
+  max-height: 360px;
   margin: 20px auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -40,31 +39,22 @@ h1 {
   position: relative;
 }
 
-/* SLOT */
+/* SLOTS */
 .slot {
   border: 1px dashed rgba(255,255,255,0.2);
 }
 
-/* ÁREA DAS PEÇAS */
-#pieces {
-  position: relative;
-  width: 100%;
-  margin-top: 20px;
-}
-
 /* PEÇAS */
 .piece {
-  width: calc(95vw / 4);
-  height: calc(95vw / 4);
-  max-width: 105px;
-  max-height: 105px;
+  position: absolute;
+  width: 25%;
+  height: 25%;
   background-image: url("quebra/cabeca.jpg");
   background-size: 400% 400%;
-  position: absolute;
-  touch-action: none;
-  cursor: grab;
   border-radius: 6px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  cursor: grab;
+  touch-action: none;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.5);
 }
 
 /* TEXTO FINAL */
@@ -75,13 +65,12 @@ h1 {
   line-height: 1.8;
   opacity: 0;
   transition: opacity 1s;
-  text-align: center;
 }
 
 /* BOTÃO */
 #nextBtn {
   display: none;
-  margin: 30px auto 60px;
+  margin: 40px auto 80px;
   padding: 14px 35px;
   background: linear-gradient(135deg, #9b4dff, #5e17eb);
   border: none;
@@ -97,7 +86,6 @@ h1 {
 <h1>Monte a imagem... 💜</h1>
 
 <div id="board"></div>
-<div id="pieces"></div>
 
 <div id="finalText"></div>
 
@@ -107,7 +95,6 @@ h1 {
 
 <script>
 const board = document.getElementById("board");
-const piecesArea = document.getElementById("pieces");
 const finalText = document.getElementById("finalText");
 const nextBtn = document.getElementById("nextBtn");
 
@@ -131,19 +118,19 @@ for (let i = 0; i < total; i++) {
 
   const x = i % cols;
   const y = Math.floor(i / cols);
+
   piece.style.backgroundPosition = `${x * 33.33}% ${y * 33.33}%`;
 
-  piece.style.left = Math.random() * (window.innerWidth - 120) + "px";
-  piece.style.top = Math.random() * 120 + "px";
+  piece.style.left = Math.random() * 70 + "%";
+  piece.style.top = Math.random() * 70 + "%";
 
-  piecesArea.appendChild(piece);
-  dragPiece(piece);
+  board.appendChild(piece);
+  drag(piece);
 }
 
 /* DRAG */
-function dragPiece(piece) {
-  let offsetX = 0;
-  let offsetY = 0;
+function drag(piece) {
+  let offsetX, offsetY;
 
   piece.addEventListener("pointerdown", e => {
     offsetX = e.clientX - piece.offsetLeft;
@@ -159,34 +146,31 @@ function dragPiece(piece) {
   });
 
   piece.addEventListener("pointerup", () => {
-    checkSnap(piece);
+    snap(piece);
+    piece.style.zIndex = 1;
   });
 }
 
 /* SNAP */
-function checkSnap(piece) {
+function snap(piece) {
   const index = piece.dataset.index;
   const slot = board.children[index];
+  const pr = piece.getBoundingClientRect();
+  const sr = slot.getBoundingClientRect();
 
-  const pieceRect = piece.getBoundingClientRect();
-  const slotRect = slot.getBoundingClientRect();
-  const areaRect = piecesArea.getBoundingClientRect();
+  const dist = Math.abs(pr.left - sr.left) + Math.abs(pr.top - sr.top);
 
-  const distance =
-    Math.abs(pieceRect.left - slotRect.left) +
-    Math.abs(pieceRect.top - slotRect.top);
-
-  if (distance < 60) {
-    piece.style.left = (slotRect.left - areaRect.left) + "px";
-    piece.style.top = (slotRect.top - areaRect.top) + "px";
+  if (dist < 50) {
+    piece.style.left = slot.offsetLeft + "px";
+    piece.style.top = slot.offsetTop + "px";
     piece.style.pointerEvents = "none";
-
     placed++;
+
     if (placed === total) startText();
   }
 }
 
-/* TEXTO FINAL */
+/* TEXTO */
 const text = `
 Montar cada parte dessa imagem é quase como reviver cada detalhe da gente.
 Porque quando nossas partes se encaixam, não sobra espaço pra dúvida.
@@ -207,15 +191,10 @@ apenas sentindo cada pedaço de nós dois.
 let i = 0;
 
 function startText() {
-  piecesArea.style.display = "none";
   finalText.style.opacity = 1;
-  ...
-      }
-
   const interval = setInterval(() => {
     finalText.innerHTML += text.charAt(i);
     i++;
-
     if (i >= text.length) {
       clearInterval(interval);
       nextBtn.style.display = "block";
@@ -226,4 +205,4 @@ function startText() {
 </script>
 
 </body>
-  </html>
+</html>
