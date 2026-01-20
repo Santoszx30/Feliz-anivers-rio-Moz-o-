@@ -239,14 +239,15 @@ function movePiece(x1,y1,x2,y2){
   if(captured && pieceHasCapture(x2,y2)){
     selected={x:x2,y:y2};
     highlightMoves(x2,y2);
-    turn="player";
+    turn = piece.type; // mantém turno correto
     return;
   }
 
   selected=null;
   checkGameOver();
   if(!gameOver){
-    turn="ai"; setTimeout(aiMove,600);
+    turn = piece.type==="player" ? "ai" : "player";
+    if(turn==="ai") setTimeout(aiMove,600);
   }
 }
 
@@ -291,31 +292,39 @@ function onCellClick(x,y){
 }
 
 function aiMove(){
-  if(gameOver) return;
+  if(gameOver || turn !== "ai") return;
 
-  let moves=[];
-  for(let y=0;y<SIZE;y++) for(let x=0;x<SIZE;x++){
-    const p=state[y][x];
-    if(p && p.type==="ai"){
-      for(let dx of [-1,1]) for(let dy of [1]){
-        const nx=x+dx,ny=y+dy;
-        if(nx>=0 && nx<SIZE && ny>=0 && ny<SIZE && !state[ny][nx])
-          moves.push({x1:x,y1:y,x2:nx,y2:ny});
+  let moves = [];
+  for(let y=0;y<SIZE;y++){
+    for(let x=0;x<SIZE;x++){
+      const p=state[y][x];
+      if(p && p.type==="ai"){
+        for(let dx of [-1,1]){
+          for(let dy of [1]){
+            const nx=x+dx, ny=y+dy;
+            if(nx>=0 && nx<SIZE && ny>=0 && ny<SIZE && !state[ny][nx])
+              moves.push({x1:x,y1:y,x2:nx,y2:ny});
+          }
+        }
+        for(let dx of [-2,2]){
+          for(let dy of [2]){
+            const nx=x+dx, ny=y+dy;
+            if(nx>=0 && nx<SIZE && ny>=0 && ny<SIZE && isMoveValid(x,y,nx,ny))
+              moves.push({x1:x,y1:y,x2:nx,y2:ny});
+          }
+        }
       }
     }
   }
 
   if(moves.length){
-    const m=moves[Math.floor(Math.random()*moves.length)];
+    const m = moves[Math.floor(Math.random()*moves.length)];
     movePiece(m.x1,m.y1,m.x2,m.y2);
   } else {
-    // IA sem jogadas: jogador vence
-    gameOver=true;
+    gameOver = true;
     board.classList.add("game-over");
     showFinalEffect("Com toda a certeza, em todas as jogadas da vida, eu sempre escolherei você, por inteira e completa, eu te amo 💜!");
   }
-
-  turn="player";
 }
 
 function showCaptureEffect(x,y,color="#9333ea"){
