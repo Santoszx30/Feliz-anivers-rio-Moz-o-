@@ -14,34 +14,33 @@
 body{
   margin:0;
   min-height:100vh;
-  font-family:Poppins, sans-serif;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  font-family:Poppins,sans-serif;
   background:radial-gradient(circle at top,#4b1170,#12001a);
   color:white;
-  overflow-x:hidden;
 }
 
 h1{
-  text-align:center;
-  margin:20px;
-  font-size:1.4rem;
+  margin:20px 0 10px;
+  font-size:1.5rem;
 }
 
 /* TABULEIRO */
 #board{
-  width:90vw;
-  max-width:360px;
+  width:92vw;
+  max-width:520px;
   aspect-ratio:1;
-  margin:20px auto;
   display:grid;
   grid-template-columns:repeat(8,1fr);
-  border:3px solid #a855f7;
-  box-shadow:0 0 25px rgba(180,0,255,0.6);
+  border:4px solid #a855f7;
+  box-shadow:0 0 35px rgba(180,0,255,0.7);
 }
 
 /* CASAS */
 .cell{
-  width:100%;
-  height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -52,8 +51,8 @@ h1{
 
 /* PEÇAS */
 .piece{
-  width:80%;
-  height:80%;
+  width:78%;
+  height:78%;
   border-radius:50%;
   touch-action:none;
 }
@@ -70,9 +69,9 @@ h1{
   outline:3px solid gold;
 }
 
-/* MOVIMENTO */
+/* DESTAQUE */
 .highlight{
-  outline:3px dashed #9b4dff;
+  outline:3px dashed #c084fc;
 }
 </style>
 </head>
@@ -84,81 +83,98 @@ h1{
 <div id="board"></div>
 
 <script>
-const board = document.getElementById("board");
-let turn = "player";
-
-/* UTILIDADES */
-function idxToRC(i){
-  return { r: Math.floor(i/8), c: i%8 };
-}
-function rcToIdx(r,c){
-  if(r<0||r>7||c<0||c>7) return null;
-  return r*8+c;
-}
-
-/* CRIAR TABULEIRO */
-for(let r=0;r<8;r++){
-  for(let c=0;c<8;c++){
-    const cell=document.createElement("div");
-    cell.className="cell "+((r+c)%2===1?"dark":"light");
-    board.appendChild(cell);
-
-    if(r<3 && (r+c)%2===1){
-      cell.appendChild(createPiece("enemy"));
-    }
-    if(r>4 && (r+c)%2===1){
-      cell.appendChild(createPiece("player"));
-    }
-  }
-}
-
-/* CRIAR PEÇA */
-function createPiece(type){
-  const p=document.createElement("div");
-  p.className="piece "+type;
-  if(type==="player") enableDrag(p);
-  return p;
-}
-
-/* DRAG DO JOGADOR */
+const board=document.getElementById("board");
+let turn="player";
 let selected=null;
 let moves=[];
 
-function enableDrag(piece){
-  piece.addEventListener("pointerdown",()=>{
-    if(turn!=="player") return;
-    clearHighlights();
-    selected=piece;
-    moves=getMoves(piece);
-    moves.forEach(i=>board.children[i].classList.add("highlight"));
-  });
+/* UTIL */
+const idxToRC=i=>({r:Math.floor(i/8),c:i%8});
+const rcToIdx=(r,c)=>r>=0&&r<8&&c>=0&&c<8?r*8+c:null;
+
+/* TABULEIRO */
+for(let r=0;r<8;r++){
+  for(let c=0;c<8;c++){
+    const cell=document.createElement("div");
+    cell.className="cell "+((r+c)%2?"dark":"light");
+    board.appendChild(cell);
+
+    if(r<3 && (r+c)%2) cell.appendChild(createPiece("enemy"));
+    if(r>4 && (r+c)%2) cell.appendChild(createPiece("player"));
+  }
 }
 
-/* MOVIMENTOS VÁLIDOS */
+/* PEÇA */
+function createPiece(type){
+  const p=document.createElement("div");
+  p.className="piece "+type;
+  if(type==="player") enable(p);
+  return p;
+}
+
+/* MOVIMENTOS */
 function getMoves(piece){
   const idx=[...board.children].indexOf(piece.parentElement);
   const {r,c}=idxToRC(idx);
-  const dir=-1;
+  const dir=piece.classList.contains("player")?-1:1;
   const res=[];
-  [[dir,-1],[dir,1]].forEach(d=>{
-    const t=rcToIdx(r+d[0],c+d[1]);
-    if(t!==null && board.children[t].classList.contains("dark") && !board.children[t].firstChild){
-      res.push(t);
+  const captures=[];
+
+  [[dir,-1],[dir,1]].forEach(([dr,dc])=>{
+    const mid=rcToIdx(r+dr,c+dc);
+    const land=rcToIdx(r+dr*2,c+dc*2);
+
+    if(mid!==null && land!==null){
+      const midCell=board.children[mid];
+      const landCell=board.children[land];
+
+      if(midCell.firstChild &&
+         midCell.firstChild.classList.contains("enemy") &&
+         !landCell.firstChild){
+        captures.push({land,mid});
+      }
     }
   });
+
+  if(captures.length) return captures;
+
+  [[dir,-1],[dir,1]].forEach(([dr,dc])=>{
+    const t=rcToIdx(r+dr,c+dc);
+    if(t!==null && !board.children[t].firstChild)
+      res.push({land:t});
+  });
+
   return res;
 }
 
-/* CLIQUE NO TABULEIRO */
+/* SELEÇÃO */
+function enable(piece){
+  piece.addEventListener("pointerdown",()=>{
+    if(turn!=="player") return;
+    clear();
+    selected=piece;
+    moves=getMoves(piece);
+    moves.forEach(m=>board.children[m.land].classList.add("highlight"));
+  });
+}
+
+/* CLICK */
 board.addEventListener("click",e=>{
   if(!selected) return;
   const cell=e.target.closest(".cell");
   if(!cell) return;
   const idx=[...board.children].indexOf(cell);
-  if(moves.includes(idx)){
+
+  const move=moves.find(m=>m.land===idx);
+  if(move){
     cell.appendChild(selected);
+
+    if(move.mid!==undefined){
+      board.children[move.mid].innerHTML="";
+    }
+
     promote(selected);
-    clearHighlights();
+    clear();
     selected=null;
     turn="enemy";
     setTimeout(enemyMove,600);
@@ -169,7 +185,7 @@ board.addEventListener("click",e=>{
 function promote(piece){
   const idx=[...board.children].indexOf(piece.parentElement);
   const {r}=idxToRC(idx);
-  if(piece.classList.contains("player") && r===0){
+  if(piece.classList.contains("player") && r===0 && !piece.classList.contains("king")){
     piece.classList.add("king");
     alert("No coração de um homem sempre há uma menina, assim como num tabuleiro, um rei sempre precisa de sua rainha 💜");
   }
@@ -178,29 +194,47 @@ function promote(piece){
 /* IA SIMPLES */
 function enemyMove(){
   const enemies=[...document.querySelectorAll(".enemy")];
-  for(let p of enemies){
+  for(const p of enemies){
     const idx=[...board.children].indexOf(p.parentElement);
     const {r,c}=idxToRC(idx);
-    const targets=[
-      rcToIdx(r+1,c+1),
-      rcToIdx(r+1,c-1)
-    ];
-    for(let t of targets){
-      if(t!==null && board.children[t].classList.contains("dark") && !board.children[t].firstChild){
+
+    for(const dc of [-1,1]){
+      const mid=rcToIdx(r+1,c+dc);
+      const land=rcToIdx(r+2,c+dc*2);
+      if(mid!==null && land!==null){
+        const midCell=board.children[mid];
+        const landCell=board.children[land];
+        if(midCell.firstChild?.classList.contains("player") && !landCell.firstChild){
+          landCell.appendChild(p);
+          midCell.innerHTML="";
+          turn="player";
+          return;
+        }
+      }
+    }
+  }
+
+  for(const p of enemies){
+    const idx=[...board.children].indexOf(p.parentElement);
+    const {r,c}=idxToRC(idx);
+    for(const dc of [-1,1]){
+      const t=rcToIdx(r+1,c+dc);
+      if(t!==null && !board.children[t].firstChild){
         board.children[t].appendChild(p);
         turn="player";
         return;
       }
     }
   }
+
   turn="player";
 }
 
 /* LIMPAR */
-function clearHighlights(){
-  document.querySelectorAll(".highlight").forEach(c=>c.classList.remove("highlight"));
+function clear(){
+  document.querySelectorAll(".highlight").forEach(h=>h.classList.remove("highlight"));
 }
 </script>
 
 </body>
-  </html>
+</html>
