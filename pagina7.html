@@ -3,171 +3,268 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Damas</title>
+<title>Página 7 ♟️</title>
 
 <style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:radial-gradient(circle,#3b0a57,#12001a);
-  font-family:Arial, sans-serif;
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #3b0a57, #12001a);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: Arial, sans-serif;
 }
 
-/* CONTAINER */
-#game{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+#board {
+  width: 90vmin;
+  height: 90vmin;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  border: 5px solid #a855f7;
+  box-shadow: 0 0 25px #a855f7;
 }
 
-/* TABULEIRO */
-#board{
-  width:420px;
-  height:420px;
-  display:grid;
-  grid-template-columns:repeat(8,1fr);
-  border:4px solid #a855f7;
-  box-shadow:0 0 25px rgba(180,0,255,.6);
+.cell {
+  width: 100%;
+  height: 100%;
 }
 
-/* CASAS */
-.cell{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#111;
+.dark {
+  background: #0b0b0b;
 }
-.cell.dark{background:#000}
-.cell.highlight{outline:3px solid #a855f7}
 
-/* PEÇAS */
-.piece{
-  width:70%;
-  height:70%;
-  border-radius:50%;
+.light {
+  background: #1a1a1a;
 }
-.purple{background:#a855f7}
-.red{background:#dc2626}
-.king{outline:3px solid gold}
+
+.piece {
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  margin: auto;
+  margin-top: 10%;
+}
+
+.player {
+  background: #9333ea;
+}
+
+.ai {
+  background: #dc2626;
+}
+
+.king {
+  border: 3px solid gold;
+}
+
+.highlight {
+  outline: 3px solid #22c55e;
+}
 </style>
 </head>
 
 <body>
-<div id="game">
-  <h2 style="color:white">Damas ♟️</h2>
-  <div id="board"></div>
-</div>
+
+<div id="board"></div>
 
 <script>
-const board=document.getElementById("board");
-let selected=null;
+const board = document.getElementById("board");
+let cells = [];
+let selected = null;
+let turn = "player";
 
-/* ESTADO */
-let state=Array(64).fill(null);
+const SIZE = 8;
 
-function idx(r,c){return r*8+c}
+// MATRIZ
+let state = Array.from({ length: SIZE }, () => Array(SIZE).fill(null));
 
-/* CRIA TABULEIRO */
-for(let r=0;r<8;r++){
-  for(let c=0;c<8;c++){
-    const cell=document.createElement("div");
-    cell.className="cell "+((r+c)%2?"dark":"");
-    cell.dataset.i=idx(r,c);
-    cell.onclick=()=>cellClick(idx(r,c));
-    board.appendChild(cell);
+function createBoard() {
+  board.innerHTML = "";
+  cells = [];
+
+  for (let y = 0; y < SIZE; y++) {
+    for (let x = 0; x < SIZE; x++) {
+      const cell = document.createElement("div");
+      cell.className = "cell " + ((x + y) % 2 ? "dark" : "light");
+      cell.dataset.x = x;
+      cell.dataset.y = y;
+
+      cell.onclick = () => onCellClick(x, y);
+      board.appendChild(cell);
+      cells.push(cell);
+    }
   }
 }
 
-/* PEÇAS INICIAIS */
-for(let r=0;r<3;r++)
- for(let c=0;c<8;c++)
-  if((r+c)%2) state[idx(r,c)]={color:"red",king:false};
-
-for(let r=5;r<8;r++)
- for(let c=0;c<8;c++)
-  if((r+c)%2) state[idx(r,c)]={color:"purple",king:false};
-
-function render(){
-  board.querySelectorAll(".piece").forEach(p=>p.remove());
-  board.querySelectorAll(".highlight").forEach(h=>h.classList.remove("highlight"));
-
-  state.forEach((p,i)=>{
-    if(p){
-      const el=document.createElement("div");
-      el.className="piece "+p.color+(p.king?" king":"");
-      board.children[i].appendChild(el);
+function placePieces() {
+  for (let y = 0; y < 3; y++) {
+    for (let x = 0; x < SIZE; x++) {
+      if ((x + y) % 2 === 1) state[y][x] = { type: "ai", king: false };
     }
-  });
-}
-render();
+  }
 
-/* CLIQUE */
-function cellClick(i){
-  if(selected===null){
-    if(state[i] && state[i].color==="purple"){
-      selected=i;
-      highlightMoves(i);
+  for (let y = 5; y < SIZE; y++) {
+    for (let x = 0; x < SIZE; x++) {
+      if ((x + y) % 2 === 1) state[y][x] = { type: "player", king: false };
     }
-  }else{
-    if(board.children[i].classList.contains("highlight")){
-      move(selected,i);
-    }
-    selected=null;
-    render();
-    setTimeout(aiMove,500);
   }
 }
 
-/* MOVIMENTOS */
-function highlightMoves(i){
-  const p=state[i];
-  const r=Math.floor(i/8),c=i%8;
-  const dirs=p.king?[-1,1]:[-1];
+function render() {
+  cells.forEach(cell => cell.innerHTML = "");
 
-  dirs.forEach(dr=>{
-    [-1,1].forEach(dc=>{
-      const nr=r+dr,nc=c+dc;
-      if(nr>=0&&nr<8&&nc>=0&&nc<8){
-        const ni=idx(nr,nc);
-        if(!state[ni]) board.children[ni].classList.add("highlight");
+  for (let y = 0; y < SIZE; y++) {
+    for (let x = 0; x < SIZE; x++) {
+      const piece = state[y][x];
+      if (piece) {
+        const el = document.createElement("div");
+        el.className = `piece ${piece.type}` + (piece.king ? " king" : "");
+        cells[y * SIZE + x].appendChild(el);
       }
-    });
-  });
+    }
+  }
+}
+  
+function playerHasCapture() {
+  for (let y = 0; y < SIZE; y++) {
+    for (let x = 0; x < SIZE; x++) {
+      const p = state[y][x];
+      if (p && p.type === "player") {
+        for (let dx of [-2, 2]) {
+          for (let dy of [-2]) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (
+              nx >= 0 && nx < SIZE &&
+              ny >= 0 && ny < SIZE &&
+              isMoveValid(x, y, nx, ny)
+            ) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+  }
+  return false;
+  }
+  
+function onCellClick(x, y) {
+  if (turn !== "player") return;
+
+  clearHighlights();
+
+  const piece = state[y][x];
+
+  if (selected && isMoveValid(selected.x, selected.y, x, y)) {
+    movePiece(selected.x, selected.y, x, y);
+    selected = null;
+    turn = "ai";
+    setTimeout(aiMove, 600);
+    return;
+  }
+
+  if (piece && piece.type === "player") {
+    selected = { x, y };
+    highlightMoves(x, y);
+  }
 }
 
-function move(from,to){
-  state[to]=state[from];
-  state[from]=null;
 
-  if(Math.floor(to/8)===0) state[to].king=true;
+function isMoveValid(x1, y1, x2, y2) {
+  if (state[y2][x2]) return false;
+
+  const piece = state[y1][x1];
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+
+  if (!piece.king && dy !== -1 && dy !== -2) return false;
+  if (Math.abs(dx) !== Math.abs(dy)) return false;
+
+  const hasCapture = playerHasCapture();
+
+  // CAPTURA
+  if (Math.abs(dx) === 2) {
+    const mx = (x1 + x2) / 2;
+    const my = (y1 + y2) / 2;
+    return state[my][mx] && state[my][mx].type === "ai";
+  }
+
+  // MOVIMENTO SIMPLES (bloqueado se existir captura)
+  if (Math.abs(dx) === 1 && !hasCapture) {
+    return true;
+  }
+
+  return false;
 }
 
-/* IA SIMPLES */
-function aiMove(){
-  const reds=state.map((p,i)=>p&&p.color==="red"?i:null).filter(i=>i!==null);
-  if(!reds.length) return;
+function movePiece(x1, y1, x2, y2) {
+  const piece = state[y1][x1];
+  state[y2][x2] = piece;
+  state[y1][x1] = null;
 
-  for(const from of reds){
-    const r=Math.floor(from/8),c=from%8;
-    for(const dc of [-1,1]){
-      const nr=r+1,nc=c+dc;
-      if(nr<8&&nc>=0&&nc<8){
-        const ni=idx(nr,nc);
-        if(!state[ni]){
-          state[ni]=state[from];
-          state[from]=null;
-          render();
-          return;
+  if (Math.abs(x2 - x1) === 2) {
+    const mx = (x1 + x2) / 2;
+    const my = (y1 + y2) / 2;
+    state[my][mx] = null;
+  }
+
+  if (y2 === 0) piece.king = true;
+  render();
+}
+
+function highlightMoves(x, y) {
+  for (let dy of [-1, -2]) {
+    for (let dx of [-2, -1, 1, 2]) {
+      const nx = x + dx;
+      const ny = y + dy;
+      if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE) {
+        if (isMoveValid(x, y, nx, ny)) {
+          cells[ny * SIZE + nx].classList.add("highlight");
         }
       }
     }
   }
 }
+
+function clearHighlights() {
+  cells.forEach(c => c.classList.remove("highlight"));
+}
+
+function aiMove() {
+  let moves = [];
+
+  for (let y = 0; y < SIZE; y++) {
+    for (let x = 0; x < SIZE; x++) {
+      const p = state[y][x];
+      if (p && p.type === "ai") {
+        for (let dx of [-1, 1]) {
+          for (let dy of [1]) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx >= 0 && nx < SIZE && ny < SIZE && !state[ny][nx]) {
+              moves.push({ x1: x, y1: y, x2: nx, y2: ny });
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (moves.length) {
+    const m = moves[Math.floor(Math.random() * moves.length)];
+    movePiece(m.x1, m.y1, m.x2, m.y2);
+  }
+
+  turn = "player";
+}
+
+createBoard();
+placePieces();
+render();
 </script>
+
 </body>
 </html>
