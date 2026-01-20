@@ -9,10 +9,18 @@ body {
   margin: 0;
   height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background: radial-gradient(circle at top, #3b0a57, #12001a);
   font-family: Arial, sans-serif;
+}
+
+#title {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 #board {
@@ -23,7 +31,6 @@ body {
   height: 90vmin;
   border: 5px solid #a855f7;
   box-shadow: 0 0 25px #a855f7;
-  margin: auto;
   position: relative;
 }
 
@@ -81,6 +88,7 @@ body {
   display: flex; flex-direction: column;
   align-items: center; justify-content: flex-end;
   pointer-events: none;
+  opacity: 0;
   transform: scale(0);
   animation: capturePop 0.7s forwards;
   z-index: 1000;
@@ -89,6 +97,8 @@ body {
 .capture-effect img {
   width: 100%; height: 80%; object-fit: cover;
   border-radius: 12px;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards 0.2s;
 }
 
 .capture-effect p {
@@ -96,6 +106,12 @@ body {
   text-align: center;
   padding: 5px;
   font-size: 0.9rem;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards 0.5s;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
 }
 
 @keyframes capturePop {
@@ -126,16 +142,18 @@ body {
 </style>
 </head>
 <body>
+<div id="title">as damas do nosso amor bb</div>
 <div id="board"></div>
 
 <script>
 const SIZE = 8;
 const board = document.getElementById("board");
+const title = document.getElementById("title");
 let state = Array.from({length: SIZE}, () => Array(SIZE).fill(null));
 let cells = [];
 let selected = null;
 let turn = "player";
-let waitingAI = false;
+let gameOver = false;
 
 const captureTexts = [
   "Seu olhar me derrete.",
@@ -187,8 +205,11 @@ function render(){
 }
 
 function isMoveValid(x1,y1,x2,y2){
-  if(state[y2][x2]) return false;
-  const piece=state[y1][x1],dx=x2-x1,dy=y2-y1;
+  const piece=state[y1][x1];
+  if(!piece || state[y2][x2]) return false;
+  const dx=x2-x1, dy=y2-y1;
+
+  // jogador normal
   if(!piece.king){
     if(piece.type==="player" && ![-1,-2].includes(dy)) return false;
     if(piece.type==="ai" && ![1,2].includes(dy)) return false;
@@ -199,12 +220,15 @@ function isMoveValid(x1,y1,x2,y2){
     }
     return false;
   }
+
+  // dama captura à distância
   if(Math.abs(dx)!==Math.abs(dy)) return false;
-  const stepX=dx>0?1:-1,stepY=dy>0?1:-1;
-  let cx=x1+stepX,cy=y1+stepY,enemyFound=null;
+  const stepX=dx>0?1:-1, stepY=dy>0?1:-1;
+  let cx=x1+stepX, cy=y1+stepY, enemyFound=null;
   while(cx!==x2 && cy!==y2){
-    if(state[cy][cx]){
-      if(state[cy][cx].type===piece.type) return false;
+    const target=state[cy][cx];
+    if(target){
+      if(target.type===piece.type) return false;
       if(enemyFound) return false;
       enemyFound={x:cx,y:cy};
     }
@@ -214,27 +238,43 @@ function isMoveValid(x1,y1,x2,y2){
 }
 
 function movePiece(x1,y1,x2,y2){
+  if(gameOver) return;
+
   const piece=state[y1][x1];
   let captured=false;
 
-  if(Math.abs(x2-x1)===2){
-    const mx=(x1+x2)/2,my=(y1+y2)/2;
-    const color=state[my][mx].type==="ai"?"#dc2626":"#9333ea";
-    state[my][mx]=null;
-    captured=true;
-    showCaptureEffect(mx,my,color);
+  // captura
+  const dx=x2-x1, dy=y2-y1;
+  if(Math.abs(dx)>1){
+    const stepX=dx>0?1:-1, stepY=dy>0?1:-1;
+    let cx=x1+stepX, cy=y1+stepY;
+    while(cx!==x2 && cy!==y2){
+      if(state[cy][cx] && state[cy][cx].type!==piece.type){
+        const color=state[cy][cx].type==="ai"?"#dc2626":"#9333ea";
+        state[cy][cx]=null;
+        captured=true;
+        showCaptureEffect(cx,cy,color);
+        break;
+      }
+      cx+=stepX; cy+=stepY;
+    }
   }
 
   state[y2][x2]=piece;
   state[y1][x1]=null;
 
-  if(piece.type==="player" && y2===0) piece.king=true;
+  // virar dama
+  if(piece.type==="player" && y2===0){ 
+    piece.king=true; 
+    showCaptureText("Você sempre será minha rainha dentro e fora do jogo");
+  }
   if(piece.type==="ai" && y2===SIZE-1) piece.king=true;
 
   render();
   clearHighlights();
 
-  if(captured && piece.type==="player" && pieceHasCapture(x2,y2)){
+  // multicaptura
+  if(captured && pieceHasCapture(x2,y2)){
     selected={x:x2,y:y2};
     highlightMoves(x2,y2);
     turn="player";
@@ -242,6 +282,7 @@ function movePiece(x1,y1,x2,y2){
   }
 
   selected=null;
+  checkGameOver();
   if(turn==="player") turn="ai", setTimeout(aiMove,600);
 }
 
@@ -276,7 +317,7 @@ function highlightMoves(x,y){
 function clearHighlights(){ cells.forEach(c=>c.classList.remove("highlight")); }
 
 function onCellClick(x,y){
-  if(turn!=="player"||waitingAI) return;
+  if(turn!=="player" || gameOver) return;
   clearHighlights();
   const piece=state[y][x];
   if(selected && isMoveValid(selected.x,selected.y,x,y)){
@@ -286,6 +327,8 @@ function onCellClick(x,y){
 }
 
 function aiMove(){
+  if(gameOver) return;
+
   let moves=[];
   for(let y=0;y<SIZE;y++) for(let x=0;x<SIZE;x++){
     const p=state[y][x];
@@ -304,13 +347,11 @@ function aiMove(){
 }
 
 function showCaptureEffect(x,y,color="#9333ea"){
-  // FLASH
   const flash=document.createElement("div");
   flash.className="capture-flash";
   document.body.appendChild(flash);
   setTimeout(()=>flash.remove(),400);
 
-  // PEÇA QUEBRANDO
   const pieceBreak=document.createElement("div");
   pieceBreak.className="break-piece";
   pieceBreak.style.backgroundColor=color;
@@ -321,13 +362,12 @@ function showCaptureEffect(x,y,color="#9333ea"){
   document.body.appendChild(pieceBreak);
   setTimeout(()=>pieceBreak.remove(),600);
 
-  // FOTO + FRASE
   if(captureIndex<12){
     const effect=document.createElement("div");
     effect.className="capture-effect";
 
     const img=document.createElement("img");
-    img.src=`damas/captura${captureIndex+1}.jpg`; // pasta correta
+    img.src=`damas/captura${captureIndex+1}.jpg`;
 
     const p=document.createElement("p");
     p.textContent=captureTexts[captureIndex];
@@ -337,11 +377,37 @@ function showCaptureEffect(x,y,color="#9333ea"){
     document.body.appendChild(effect);
     captureIndex++;
 
-    setTimeout(()=>effect.remove(),3000); // DURA 3s
+    setTimeout(()=>effect.remove(),3000);
   }
 }
 
-// INICIALIZA
+function showCaptureText(text){
+  const effect=document.createElement("div");
+  effect.className="capture-effect";
+
+  const p=document.createElement("p");
+  p.textContent=text;
+  p.style.fontWeight="bold";
+  p.style.fontSize="1rem";
+  effect.appendChild(p);
+  document.body.appendChild(effect);
+  setTimeout(()=>effect.remove(),3000);
+}
+
+function checkGameOver(){
+  const aiPieces = state.flat().filter(p=>p && p.type==="ai").length;
+  const playerPieces = state.flat().filter(p=>p && p.type==="player").length;
+  if(aiPieces===0){
+    gameOver=true;
+    showCaptureText("Parabéns! Você venceu!");
+  }
+  if(playerPieces===0){
+    gameOver=true;
+    showCaptureText("Que pena! A IA venceu!");
+  }
+}
+
+// inicializa
 createBoard(); placePieces(); render();
 </script>
 </body>
