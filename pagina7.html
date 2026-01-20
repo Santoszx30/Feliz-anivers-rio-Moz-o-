@@ -6,234 +6,198 @@
 <title>Página 7 ♟️💜</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  user-select:none;
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top, #3b0a57, #12001a);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  font-family:Poppins,sans-serif;
-  background:radial-gradient(circle at top,#4b1170,#12001a);
-  color:white;
-}
-
-h1{
-  margin:20px 0 10px;
-  font-size:1.5rem;
+h1 {
+  margin: 20px;
+  font-size: 1.3rem;
 }
 
 /* TABULEIRO */
-#board{
-  width:92vw;
-  max-width:520px;
-  aspect-ratio:1;
-  display:grid;
-  grid-template-columns:repeat(8,1fr);
-  border:4px solid #a855f7;
-  box-shadow:0 0 35px rgba(180,0,255,0.7);
+#board {
+  width: 90vmin;
+  height: 90vmin;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  border: 4px solid #9b4dff;
+  box-shadow: 0 0 30px #9b4dff;
 }
 
 /* CASAS */
-.cell{
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.cell {
+  width: 100%;
+  height: 100%;
 }
-
-.dark{ background:#0b0016; }
-.light{ background:#1b1026; }
+.dark {
+  background: #050008;
+}
+.light {
+  background: #1a1022;
+}
 
 /* PEÇAS */
-.piece{
-  width:78%;
-  height:78%;
-  border-radius:50%;
-  touch-action:none;
+.piece {
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  margin: auto;
+}
+.player {
+  background: radial-gradient(circle, #c084ff, #6b21a8);
+}
+.ai {
+  background: radial-gradient(circle, #ff5f5f, #7f1d1d);
+}
+.king {
+  box-shadow: 0 0 15px gold;
 }
 
-.player{
-  background:radial-gradient(circle,#d08cff,#7c2aff);
+/* OVERLAY */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 999;
+}
+#overlay img {
+  max-width: 80%;
+  animation: zoom 0.6s ease;
+}
+#overlay p {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  text-align: center;
 }
 
-.enemy{
-  background:radial-gradient(circle,#ff7a7a,#b30000);
+@keyframes zoom {
+  from { transform: scale(0.4); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
-.king{
-  outline:3px solid gold;
-}
-
-/* DESTAQUE */
-.highlight{
-  outline:3px dashed #c084fc;
+#nextBtn {
+  display: none;
+  margin: 40px;
+  padding: 14px 35px;
+  background: linear-gradient(135deg, #9b4dff, #5e17eb);
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-size: 1rem;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Jogo de Damas 💜</h1>
-
+<h1>Jogue comigo… ♟️💜</h1>
 <div id="board"></div>
 
+<div id="overlay">
+  <img id="overlayImg">
+  <p id="overlayText"></p>
+</div>
+
+<button id="nextBtn" onclick="window.location.href='pagina8.html'">
+  Ir para a página 8
+</button>
+
 <script>
-const board=document.getElementById("board");
-let turn="player";
-let selected=null;
-let moves=[];
+const board = document.getElementById("board");
+const overlay = document.getElementById("overlay");
+const overlayImg = document.getElementById("overlayImg");
+const overlayText = document.getElementById("overlayText");
+const nextBtn = document.getElementById("nextBtn");
 
-/* UTIL */
-const idxToRC=i=>({r:Math.floor(i/8),c:i%8});
-const rcToIdx=(r,c)=>r>=0&&r<8&&c>=0&&c<8?r*8+c:null;
+const captureTexts = [
+  "Cada vez que eu te conquisto, meu desejo cresce mais.",
+  "Te tocar é sempre uma vitória que eu quero repetir.",
+  "Você me provoca até quando tenta escapar.",
+  "Cada movimento seu me deixa mais preso a você.",
+  "Te vencer nunca foi meu objetivo… te ter, sim.",
+  "Seu corpo é uma armadilha onde eu caio sorrindo.",
+  "Você joga comigo sem nem perceber o quanto me domina.",
+  "Eu gosto quando você perde o controle… comigo.",
+  "Te conquistar assim me deixa com fome de mais.",
+  "Você é desafio, desejo e recompensa ao mesmo tempo.",
+  "Cada peça sua que cai me faz querer você inteira.",
+  "Se render a mim nunca pareceu tão gostoso."
+];
 
-/* TABULEIRO */
-for(let r=0;r<8;r++){
-  for(let c=0;c<8;c++){
-    const cell=document.createElement("div");
-    cell.className="cell "+((r+c)%2?"dark":"light");
-    board.appendChild(cell);
+let captureCount = 0;
+let aiPieces = 12;
 
-    if(r<3 && (r+c)%2) cell.appendChild(createPiece("enemy"));
-    if(r>4 && (r+c)%2) cell.appendChild(createPiece("player"));
-  }
+/* CRIA TABULEIRO */
+for (let i = 0; i < 64; i++) {
+  const cell = document.createElement("div");
+  cell.className = "cell " + ((Math.floor(i / 8) + i) % 2 ? "dark" : "light");
+  board.appendChild(cell);
 }
 
-/* PEÇA */
-function createPiece(type){
-  const p=document.createElement("div");
-  p.className="piece "+type;
-  if(type==="player") enable(p);
-  return p;
+/* CRIA PEÇAS */
+function createPiece(cell, cls) {
+  const p = document.createElement("div");
+  p.className = "piece " + cls;
+  cell.appendChild(p);
 }
 
-/* MOVIMENTOS */
-function getMoves(piece){
-  const idx=[...board.children].indexOf(piece.parentElement);
-  const {r,c}=idxToRC(idx);
-  const dir=piece.classList.contains("player")?-1:1;
-  const res=[];
-  const captures=[];
-
-  [[dir,-1],[dir,1]].forEach(([dr,dc])=>{
-    const mid=rcToIdx(r+dr,c+dc);
-    const land=rcToIdx(r+dr*2,c+dc*2);
-
-    if(mid!==null && land!==null){
-      const midCell=board.children[mid];
-      const landCell=board.children[land];
-
-      if(midCell.firstChild &&
-         midCell.firstChild.classList.contains("enemy") &&
-         !landCell.firstChild){
-        captures.push({land,mid});
-      }
-    }
-  });
-
-  if(captures.length) return captures;
-
-  [[dir,-1],[dir,1]].forEach(([dr,dc])=>{
-    const t=rcToIdx(r+dr,c+dc);
-    if(t!==null && !board.children[t].firstChild)
-      res.push({land:t});
-  });
-
-  return res;
-}
-
-/* SELEÇÃO */
-function enable(piece){
-  piece.addEventListener("pointerdown",()=>{
-    if(turn!=="player") return;
-    clear();
-    selected=piece;
-    moves=getMoves(piece);
-    moves.forEach(m=>board.children[m.land].classList.add("highlight"));
-  });
-}
-
-/* CLICK */
-board.addEventListener("click",e=>{
-  if(!selected) return;
-  const cell=e.target.closest(".cell");
-  if(!cell) return;
-  const idx=[...board.children].indexOf(cell);
-
-  const move=moves.find(m=>m.land===idx);
-  if(move){
-    cell.appendChild(selected);
-
-    if(move.mid!==undefined){
-      board.children[move.mid].innerHTML="";
-    }
-
-    promote(selected);
-    clear();
-    selected=null;
-    turn="enemy";
-    setTimeout(enemyMove,600);
+/* POSIÇÕES INICIAIS */
+document.querySelectorAll(".cell").forEach((cell, i) => {
+  const row = Math.floor(i / 8);
+  if (cell.classList.contains("dark")) {
+    if (row < 3) createPiece(cell, "ai");
+    if (row > 4) createPiece(cell, "player");
   }
 });
 
-/* PROMOÇÃO */
-function promote(piece){
-  const idx=[...board.children].indexOf(piece.parentElement);
-  const {r}=idxToRC(idx);
-  if(piece.classList.contains("player") && r===0 && !piece.classList.contains("king")){
-    piece.classList.add("king");
-    alert("No coração de um homem sempre há uma menina, assim como num tabuleiro, um rei sempre precisa de sua rainha 💜");
-  }
+/* CAPTURA */
+function capturePiece() {
+  captureCount++;
+  if (captureCount > 12) captureCount = 12;
+
+  overlayImg.src = `damas/captura${captureCount}.jpg`;
+  overlayText.textContent = captureTexts[captureCount - 1];
+
+  overlay.style.display = "flex";
+  setTimeout(() => overlay.style.display = "none", 2500);
+
+  aiPieces--;
+  if (aiPieces === 0) winGame();
 }
 
-/* IA SIMPLES */
-function enemyMove(){
-  const enemies=[...document.querySelectorAll(".enemy")];
-  for(const p of enemies){
-    const idx=[...board.children].indexOf(p.parentElement);
-    const {r,c}=idxToRC(idx);
+/* VITÓRIA */
+function winGame() {
+  overlayImg.src = "damas/final.jpg";
+  overlayText.textContent =
+    "No tabuleiro e na vida, você é a jogada mais bonita que eu já fiz.";
 
-    for(const dc of [-1,1]){
-      const mid=rcToIdx(r+1,c+dc);
-      const land=rcToIdx(r+2,c+dc*2);
-      if(mid!==null && land!==null){
-        const midCell=board.children[mid];
-        const landCell=board.children[land];
-        if(midCell.firstChild?.classList.contains("player") && !landCell.firstChild){
-          landCell.appendChild(p);
-          midCell.innerHTML="";
-          turn="player";
-          return;
-        }
-      }
-    }
-  }
-
-  for(const p of enemies){
-    const idx=[...board.children].indexOf(p.parentElement);
-    const {r,c}=idxToRC(idx);
-    for(const dc of [-1,1]){
-      const t=rcToIdx(r+1,c+dc);
-      if(t!==null && !board.children[t].firstChild){
-        board.children[t].appendChild(p);
-        turn="player";
-        return;
-      }
-    }
-  }
-
-  turn="player";
+  overlay.style.display = "flex";
+  setTimeout(() => {
+    overlay.style.display = "none";
+    nextBtn.style.display = "block";
+    nextBtn.scrollIntoView({ behavior: "smooth" });
+  }, 4000);
 }
 
-/* LIMPAR */
-function clear(){
-  document.querySelectorAll(".highlight").forEach(h=>h.classList.remove("highlight"));
-}
+/* SIMULA CAPTURA (IA FÁCIL) */
+board.addEventListener("click", e => {
+  if (e.target.classList.contains("ai")) {
+    e.target.remove();
+    capturePiece();
+  }
+});
 </script>
 
 </body>
