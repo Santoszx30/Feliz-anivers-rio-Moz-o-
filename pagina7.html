@@ -124,6 +124,7 @@ let selected = null;
 let turn = "player";
 let gameOver = false;
 let captureIndex = 0;
+let effectsRunning = false;
 
 function createBoard(){
   board.innerHTML=""; cells=[];
@@ -132,7 +133,7 @@ function createBoard(){
       const cell=document.createElement("div");
       cell.className=(x+y)%2?"dark cell":"light cell";
       cell.dataset.x=x; cell.dataset.y=y;
-      cell.onclick=()=>onCellClick(x,y);
+      cell.onclick=()=>{if(!effectsRunning) onCellClick(x,y)};
       board.appendChild(cell);
       cells.push(cell);
     }
@@ -220,13 +221,11 @@ function movePiece(x1,y1,x2,y2,isPlayerMove=true){
   }
   if(piece.type==="ai" && y2===SIZE-1 && !piece.king) piece.king=true;
 
-  // Mostrar efeitos imediatamente
   if(isPlayerMove){
     if(capturedPos) showCaptureEffectWithPhoto(capturedPos.x, capturedPos.y);
-    if(turnedToKing) showCaptureTextAbovePhoto("Você sempre será minha rainha dentro e fora do jogo");
+    if(turnedToKing) showOnlyText("Você sempre será minha rainha dentro e fora do jogo");
   }
 
-  // captura extra
   if(captured && pieceHasCapture(x2,y2)){
     selected={x:x2,y:y2};
     highlightMoves(x2,y2);
@@ -235,8 +234,6 @@ function movePiece(x1,y1,x2,y2,isPlayerMove=true){
   }
 
   selected=null;
-
-  // verificar fim de jogo
   checkGameOver();
 
   if(!gameOver){
@@ -288,7 +285,6 @@ function onCellClick(x,y){
 
 function aiMove(showCapture=false){
   if(gameOver || turn !== "ai") return;
-
   let moves = [];
   for(let y=0;y<SIZE;y++){
     for(let x=0;x<SIZE;x++){
@@ -322,53 +318,42 @@ function aiMove(showCapture=false){
   }
 }
 
+// NOVO: apenas texto, sem fotos
+function showOnlyText(text){
+  effectsRunning = true;
+  const effect = document.createElement("div");
+  effect.className="capture-effect";
+  const p=document.createElement("p");
+  p.textContent=text;
+  effect.appendChild(p);
+  document.body.appendChild(effect);
+  setTimeout(()=>{
+    effect.remove();
+    effectsRunning=false;
+  },3000);
+}
+
 function showCaptureEffectWithPhoto(x,y){
+  effectsRunning = true;
   const effect=document.createElement("div");
   effect.className="capture-effect";
-
   const img=document.createElement("img");
   img.src=`damas/captura${captureIndex%12+1}.jpg`;
-
   const p=document.createElement("p");
   const captureTexts = [
-    "Seu olhar me derrete.",
-    "Quero sentir você perto.",
-    "Cada curva sua me provoca.",
-    "Não consigo tirar você da cabeça.",
-    "Você é desejo puro.",
-    "Sinto sua falta mesmo perto.",
-    "Quero explorar cada detalhe seu.",
-    "Seu corpo me chama.",
-    "Você é minha tentação favorita.",
-    "Cada toque seu me enlouquece.",
-    "Você é linda demais para palavras.",
-    "Quero te ter só para mim."
+    "Seu olhar me derrete.","Quero sentir você perto.","Cada curva sua me provoca.","Não consigo tirar você da cabeça.",
+    "Você é desejo puro.","Sinto sua falta mesmo perto.","Quero explorar cada detalhe seu.","Seu corpo me chama.",
+    "Você é minha tentação favorita.","Cada toque seu me enlouquece.","Você é linda demais para palavras.","Quero te ter só para mim."
   ];
   p.textContent = captureTexts[captureIndex%12];
   captureIndex++;
-
   effect.appendChild(p);
   effect.appendChild(img);
   document.body.appendChild(effect);
-
-  setTimeout(()=>effect.remove(),3000);
-}
-
-function showCaptureTextAbovePhoto(text){
-  const effect=document.createElement("div");
-  effect.className="capture-effect";
-
-  const p=document.createElement("p");
-  p.textContent = text;
-
-  const img=document.createElement("img");
-  img.src = `damas/captura${captureIndex%12+1}.jpg`;
-
-  effect.appendChild(p);
-  effect.appendChild(img);
-  document.body.appendChild(effect);
-
-  setTimeout(()=>effect.remove(),3000);
+  setTimeout(()=>{
+    effect.remove();
+    effectsRunning=false;
+  },3000);
 }
 
 function checkGameOver(){
@@ -409,14 +394,9 @@ function hasAnyMove(type){
 function showFinalEffect(text){
   const effect=document.createElement("div");
   effect.id="finalEffect";
-
-  const p=document.createElement("p");
-  p.textContent=text;
-  const img=document.createElement("img");
-  img.src=`damas/final.jpg`;
-
-  effect.appendChild(p);
-  effect.appendChild(img);
+  const p=document.createElement("p"); p.textContent=text;
+  const img=document.createElement("img"); img.src=`damas/final.jpg`;
+  effect.appendChild(p); effect.appendChild(img);
   document.body.appendChild(effect);
 }
 
