@@ -7,274 +7,245 @@
 <title>Página 7 ♟️💜</title>
 
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: radial-gradient(circle at top, #3b0a57, #12001a);
-  font-family: Poppins, sans-serif;
-  color: white;
-  overflow-x: hidden;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Poppins, sans-serif;
+  background:radial-gradient(circle at top,#4b1170,#12001a);
+  color:white;
+  overflow:hidden;
 }
 
-h1 {
-  text-align: center;
-  margin: 20px;
+/* TÍTULO */
+h2{
+  text-align:center;
+  margin:15px;
+  font-size:1.2rem;
 }
 
 /* TABULEIRO */
-#board {
-  width: 90vmin;
-  height: 90vmin;
-  margin: 20px auto;
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(8, 1fr);
-  background: black;
-  border: 4px solid #9b4dff;
-  box-shadow: 0 0 25px #9b4dff;
+#board{
+  width:90vw;
+  height:90vw;
+  max-width:420px;
+  max-height:420px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  grid-template-rows:repeat(8,1fr);
+  border:3px solid #a855f7;
+  box-shadow:0 0 20px #a855f7;
 }
 
-/* CASA */
-.cell {
-  width: 100%;
-  height: 100%;
+/* CASAS */
+.cell{
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
+.dark{background:#0a0a0a}
+.light{background:#1a1a1a}
 
-.dark {
-  background: rgba(0,0,0,0.85);
-}
-
-.light {
-  background: rgba(255,255,255,0.08);
-}
-
-.highlight {
-  box-shadow: inset 0 0 0 4px #9b4dff;
+/* DESTAQUE */
+.highlight{
+  outline:3px solid #a855f7;
 }
 
 /* PEÇAS */
-.piece {
-  width: 80%;
-  height: 80%;
-  border-radius: 50%;
-  margin: auto;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.piece{
+  width:80%;
+  height:80%;
+  border-radius:50%;
+  cursor:pointer;
 }
+.player{background:#a855f7}
+.enemy{background:#ff3b3b}
+.king{box-shadow:0 0 0 4px gold inset}
 
-.player {
-  background: radial-gradient(circle, #b76cff, #5e17eb);
+/* OVERLAY */
+#overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  z-index:10;
 }
-
-.enemy {
-  background: radial-gradient(circle, #ff6b6b, #c1121f);
+#overlay img{
+  max-width:80%;
+  border-radius:15px;
+  margin-bottom:20px;
 }
-
-.king {
-  box-shadow: 0 0 15px gold;
-}
-
-/* OVERLAY DE CAPTURA */
-#captureOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-#captureOverlay img {
-  max-width: 80%;
-  border-radius: 12px;
-  margin-bottom: 20px;
-}
-
-#captureOverlay p {
-  font-size: 1.2rem;
-  text-align: center;
-  max-width: 80%;
+#overlay p{
+  text-align:center;
+  font-size:1.1rem;
 }
 
 /* FINAL */
-#finalScreen {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: black;
-  z-index: 1000;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+#final{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:black;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
 }
-
-#finalScreen img {
-  max-width: 85%;
-  border-radius: 15px;
-  margin-bottom: 20px;
+#final img{
+  max-width:80%;
+  border-radius:15px;
 }
-
-#finalScreen p {
-  max-width: 80%;
-  font-size: 1.2rem;
-  text-align: center;
+#final p{
+  margin:20px;
+  text-align:center;
+  font-size:1.2rem;
 }
-
-#nextBtn {
-  margin-top: 30px;
-  padding: 14px 35px;
-  border-radius: 25px;
-  border: none;
-  background: linear-gradient(135deg, #9b4dff, #5e17eb);
-  color: white;
-  font-size: 1rem;
+button{
+  margin-top:20px;
+  padding:12px 30px;
+  border:none;
+  border-radius:25px;
+  background:linear-gradient(135deg,#a855f7,#5e17eb);
+  color:white;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Jogue damas ♟️💜</h1>
-
+<h2>Derrote a IA ♟️💜</h2>
 <div id="board"></div>
 
-<div id="captureOverlay">
+<div id="overlay">
   <img id="capImg">
   <p id="capText"></p>
 </div>
 
-<div id="finalScreen">
-  <img src="final.jpg">
+<div id="final">
+  <img src="captura/final.jpg">
   <p>
-    Assim como nesse tabuleiro,  
-    sua beleza domina cada espaço.  
-    Você não joga apenas… você reina.
+    Assim como no tabuleiro,<br>
+    você domina com elegância.<br>
+    Linda, forte e impossível de ignorar.
   </p>
-  <button id="nextBtn" onclick="location.href='pagina8.html'">
-    Página 8 💜
-  </button>
+  <button onclick="location.href='pagina8.html'">Página 8 💜</button>
 </div>
 
 <script>
-const board = document.getElementById("board");
-const overlay = document.getElementById("captureOverlay");
-const capImg = document.getElementById("capImg");
-const capText = document.getElementById("capText");
-const finalScreen = document.getElementById("finalScreen");
+const board=document.getElementById("board");
+const overlay=document.getElementById("overlay");
+const capImg=document.getElementById("capImg");
+const capText=document.getElementById("capText");
+const final=document.getElementById("final");
 
-let selected = null;
-let captureCount = 0;
+let turn="player";
+let selected=null;
+let highlights=[];
+let captureIndex=1;
 
-const phrases = [
-  "Cada captura sua me provoca.",
-  "Você domina o jogo… e meu desejo.",
-  "Seu toque manda, eu obedeço.",
-  "Você é perigosa de linda.",
-  "Cada jogada sua me prende mais.",
-  "Você não joga, você seduz.",
-  "Sua estratégia é puro charme.",
-  "Você me desmonta com facilidade.",
-  "Até vencendo você é sexy.",
-  "Você transforma tudo em tentação.",
-  "Seu jogo é arte.",
-  "Você sempre vence."
+/* FRASES */
+const frases=[
+ "Você domina com charme… impossível resistir.",
+ "Cada movimento seu provoca.",
+ "Sua beleza quebra qualquer defesa.",
+ "Você joga com o corpo e com o olhar.",
+ "Te enfrentar é desejar perder.",
+ "Você é perigo em forma de arte.",
+ "Seu toque desarma.",
+ "Você vence antes mesmo de começar.",
+ "Seu jogo é sedução.",
+ "Você reina no tabuleiro.",
+ "Cada vitória sua me excita.",
+ "Você não joga… você encanta."
 ];
 
-// CRIA TABULEIRO
-for (let i = 0; i < 64; i++) {
-  const cell = document.createElement("div");
-  cell.className = "cell " + ((Math.floor(i/8)+i)%2 ? "dark" : "light");
-  cell.dataset.index = i;
+/* CRIAR TABULEIRO */
+for(let i=0;i<64;i++){
+  const cell=document.createElement("div");
+  cell.className="cell "+((Math.floor(i/8)+i)%2?"dark":"light");
+  cell.dataset.index=i;
   board.appendChild(cell);
 }
 
-// POSICIONA PEÇAS
+/* PEÇAS */
 document.querySelectorAll(".dark").forEach((c,i)=>{
-  if(i < 12){
-    c.appendChild(createPiece("enemy"));
-  }
-  if(i >= 20 && i < 32){
-    c.appendChild(createPiece("player"));
-  }
+  if(i<12)c.appendChild(createPiece("enemy"));
+  if(i>19)c.appendChild(createPiece("player"));
 });
 
 function createPiece(type){
-  const p = document.createElement("div");
-  p.className = "piece " + type;
-  p.onclick = ()=> selectPiece(p);
+  const p=document.createElement("div");
+  p.className="piece "+type;
+  p.onclick=()=>selectPiece(p);
   return p;
 }
 
-function selectPiece(piece){
+/* SELEÇÃO */
+function selectPiece(p){
+  if(turn!=="player")return;
+  if(!p.classList.contains("player"))return;
   clearHighlights();
-  selected = piece;
-  const cell = piece.parentElement;
-  const idx = [...board.children].indexOf(cell);
-  possibleMoves(idx).forEach(i=>{
-    board.children[i].classList.add("highlight");
+  selected=p;
+  showMoves(p);
+}
+
+/* MOVIMENTOS */
+function showMoves(p){
+  const idx=[...board.children].indexOf(p.parentElement);
+  [-7,-9].forEach(d=>{
+    const t=idx+d;
+    if(board.children[t]&&!board.children[t].firstChild){
+      highlight(t);
+    }
   });
 }
 
+/* DESTAQUE */
+function highlight(i){
+  const c=board.children[i];
+  c.classList.add("highlight");
+  c.onclick=()=>movePiece(c);
+  highlights.push(c);
+}
 function clearHighlights(){
-  document.querySelectorAll(".highlight").forEach(c=>c.classList.remove("highlight"));
+  highlights.forEach(c=>{
+    c.classList.remove("highlight");
+    c.onclick=null;
+  });
+  highlights=[];
 }
 
-// MOVIMENTOS SIMPLES (JOGADOR)
-function possibleMoves(i){
-  return [i-7,i-9].filter(n=>board.children[n]);
-}
-
-// CLIQUE NAS CASAS
-board.onclick = e=>{
-  if(!selected) return;
-  const cell = e.target.closest(".cell");
-  if(!cell || !cell.classList.contains("highlight")) return;
-
-  const from = selected.parentElement;
+/* MOVER */
+function movePiece(cell){
   cell.appendChild(selected);
   clearHighlights();
-  selected = null;
+  selected=null;
+  turn="enemy";
+  setTimeout(enemyMove,400);
+}
 
-  checkWin();
-  setTimeout(enemyMove, 500);
-};
-
-// IA BEM BURRA
+/* IA */
 function enemyMove(){
-  const enemies = [...document.querySelectorAll(".enemy")];
-  if(enemies.length===0) return;
-
-  const p = enemies[Math.floor(Math.random()*enemies.length)];
-  const cell = p.parentElement;
-  const idx = [...board.children].indexOf(cell);
-  const moves = [idx+7,idx+9].filter(i=>board.children[i] && !board.children[i].firstChild);
-
-  if(moves.length){
-    board.children[moves[0]].appendChild(p);
+  const enemies=[...document.querySelectorAll(".enemy")];
+  for(let p of enemies){
+    const idx=[...board.children].indexOf(p.parentElement);
+    for(let d of [7,9]){
+      const t=idx+d;
+      if(board.children[t]&&!board.children[t].firstChild){
+        board.children[t].appendChild(p);
+        turn="player";
+        return;
+      }
+    }
   }
+  endGame();
 }
 
-// CAPTURA (simplificada)
-function checkWin(){
-  const enemies = document.querySelectorAll(".enemy");
-  if(enemies.length === 0){
-    finalScreen.style.display = "flex";
-  }
-}
-
-// MOSTRA CAPTURA
-function showCapture(){
-  captureCount++;
-  capImg.src = `captura${captureCount}.jpg`;
-  capText.textContent = phrases[captureCount-1];
-  overlay.style.display = "flex";
-  setTimeout(()=>overlay.style.display="none",3000);
+/* FIM */
+function endGame(){
+  final.style.display="flex";
 }
 </script>
 
