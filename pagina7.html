@@ -112,7 +112,7 @@ body {
 </style>
 </head>
 <body>
-<div id="title">as damas do nosso amor bb</div>
+<div id="title">Jogue, ganhe e se prepare para o final minha neném 💜</div>
 <div id="board"></div>
 
 <script>
@@ -126,6 +126,7 @@ let gameOver = false;
 let captureIndex = 0;
 let effectsRunning = false;
 
+// Cria tabuleiro
 function createBoard(){
   board.innerHTML=""; cells=[];
   for(let y=0;y<SIZE;y++){
@@ -140,11 +141,13 @@ function createBoard(){
   }
 }
 
+// Posiciona peças
 function placePieces(){
   for(let y=0;y<3;y++) for(let x=0;x<SIZE;x++) if((x+y)%2===1) state[y][x]={type:"ai",king:false};
   for(let y=5;y<SIZE;y++) for(let x=0;x<SIZE;x++) if((x+y)%2===1) state[y][x]={type:"player",king:false};
 }
 
+// Renderiza peças
 function render(){
   cells.forEach(c=>c.innerHTML="");
   for(let y=0;y<SIZE;y++){
@@ -159,6 +162,7 @@ function render(){
   }
 }
 
+// Valida movimento
 function isMoveValid(x1,y1,x2,y2){
   const piece=state[y1][x1];
   if(!piece || state[y2][x2]) return false;
@@ -188,6 +192,7 @@ function isMoveValid(x1,y1,x2,y2){
   return true;
 }
 
+// Movimento principal
 function movePiece(x1,y1,x2,y2,isPlayerMove=true){
   if(gameOver) return;
   const piece=state[y1][x1];
@@ -219,13 +224,28 @@ function movePiece(x1,y1,x2,y2,isPlayerMove=true){
     piece.king=true;
     turnedToKing = true;
   }
-  if(piece.type==="ai" && y2===SIZE-1 && !piece.king) piece.king=true;
+  if(piece.type==="ai" && y2===SIZE-1 && !piece.king){
+    piece.king=true;
+    turnedToKing = true;
+  }
 
+  // Efeitos
   if(isPlayerMove){
     if(capturedPos) showCaptureEffectWithPhoto(capturedPos.x, capturedPos.y);
     if(turnedToKing) showOnlyText("Você sempre será minha rainha dentro e fora do jogo");
+  } else {
+    if(turnedToKing){
+      effectsRunning = true;
+      showOnlyText("Eu sempre escolherei você, por inteira e completa 💜");
+      setTimeout(()=>{
+        effectsRunning = false;
+        turn = "player";
+      },3000);
+      return;
+    }
   }
 
+  // Captura extra
   if(captured && pieceHasCapture(x2,y2)){
     selected={x:x2,y:y2};
     highlightMoves(x2,y2);
@@ -236,12 +256,13 @@ function movePiece(x1,y1,x2,y2,isPlayerMove=true){
   selected=null;
   checkGameOver();
 
-  if(!gameOver){
+  if(!gameOver && !turnedToKing){
     turn = piece.type==="player" ? "ai" : "player";
     if(turn==="ai") setTimeout(()=>aiMove(false), 600);
   }
 }
 
+// Verifica se peça pode capturar
 function pieceHasCapture(x,y){
   const piece=state[y][x]; if(!piece) return false;
   const dirs=piece.king?[-2,2]:piece.type==="player"?[-2]:[2];
@@ -252,6 +273,7 @@ function pieceHasCapture(x,y){
   return false;
 }
 
+// Destaca movimentos possíveis
 function highlightMoves(x,y){
   const piece=state[y][x]; if(!piece) return;
   const directions=piece.king?[-1,1]:piece.type==="player"?[-1]:[1];
@@ -273,7 +295,7 @@ function highlightMoves(x,y){
 function clearHighlights(){ cells.forEach(c=>c.classList.remove("highlight")); }
 
 function onCellClick(x,y){
-  if(turn!=="player" || gameOver) return;
+  if(turn!=="player" || gameOver || effectsRunning) return;
   clearHighlights();
   const piece=state[y][x];
   if(selected && isMoveValid(selected.x,selected.y,x,y)){
@@ -283,8 +305,9 @@ function onCellClick(x,y){
   if(piece && piece.type==="player"){ selected={x,y}; highlightMoves(x,y); }
 }
 
-function aiMove(showCapture=false){
-  if(gameOver || turn !== "ai") return;
+// Movimentos da IA
+function aiMove(){
+  if(gameOver || turn !== "ai" || effectsRunning) return;
   let moves = [];
   for(let y=0;y<SIZE;y++){
     for(let x=0;x<SIZE;x++){
@@ -318,7 +341,7 @@ function aiMove(showCapture=false){
   }
 }
 
-// NOVO: apenas texto, sem fotos
+// Efeito apenas texto
 function showOnlyText(text){
   effectsRunning = true;
   const effect = document.createElement("div");
@@ -333,6 +356,7 @@ function showOnlyText(text){
   },3000);
 }
 
+// Efeito de captura com foto
 function showCaptureEffectWithPhoto(x,y){
   effectsRunning = true;
   const effect=document.createElement("div");
@@ -356,6 +380,7 @@ function showCaptureEffectWithPhoto(x,y){
   },3000);
 }
 
+// Verifica fim de jogo
 function checkGameOver(){
   const aiPieces = state.flat().filter(p=>p && p.type==="ai").length;
   const playerPieces = state.flat().filter(p=>p && p.type==="player").length;
@@ -373,6 +398,7 @@ function checkGameOver(){
   }
 }
 
+// Verifica se há movimentos possíveis
 function hasAnyMove(type){
   for(let y=0;y<SIZE;y++){
     for(let x=0;x<SIZE;x++){
@@ -391,6 +417,7 @@ function hasAnyMove(type){
   return false;
 }
 
+// Efeito final
 function showFinalEffect(text){
   const effect=document.createElement("div");
   effect.id="finalEffect";
@@ -400,7 +427,7 @@ function showFinalEffect(text){
   document.body.appendChild(effect);
 }
 
-// inicializa
+// Inicializa
 createBoard(); placePieces(); render();
 </script>
 </body>
