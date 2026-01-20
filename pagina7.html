@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -7,247 +6,201 @@
 <title>Página 7 ♟️💜</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  user-select:none;
+}
+
 body{
   margin:0;
+  min-height:100vh;
   font-family:Poppins, sans-serif;
   background:radial-gradient(circle at top,#4b1170,#12001a);
   color:white;
-  overflow:hidden;
+  overflow-x:hidden;
 }
 
-/* TÍTULO */
-h2{
+h1{
   text-align:center;
-  margin:15px;
-  font-size:1.2rem;
+  margin:20px;
+  font-size:1.4rem;
 }
 
 /* TABULEIRO */
 #board{
   width:90vw;
-  height:90vw;
-  max-width:420px;
-  max-height:420px;
-  margin:auto;
+  max-width:360px;
+  aspect-ratio:1;
+  margin:20px auto;
   display:grid;
   grid-template-columns:repeat(8,1fr);
-  grid-template-rows:repeat(8,1fr);
   border:3px solid #a855f7;
-  box-shadow:0 0 20px #a855f7;
+  box-shadow:0 0 25px rgba(180,0,255,0.6);
 }
 
 /* CASAS */
 .cell{
+  width:100%;
+  height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
 }
-.dark{background:#0a0a0a}
-.light{background:#1a1a1a}
 
-/* DESTAQUE */
-.highlight{
-  outline:3px solid #a855f7;
-}
+.dark{ background:#0b0016; }
+.light{ background:#1b1026; }
 
 /* PEÇAS */
 .piece{
   width:80%;
   height:80%;
   border-radius:50%;
-  cursor:pointer;
-}
-.player{background:#a855f7}
-.enemy{background:#ff3b3b}
-.king{box-shadow:0 0 0 4px gold inset}
-
-/* OVERLAY */
-#overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.9);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  z-index:10;
-}
-#overlay img{
-  max-width:80%;
-  border-radius:15px;
-  margin-bottom:20px;
-}
-#overlay p{
-  text-align:center;
-  font-size:1.1rem;
+  touch-action:none;
 }
 
-/* FINAL */
-#final{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:black;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
+.player{
+  background:radial-gradient(circle,#d08cff,#7c2aff);
 }
-#final img{
-  max-width:80%;
-  border-radius:15px;
+
+.enemy{
+  background:radial-gradient(circle,#ff7a7a,#b30000);
 }
-#final p{
-  margin:20px;
-  text-align:center;
-  font-size:1.2rem;
+
+.king{
+  outline:3px solid gold;
 }
-button{
-  margin-top:20px;
-  padding:12px 30px;
-  border:none;
-  border-radius:25px;
-  background:linear-gradient(135deg,#a855f7,#5e17eb);
-  color:white;
+
+/* MOVIMENTO */
+.highlight{
+  outline:3px dashed #9b4dff;
 }
 </style>
 </head>
 
 <body>
 
-<h2>Derrote a IA ♟️💜</h2>
+<h1>Jogo de Damas 💜</h1>
+
 <div id="board"></div>
 
-<div id="overlay">
-  <img id="capImg">
-  <p id="capText"></p>
-</div>
-
-<div id="final">
-  <img src="captura/final.jpg">
-  <p>
-    Assim como no tabuleiro,<br>
-    você domina com elegância.<br>
-    Linda, forte e impossível de ignorar.
-  </p>
-  <button onclick="location.href='pagina8.html'">Página 8 💜</button>
-</div>
-
 <script>
-const board=document.getElementById("board");
-const overlay=document.getElementById("overlay");
-const capImg=document.getElementById("capImg");
-const capText=document.getElementById("capText");
-const final=document.getElementById("final");
+const board = document.getElementById("board");
+let turn = "player";
 
-let turn="player";
-let selected=null;
-let highlights=[];
-let captureIndex=1;
-
-/* FRASES */
-const frases=[
- "Você domina com charme… impossível resistir.",
- "Cada movimento seu provoca.",
- "Sua beleza quebra qualquer defesa.",
- "Você joga com o corpo e com o olhar.",
- "Te enfrentar é desejar perder.",
- "Você é perigo em forma de arte.",
- "Seu toque desarma.",
- "Você vence antes mesmo de começar.",
- "Seu jogo é sedução.",
- "Você reina no tabuleiro.",
- "Cada vitória sua me excita.",
- "Você não joga… você encanta."
-];
-
-/* CRIAR TABULEIRO */
-for(let i=0;i<64;i++){
-  const cell=document.createElement("div");
-  cell.className="cell "+((Math.floor(i/8)+i)%2?"dark":"light");
-  cell.dataset.index=i;
-  board.appendChild(cell);
+/* UTILIDADES */
+function idxToRC(i){
+  return { r: Math.floor(i/8), c: i%8 };
+}
+function rcToIdx(r,c){
+  if(r<0||r>7||c<0||c>7) return null;
+  return r*8+c;
 }
 
-/* PEÇAS */
-document.querySelectorAll(".dark").forEach((c,i)=>{
-  if(i<12)c.appendChild(createPiece("enemy"));
-  if(i>19)c.appendChild(createPiece("player"));
-});
+/* CRIAR TABULEIRO */
+for(let r=0;r<8;r++){
+  for(let c=0;c<8;c++){
+    const cell=document.createElement("div");
+    cell.className="cell "+((r+c)%2===1?"dark":"light");
+    board.appendChild(cell);
 
+    if(r<3 && (r+c)%2===1){
+      cell.appendChild(createPiece("enemy"));
+    }
+    if(r>4 && (r+c)%2===1){
+      cell.appendChild(createPiece("player"));
+    }
+  }
+}
+
+/* CRIAR PEÇA */
 function createPiece(type){
   const p=document.createElement("div");
   p.className="piece "+type;
-  p.onclick=()=>selectPiece(p);
+  if(type==="player") enableDrag(p);
   return p;
 }
 
-/* SELEÇÃO */
-function selectPiece(p){
-  if(turn!=="player")return;
-  if(!p.classList.contains("player"))return;
-  clearHighlights();
-  selected=p;
-  showMoves(p);
+/* DRAG DO JOGADOR */
+let selected=null;
+let moves=[];
+
+function enableDrag(piece){
+  piece.addEventListener("pointerdown",()=>{
+    if(turn!=="player") return;
+    clearHighlights();
+    selected=piece;
+    moves=getMoves(piece);
+    moves.forEach(i=>board.children[i].classList.add("highlight"));
+  });
 }
 
-/* MOVIMENTOS */
-function showMoves(p){
-  const idx=[...board.children].indexOf(p.parentElement);
-  [-7,-9].forEach(d=>{
-    const t=idx+d;
-    if(board.children[t]&&!board.children[t].firstChild){
-      highlight(t);
+/* MOVIMENTOS VÁLIDOS */
+function getMoves(piece){
+  const idx=[...board.children].indexOf(piece.parentElement);
+  const {r,c}=idxToRC(idx);
+  const dir=-1;
+  const res=[];
+  [[dir,-1],[dir,1]].forEach(d=>{
+    const t=rcToIdx(r+d[0],c+d[1]);
+    if(t!==null && board.children[t].classList.contains("dark") && !board.children[t].firstChild){
+      res.push(t);
     }
   });
+  return res;
 }
 
-/* DESTAQUE */
-function highlight(i){
-  const c=board.children[i];
-  c.classList.add("highlight");
-  c.onclick=()=>movePiece(c);
-  highlights.push(c);
-}
-function clearHighlights(){
-  highlights.forEach(c=>{
-    c.classList.remove("highlight");
-    c.onclick=null;
-  });
-  highlights=[];
+/* CLIQUE NO TABULEIRO */
+board.addEventListener("click",e=>{
+  if(!selected) return;
+  const cell=e.target.closest(".cell");
+  if(!cell) return;
+  const idx=[...board.children].indexOf(cell);
+  if(moves.includes(idx)){
+    cell.appendChild(selected);
+    promote(selected);
+    clearHighlights();
+    selected=null;
+    turn="enemy";
+    setTimeout(enemyMove,600);
+  }
+});
+
+/* PROMOÇÃO */
+function promote(piece){
+  const idx=[...board.children].indexOf(piece.parentElement);
+  const {r}=idxToRC(idx);
+  if(piece.classList.contains("player") && r===0){
+    piece.classList.add("king");
+    alert("No coração de um homem sempre há uma menina, assim como num tabuleiro, um rei sempre precisa de sua rainha 💜");
+  }
 }
 
-/* MOVER */
-function movePiece(cell){
-  cell.appendChild(selected);
-  clearHighlights();
-  selected=null;
-  turn="enemy";
-  setTimeout(enemyMove,400);
-}
-
-/* IA */
+/* IA SIMPLES */
 function enemyMove(){
   const enemies=[...document.querySelectorAll(".enemy")];
   for(let p of enemies){
     const idx=[...board.children].indexOf(p.parentElement);
-    for(let d of [7,9]){
-      const t=idx+d;
-      if(board.children[t]&&!board.children[t].firstChild){
+    const {r,c}=idxToRC(idx);
+    const targets=[
+      rcToIdx(r+1,c+1),
+      rcToIdx(r+1,c-1)
+    ];
+    for(let t of targets){
+      if(t!==null && board.children[t].classList.contains("dark") && !board.children[t].firstChild){
         board.children[t].appendChild(p);
         turn="player";
         return;
       }
     }
   }
-  endGame();
+  turn="player";
 }
 
-/* FIM */
-function endGame(){
-  final.style.display="flex";
+/* LIMPAR */
+function clearHighlights(){
+  document.querySelectorAll(".highlight").forEach(c=>c.classList.remove("highlight"));
 }
 </script>
 
 </body>
-</html>
+  </html>
