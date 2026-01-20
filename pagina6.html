@@ -6,181 +6,189 @@
 <title>Página 6 💜</title>
 
 <style>
-body{
-  margin:0;
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(180deg,#2b0040,#000);
-  color:#fff;
-  overflow-x:hidden;
+* {
+  box-sizing: border-box;
+  user-select: none;
 }
 
-h1{
-  text-align:center;
-  margin:20px 10px;
-  font-size:1.2rem;
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at top, #3b0a57, #12001a);
+  color: white;
+  overflow-x: hidden;
+}
+
+/* TÍTULO */
+h1 {
+  text-align: center;
+  margin: 25px 15px;
+  font-size: 1.4rem;
 }
 
 /* TABULEIRO */
-#board{
-  position:relative;
-  width:90vw;
-  max-width:360px;
-  aspect-ratio:1/1;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  grid-template-rows:repeat(4,1fr);
-  border-radius:16px;
-  background:#1a001f;
-  box-shadow:0 0 20px rgba(180,0,255,.4);
+#board {
+  width: 95vw;
+  height: 95vw;
+  max-width: 420px;
+  max-height: 420px;
+  margin: 20px auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  border: 2px dashed rgba(255,255,255,0.5);
+  position: relative;
 }
 
-/* SLOTS */
-.slot{
-  border:1px dashed rgba(255,255,255,.2);
+/* SLOT */
+.slot {
+  border: 1px dashed rgba(255,255,255,0.2);
 }
 
 /* ÁREA DAS PEÇAS */
-#pieces{
-  position:relative;
-  width:100%;
-  height:38vh;
-  margin-top:15px;
+#pieces {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  margin-top: 20px;
 }
 
 /* PEÇAS */
-.piece{
-  position:absolute;
-  width:22vw;
-  max-width:80px;
-  aspect-ratio:1/1;
-  background-image:url("quebra/cabeca.jpg");
-  background-size:400% 400%;
-  border-radius:8px;
-  cursor:grab;
-  touch-action:none;
-  box-shadow:0 4px 10px rgba(0,0,0,.6);
+.piece {
+  width: calc(95vw / 4);
+  height: calc(95vw / 4);
+  max-width: 105px;
+  max-height: 105px;
+  background-image: url("quebra/cabeca.jpg");
+  background-size: 400% 400%;
+  position: absolute;
+  touch-action: none;
+  cursor: grab;
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 
 /* TEXTO FINAL */
-#finalText{
-  display:none;
-  max-width:90%;
-  margin:40px auto;
-  font-size:1.15rem;
-  line-height:1.9;
-  text-align:center;
+#finalText {
+  max-width: 90%;
+  margin: 40px auto;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  opacity: 0;
+  transition: opacity 1s;
+  text-align: center;
 }
 
 /* BOTÃO */
-#btnNext{
-  display:none;
-  margin:30px auto 60px;
-  padding:14px 28px;
-  border:none;
-  border-radius:30px;
-  font-size:1rem;
-  background:linear-gradient(45deg,#a855f7,#7c3aed);
-  color:#fff;
+#nextBtn {
+  display: none;
+  margin: 30px auto 60px;
+  padding: 14px 35px;
+  background: linear-gradient(135deg, #9b4dff, #5e17eb);
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-size: 1rem;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Monte o que somos 💜</h1>
+<h1>Monte a imagem... 💜</h1>
 
 <div id="board"></div>
-
 <div id="pieces"></div>
 
 <div id="finalText"></div>
 
-<button id="btnNext" onclick="window.location.href='pagina7.html'">
-Continuar 💜
+<button id="nextBtn" onclick="window.location.href='pagina7.html'">
+  Ir para a página 7
 </button>
 
 <script>
-const rows=4, cols=4;
-const board=document.getElementById("board");
-const piecesContainer=document.getElementById("pieces");
-const finalText=document.getElementById("finalText");
-const btnNext=document.getElementById("btnNext");
+const board = document.getElementById("board");
+const piecesArea = document.getElementById("pieces");
+const finalText = document.getElementById("finalText");
+const nextBtn = document.getElementById("nextBtn");
 
-let placed=0;
-const total=rows*cols;
+const rows = 4;
+const cols = 4;
+const total = rows * cols;
+let placed = 0;
 
 /* CRIA SLOTS */
-for(let i=0;i<total;i++){
-  const s=document.createElement("div");
-  s.className="slot";
-  board.appendChild(s);
+for (let i = 0; i < total; i++) {
+  const slot = document.createElement("div");
+  slot.className = "slot";
+  board.appendChild(slot);
 }
 
 /* CRIA PEÇAS */
-let pieces=[];
-for(let y=0;y<rows;y++){
-  for(let x=0;x<cols;x++){
-    const p=document.createElement("div");
-    p.className="piece";
-    p.dataset.x=x;
-    p.dataset.y=y;
-    p.style.backgroundPosition=`${x*33.33}% ${y*33.33}%`;
-    pieces.push(p);
+for (let i = 0; i < total; i++) {
+  const piece = document.createElement("div");
+  piece.className = "piece";
+  piece.dataset.index = i;
+
+  const x = i % cols;
+  const y = Math.floor(i / cols);
+  piece.style.backgroundPosition = `${x * 33.33}% ${y * 33.33}%`;
+
+  piece.style.left = Math.random() * (window.innerWidth - 120) + "px";
+  piece.style.top = Math.random() * 180 + "px";
+
+  piecesArea.appendChild(piece);
+  dragPiece(piece);
+}
+
+/* DRAG */
+function dragPiece(piece) {
+  let offsetX = 0;
+  let offsetY = 0;
+
+  piece.addEventListener("pointerdown", e => {
+    offsetX = e.clientX - piece.offsetLeft;
+    offsetY = e.clientY - piece.offsetTop;
+    piece.setPointerCapture(e.pointerId);
+    piece.style.zIndex = 1000;
+  });
+
+  piece.addEventListener("pointermove", e => {
+    if (!piece.hasPointerCapture(e.pointerId)) return;
+    piece.style.left = e.clientX - offsetX + "px";
+    piece.style.top = e.clientY - offsetY + "px";
+  });
+
+  piece.addEventListener("pointerup", () => {
+    checkSnap(piece);
+  });
+}
+
+/* SNAP */
+function checkSnap(piece) {
+  const index = piece.dataset.index;
+  const slot = board.children[index];
+
+  const pieceRect = piece.getBoundingClientRect();
+  const slotRect = slot.getBoundingClientRect();
+  const areaRect = piecesArea.getBoundingClientRect();
+
+  const distance =
+    Math.abs(pieceRect.left - slotRect.left) +
+    Math.abs(pieceRect.top - slotRect.top);
+
+  if (distance < 60) {
+    piece.style.left = (slotRect.left - areaRect.left) + "px";
+    piece.style.top = (slotRect.top - areaRect.top) + "px";
+    piece.style.pointerEvents = "none";
+
+    placed++;
+    if (placed === total) startText();
   }
 }
 
-/* EMBARALHAR */
-pieces.sort(()=>Math.random()-0.5);
-
-/* POSICIONAR PEÇAS VISÍVEIS */
-pieces.forEach((p,i)=>{
-  p.style.left=(10 + (i%4)*23)+"vw";
-  p.style.top=(10 + Math.floor(i/4)*9)+"vh";
-  piecesContainer.appendChild(p);
-});
-
-/* DRAG */
-let current=null, offsetX=0, offsetY=0;
-
-document.addEventListener("pointerdown",e=>{
-  if(e.target.classList.contains("piece")){
-    current=e.target;
-    offsetX=e.clientX-current.offsetLeft;
-    offsetY=e.clientY-current.offsetTop;
-    current.setPointerCapture(e.pointerId);
-  }
-});
-
-document.addEventListener("pointermove",e=>{
-  if(current){
-    current.style.left=(e.clientX-offsetX)+"px";
-    current.style.top=(e.clientY-offsetY)+"px";
-  }
-});
-
-document.addEventListener("pointerup",()=>{
-  if(current){
-    const bx=board.getBoundingClientRect();
-    const cx=current.getBoundingClientRect();
-    const size=board.offsetWidth/cols;
-
-    const x=Math.floor((cx.left-bx.left)/size);
-    const y=Math.floor((cx.top-bx.top)/size);
-
-    if(x==current.dataset.x && y==current.dataset.y){
-      current.style.left=(bx.left + x*size)+"px";
-      current.style.top=(bx.top + y*size)+"px";
-      current.style.pointerEvents="none";
-      placed++;
-      if(placed===total) startText();
-    }
-    current=null;
-  }
-});
-
 /* TEXTO FINAL */
-const texto=`
+const text = `
 Montar cada parte dessa imagem é quase como reviver cada detalhe da gente.
 Porque quando nossas partes se encaixam, não sobra espaço pra dúvida.
 Seu corpo no meu, sua pele sob a minha, nossos olhares se encontrando
@@ -197,21 +205,23 @@ sem pressa, sem ordem,
 apenas sentindo cada pedaço de nós dois.
 `;
 
-/* LETRA POR LETRA */
-function startText(){
-  finalText.style.display="block";
-  let i=0;
-  const interval=setInterval(()=>{
-    finalText.innerHTML+=texto.charAt(i);
+let i = 0;
+
+function startText() {
+  finalText.style.opacity = 1;
+
+  const interval = setInterval(() => {
+    finalText.innerHTML += text.charAt(i);
     i++;
-    window.scrollBy(0,1);
-    if(i>=texto.length){
+
+    if (i >= text.length) {
       clearInterval(interval);
-      btnNext.style.display="block";
+      nextBtn.style.display = "block";
+      nextBtn.scrollIntoView({ behavior: "smooth" });
     }
-  },40);
+  }, 45);
 }
 </script>
 
 </body>
-</html>
+  </html>
