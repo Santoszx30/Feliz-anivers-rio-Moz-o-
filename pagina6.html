@@ -49,7 +49,6 @@ h1 {
 #pieces {
   position: relative;
   width: 100%;
-  height: 300px;
   margin-top: 20px;
 }
 
@@ -135,7 +134,7 @@ for (let i = 0; i < total; i++) {
   piece.style.backgroundPosition = `${x * 33.33}% ${y * 33.33}%`;
 
   piece.style.left = Math.random() * (window.innerWidth - 120) + "px";
-  piece.style.top = Math.random() * 180 + "px";
+  piece.style.top = Math.random() * 120 + "px";
 
   piecesArea.appendChild(piece);
   dragPiece(piece);
@@ -208,7 +207,10 @@ apenas sentindo cada pedaço de nós dois.
 let i = 0;
 
 function startText() {
+  piecesArea.style.display = "none";
   finalText.style.opacity = 1;
+  ...
+      }
 
   const interval = setInterval(() => {
     finalText.innerHTML += text.charAt(i);
