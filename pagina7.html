@@ -1,1 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Página 7 ♟️💜</title>
 
+<style>
+* { box-sizing: border-box; user-select: none; }
+body {
+  margin: 0;
+  font-family: Poppins, sans-serif;
+  background: radial-gradient(circle at top, #3b0a57, #12001a);
+  color: white;
+  overflow-x: hidden;
+}
+
+/* TÍTULO */
+h1 {
+  text-align: center;
+  margin: 20px;
+  font-size: 1.4rem;
+}
+
+/* TABULEIRO */
+#board {
+  width: 92vw;
+  height: 92vw;
+  max-width: 420px;
+  max-height: 420px;
+  margin: auto;
+  display: grid;
+  grid-template: repeat(8, 1fr) / repeat(8, 1fr);
+  background: #000;
+  border: 4px solid #9b4dff;
+  box-shadow: 0 0 25px #9b4dff;
+  position: relative;
+}
+
+/* CASAS */
+.cell {
+  width: 100%;
+  height: 100%;
+}
+.dark { background: #111; }
+.light { background: #1a1a1a; }
+
+/* PEÇAS */
+.piece {
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  margin: auto;
+  margin-top: 10%;
+  box-shadow: 0 0 12px;
+}
+.player { background: #9b4dff; box-shadow: 0 0 15px #9b4dff; }
+.enemy { background: #ff3b3b; box-shadow: 0 0 15px #ff3b3b; }
+.king { border: 3px solid gold; }
+
+/* OVERLAY */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+#overlay img {
+  width: 70%;
+  max-width: 300px;
+  border-radius: 15px;
+  animation: zoom 1s ease;
+}
+#overlay p {
+  margin: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* FINAL */
+#final {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+}
+#final img {
+  width: 80%;
+  max-width: 320px;
+  border-radius: 20px;
+}
+#final p {
+  font-size: 1.2rem;
+  line-height: 1.7;
+  margin-top: 20px;
+}
+
+@keyframes zoom {
+  from { transform: scale(.2); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+</style>
+</head>
+
+<body>
+
+<h1>Jogue como uma rainha ♟️💜</h1>
+
+<div id="board"></div>
+
+<div id="overlay">
+  <img id="overlayImg">
+  <p id="overlayText"></p>
+</div>
+
+<div id="final">
+  <img src="damas/final.jpg">
+  <p>
+    No tabuleiro da vida, você não apenas joga — você domina.<br><br>
+    Cada movimento seu é beleza em forma de decisão, cada vitória é prova
+    de que elegância e força caminham juntas.<br><br>
+    Você é minha rainha, dentro e fora do jogo.
+  </p>
+</div>
+
+<script>
+const board = document.getElementById("board");
+const overlay = document.getElementById("overlay");
+const overlayImg = document.getElementById("overlayImg");
+const overlayText = document.getElementById("overlayText");
+const final = document.getElementById("final");
+
+let captureCount = 0;
+let selected = null;
+
+const frases = [
+  "Te tocar é como ganhar o jogo antes mesmo do final.",
+  "Seu corpo encaixa no meu como peça certa no lugar exato.",
+  "Cada movimento seu me deixa mais perto de você.",
+  "Te vencer nunca foi opção — eu só quero te sentir.",
+  "Você provoca até quando joga.",
+  "Seu olhar desarma mais que qualquer jogada.",
+  "Te desejar é inevitável.",
+  "Você é minha melhor jogada.",
+  "Cada toque seu vira vantagem.",
+  "Seu corpo dita as regras.",
+  "Com você, eu sempre quero continuar.",
+  "Você transforma jogo em desejo."
+];
+
+// CRIA TABULEIRO
+for (let i = 0; i < 64; i++) {
+  const cell = document.createElement("div");
+  cell.className = "cell " + ((Math.floor(i / 8) + i) % 2 ? "dark" : "light");
+  cell.dataset.index = i;
+  board.appendChild(cell);
+}
+
+// CRIA PEÇAS
+document.querySelectorAll(".dark").forEach((cell, i) => {
+  if (i < 12) addPiece(cell, "enemy");
+  if (i > 19) addPiece(cell, "player");
+});
+
+function addPiece(cell, type) {
+  const p = document.createElement("div");
+  p.className = "piece " + type;
+  p.onclick = () => selectPiece(p);
+  cell.appendChild(p);
+}
+
+function selectPiece(piece) {
+  if (!piece.classList.contains("player")) return;
+  selected = piece;
+}
+
+// CAPTURA SIMPLIFICADA
+board.onclick = e => {
+  if (!selected) return;
+  const cell = e.target.closest(".cell");
+  if (!cell || cell.children.length) return;
+
+  const from = selected.parentElement;
+  cell.appendChild(selected);
+  selected = null;
+
+  setTimeout(enemyMove, 400);
+};
+
+// IA BURRA
+function enemyMove() {
+  const enemies = document.querySelectorAll(".enemy");
+  if (!enemies.length) winGame();
+
+  const piece = enemies[Math.floor(Math.random()*enemies.length)];
+  const cells = document.querySelectorAll(".dark");
+  const target = cells[Math.floor(Math.random()*cells.length)];
+  if (!target.children.length) target.appendChild(piece);
+}
+
+// SIMULA CAPTURA
+document.addEventListener("dblclick", () => {
+  captureCount++;
+  overlayImg.src = `damas/captura${captureCount}.jpg`;
+  overlayText.textContent = frases[captureCount-1];
+  overlay.style.display = "flex";
+
+  setTimeout(() => overlay.style.display = "none", 2200);
+
+  if (captureCount === 12) winGame();
+});
+
+function winGame() {
+  board.style.animation = "zoom 1.5s ease forwards";
+  setTimeout(() => {
+    board.style.display = "none";
+    final.style.display = "block";
+  }, 1500);
+}
+</script>
+
+</body>
+  </html>
