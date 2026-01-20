@@ -112,7 +112,7 @@ body {
 </style>
 </head>
 <body>
-<div id="title">jogue, ganhe e se prepare pra o final minha neném 💜</div>
+<div id="title">as damas do nosso amor bb</div>
 <div id="board"></div>
 
 <script>
@@ -191,6 +191,7 @@ function movePiece(x1,y1,x2,y2,isPlayerMove=true){
   if(gameOver) return;
   const piece=state[y1][x1];
   let captured=false;
+  let capturedPos = null;
 
   const dx=x2-x1, dy=y2-y1;
   if(Math.abs(dx)>1){
@@ -198,9 +199,9 @@ function movePiece(x1,y1,x2,y2,isPlayerMove=true){
     let cx=x1+stepX, cy=y1+stepY;
     while(cx!==x2 && cy!==y2){
       if(state[cy][cx] && state[cy][cx].type!==piece.type){
-        state[cy][cx]=null;
         captured=true;
-        if(isPlayerMove) showCaptureEffectWithPhoto(cx,cy);
+        capturedPos={x:cx, y:cy};
+        state[cy][cx]=null;
         break;
       }
       cx+=stepX; cy+=stepY;
@@ -217,8 +218,15 @@ function movePiece(x1,y1,x2,y2,isPlayerMove=true){
     piece.king=true;
     turnedToKing = true;
   }
-  if(piece.type==="ai" && y2===SIZE-1) piece.king=true;
+  if(piece.type==="ai" && y2===SIZE-1 && !piece.king) piece.king=true;
 
+  // Mostrar efeitos imediatamente
+  if(isPlayerMove){
+    if(capturedPos) showCaptureEffectWithPhoto(capturedPos.x, capturedPos.y);
+    if(turnedToKing) showCaptureTextAbovePhoto("Você sempre será minha rainha dentro e fora do jogo");
+  }
+
+  // captura extra
   if(captured && pieceHasCapture(x2,y2)){
     selected={x:x2,y:y2};
     highlightMoves(x2,y2);
@@ -227,13 +235,13 @@ function movePiece(x1,y1,x2,y2,isPlayerMove=true){
   }
 
   selected=null;
-  checkGameOver();
 
-  if(turnedToKing) showCaptureTextAbovePhoto("Você sempre será minha rainha dentro e fora do jogo");
+  // verificar fim de jogo
+  checkGameOver();
 
   if(!gameOver){
     turn = piece.type==="player" ? "ai" : "player";
-    if(turn==="ai") setTimeout(()=>aiMove(false),600);
+    if(turn==="ai") setTimeout(()=>aiMove(false), 600);
   }
 }
 
@@ -416,4 +424,4 @@ function showFinalEffect(text){
 createBoard(); placePieces(); render();
 </script>
 </body>
-</html>
+  </html>
