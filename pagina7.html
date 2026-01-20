@@ -27,17 +27,12 @@ body {
   position: relative;
 }
 
-.cell {
-  width: 100%;
-  height: 100%;
-}
-
+.cell { width: 100%; height: 100%; }
 .light { background: #1a1a1a; }
 .dark  { background: #0b0b0b; }
 
 .piece {
-  width: 80%;
-  height: 80%;
+  width: 80%; height: 80%;
   border-radius: 50%;
   margin: auto;
   margin-top: 10%;
@@ -51,8 +46,8 @@ body {
 
 .capture-flash {
   position: absolute; inset: 0;
-  background: rgba(255,255,255,0.4);
-  animation: flash 0.3s ease forwards;
+  background: rgba(255,255,255,0.25);
+  animation: flash 0.4s ease forwards;
   pointer-events: none;
   z-index: 1000;
 }
@@ -65,8 +60,7 @@ body {
 
 .break-piece {
   position: absolute;
-  width: 80%;
-  height: 80%;
+  width: 80%; height: 80%;
   border-radius: 50%;
   transform-origin: center;
   animation: breakAnim 0.6s forwards;
@@ -143,7 +137,6 @@ let selected = null;
 let turn = "player";
 let waitingAI = false;
 
-// Frases + fotos
 const captureTexts = [
   "Seu olhar me derrete.",
   "Quero sentir você perto.",
@@ -160,50 +153,42 @@ const captureTexts = [
 ];
 let captureIndex = 0;
 
-// CRIA TABULEIRO
-function createBoard() {
-  board.innerHTML = "";
-  cells = [];
-  for(let y=0; y<SIZE; y++){
-    for(let x=0; x<SIZE; x++){
-      const cell = document.createElement("div");
-      cell.className = (x+y)%2 ? "dark cell":"light cell";
-      cell.dataset.x=x;
-      cell.dataset.y=y;
-      cell.onclick = () => onCellClick(x,y);
+function createBoard(){
+  board.innerHTML=""; cells=[];
+  for(let y=0;y<SIZE;y++){
+    for(let x=0;x<SIZE;x++){
+      const cell=document.createElement("div");
+      cell.className=(x+y)%2?"dark cell":"light cell";
+      cell.dataset.x=x; cell.dataset.y=y;
+      cell.onclick=()=>onCellClick(x,y);
       board.appendChild(cell);
       cells.push(cell);
     }
   }
 }
 
-// POSICIONA PEÇAS
 function placePieces(){
   for(let y=0;y<3;y++) for(let x=0;x<SIZE;x++) if((x+y)%2===1) state[y][x]={type:"ai",king:false};
   for(let y=5;y<SIZE;y++) for(let x=0;x<SIZE;x++) if((x+y)%2===1) state[y][x]={type:"player",king:false};
 }
 
-// RENDERIZA TABULEIRO
 function render(){
   cells.forEach(c=>c.innerHTML="");
   for(let y=0;y<SIZE;y++){
     for(let x=0;x<SIZE;x++){
-      const p = state[y][x];
+      const p=state[y][x];
       if(p){
-        const el = document.createElement("div");
-        el.className = `piece ${p.type}${p.king?" king":""}`;
+        const el=document.createElement("div");
+        el.className=`piece ${p.type}${p.king?" king":""}`;
         cells[y*SIZE+x].appendChild(el);
       }
     }
   }
 }
 
-// VALIDA MOVIMENTO
 function isMoveValid(x1,y1,x2,y2){
   if(state[y2][x2]) return false;
-  const piece = state[y1][x1];
-  const dx = x2-x1, dy=y2-y1;
-
+  const piece=state[y1][x1],dx=x2-x1,dy=y2-y1;
   if(!piece.king){
     if(piece.type==="player" && ![-1,-2].includes(dy)) return false;
     if(piece.type==="ai" && ![1,2].includes(dy)) return false;
@@ -214,11 +199,9 @@ function isMoveValid(x1,y1,x2,y2){
     }
     return false;
   }
-
-  // DAMA
   if(Math.abs(dx)!==Math.abs(dy)) return false;
-  const stepX=dx>0?1:-1, stepY=dy>0?1:-1;
-  let cx=x1+stepX, cy=y1+stepY, enemyFound=null;
+  const stepX=dx>0?1:-1,stepY=dy>0?1:-1;
+  let cx=x1+stepX,cy=y1+stepY,enemyFound=null;
   while(cx!==x2 && cy!==y2){
     if(state[cy][cx]){
       if(state[cy][cx].type===piece.type) return false;
@@ -230,11 +213,10 @@ function isMoveValid(x1,y1,x2,y2){
   return true;
 }
 
-// MOVE PEÇA
 function movePiece(x1,y1,x2,y2){
-  const piece = state[y1][x1];
+  const piece=state[y1][x1];
   let captured=false;
-  // Checa captura simples
+
   if(Math.abs(x2-x1)===2){
     const mx=(x1+x2)/2,my=(y1+y2)/2;
     const color=state[my][mx].type==="ai"?"#dc2626":"#9333ea";
@@ -243,32 +225,15 @@ function movePiece(x1,y1,x2,y2){
     showCaptureEffect(mx,my,color);
   }
 
-  // Checa Dama captura
-  if(piece.king){
-    const stepX=x2>x1?1:-1, stepY=y2>y1?1:-1;
-    let cx=x1+stepX, cy=y1+stepY;
-    while(cx!==x2 && cy!==y2){
-      if(state[cy][cx] && state[cy][cx].type!==piece.type){
-        state[cy][cx]=null;
-        captured=true;
-        showCaptureEffect(cx,cy,state[cy][cx].type==="ai"?"#dc2626":"#9333ea");
-        break;
-      }
-      cx+=stepX; cy+=stepY;
-    }
-  }
-
   state[y2][x2]=piece;
   state[y1][x1]=null;
 
-  // VIRAR DAMA
   if(piece.type==="player" && y2===0) piece.king=true;
   if(piece.type==="ai" && y2===SIZE-1) piece.king=true;
 
   render();
   clearHighlights();
 
-  // MULTICAPTURA
   if(captured && piece.type==="player" && pieceHasCapture(x2,y2)){
     selected={x:x2,y:y2};
     highlightMoves(x2,y2);
@@ -280,30 +245,28 @@ function movePiece(x1,y1,x2,y2){
   if(turn==="player") turn="ai", setTimeout(aiMove,600);
 }
 
-// CHECA MULTICAPTURA
 function pieceHasCapture(x,y){
   const piece=state[y][x]; if(!piece) return false;
   const dirs=piece.king?[-2,2]:piece.type==="player"?[-2]:[2];
   for(let dy of dirs) for(let dx of [-2,2]){
-    const nx=x+dx, ny=y+dy;
+    const nx=x+dx,ny=y+dy;
     if(nx>=0 && nx<SIZE && ny>=0 && ny<SIZE && isMoveValid(x,y,nx,ny)) return true;
   }
   return false;
 }
 
-// DESTAQUE POSSÍVEL MOVIMENTO
 function highlightMoves(x,y){
   const piece=state[y][x]; if(!piece) return;
   const directions=piece.king?[-1,1]:piece.type==="player"?[-1]:[1];
   for(let dy of directions){
     for(let dx of [-1,1]){
-      let nx=x+dx, ny=y+dy;
+      let nx=x+dx,ny=y+dy;
       while(nx>=0 && nx<SIZE && ny>=0 && ny<SIZE && !state[ny][nx]){
         cells[ny*SIZE+nx].classList.add("highlight");
         if(!piece.king) break;
         nx+=dx; ny+=dy;
       }
-      let jumpX=x+dx*2, jumpY=y+dy*2;
+      let jumpX=x+dx*2,jumpY=y+dy*2;
       if(jumpX>=0 && jumpX<SIZE && jumpY>=0 && jumpY<SIZE && isMoveValid(x,y,jumpX,jumpY))
         cells[jumpY*SIZE+jumpX].classList.add("highlight");
     }
@@ -312,26 +275,23 @@ function highlightMoves(x,y){
 
 function clearHighlights(){ cells.forEach(c=>c.classList.remove("highlight")); }
 
-// CLIQUE
 function onCellClick(x,y){
   if(turn!=="player"||waitingAI) return;
   clearHighlights();
   const piece=state[y][x];
   if(selected && isMoveValid(selected.x,selected.y,x,y)){
-    movePiece(selected.x,selected.y,x,y);
-    return;
+    movePiece(selected.x,selected.y,x,y); return;
   }
   if(piece && piece.type==="player"){ selected={x,y}; highlightMoves(x,y); }
 }
 
-// IA SIMPLES
 function aiMove(){
   let moves=[];
   for(let y=0;y<SIZE;y++) for(let x=0;x<SIZE;x++){
     const p=state[y][x];
     if(p && p.type==="ai"){
       for(let dx of [-1,1]) for(let dy of [1]){
-        const nx=x+dx, ny=y+dy;
+        const nx=x+dx,ny=y+dy;
         if(nx>=0 && nx<SIZE && ny>=0 && ny<SIZE && !state[ny][nx]) moves.push({x1:x,y1:y,x2:nx,y2:ny});
       }
     }
@@ -343,34 +303,41 @@ function aiMove(){
   turn="player";
 }
 
-// CAPTURA
 function showCaptureEffect(x,y,color="#9333ea"){
+  // FLASH
   const flash=document.createElement("div");
   flash.className="capture-flash";
   document.body.appendChild(flash);
-  setTimeout(()=>flash.remove(),300);
+  setTimeout(()=>flash.remove(),400);
 
+  // PEÇA QUEBRANDO
   const pieceBreak=document.createElement("div");
   pieceBreak.className="break-piece";
   pieceBreak.style.backgroundColor=color;
 
   const rect=cells[y*SIZE+x].getBoundingClientRect();
-  pieceBreak.style.top=rect.top+"px";
-  pieceBreak.style.left=rect.left+"px";
+  pieceBreak.style.top=(rect.top+window.scrollY)+"px";
+  pieceBreak.style.left=(rect.left+window.scrollX)+"px";
   document.body.appendChild(pieceBreak);
   setTimeout(()=>pieceBreak.remove(),600);
 
+  // FOTO + FRASE
   if(captureIndex<12){
     const effect=document.createElement("div");
     effect.className="capture-effect";
+
     const img=document.createElement("img");
-    img.src=`captura/captura${captureIndex+1}.jpg`;
+    img.src=`damas/captura${captureIndex+1}.jpg`; // pasta correta
+
     const p=document.createElement("p");
     p.textContent=captureTexts[captureIndex];
-    effect.appendChild(img); effect.appendChild(p);
+
+    effect.appendChild(img);
+    effect.appendChild(p);
     document.body.appendChild(effect);
     captureIndex++;
-    setTimeout(()=>effect.remove(),2500);
+
+    setTimeout(()=>effect.remove(),3000); // DURA 3s
   }
 }
 
