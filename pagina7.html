@@ -53,12 +53,10 @@ body {
 
 .highlight { outline: 3px solid #22c55e; }
 
-.break-piece { display: none; } /* remove animação de peça quebrando */
-
 .capture-effect {
   position: fixed;
   top: 50%; left: 50%;
-  width: 60vmin; height: 60vmin; /* 2/3 do tabuleiro */
+  width: 60vmin; height: 60vmin;
   margin-left: -30vmin; margin-top: -30vmin;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
@@ -82,7 +80,7 @@ body {
   color: white;
   text-align: center;
   padding: 10px;
-  font-size: 4vmin; /* ajusta conforme tamanho da imagem */
+  font-size: 4vmin;
   font-weight: bold;
   opacity: 0;
   animation: fadeIn 0.5s forwards 0.5s;
@@ -101,14 +99,14 @@ body {
   top: 50%; left: 50%;
   width: 60vmin; height: 60vmin;
   margin-left: -30vmin; margin-top: -30vmin;
-  display: flex; flex-direction: column;
+  display: flex; flex-direction: column-reverse;
   align-items: center; justify-content: center;
   z-index: 3000;
   text-align: center;
 }
 
 #finalEffect img { width: 100%; height: auto; object-fit: contain; border-radius: 15px; margin-bottom: 15px; }
-#finalEffect p { color: white; font-size: 4vmin; font-weight: bold; line-height: 1.3; }
+#finalEffect p { color: white; font-size: 4vmin; font-weight: bold; line-height: 1.3; margin-bottom: 10px; }
 
 #board.game-over { pointer-events: none; opacity: 0.8; }
 </style>
@@ -120,28 +118,11 @@ body {
 <script>
 const SIZE = 8;
 const board = document.getElementById("board");
-const title = document.getElementById("title");
 let state = Array.from({length: SIZE}, () => Array(SIZE).fill(null));
 let cells = [];
 let selected = null;
 let turn = "player";
 let gameOver = false;
-
-const captureTexts = [
-  "Seu olhar me derrete.",
-  "Quero sentir você perto.",
-  "Cada curva sua me provoca.",
-  "Não consigo tirar você da cabeça.",
-  "Você é desejo puro.",
-  "Sinto sua falta mesmo perto.",
-  "Quero explorar cada detalhe seu.",
-  "Seu corpo me chama.",
-  "Você é minha tentação favorita.",
-  "Cada toque seu me enlouquece.",
-  "Você é linda demais para palavras.",
-  "Quero te ter só para mim."
-];
-let captureIndex = 0;
 
 function createBoard(){
   board.innerHTML=""; cells=[];
@@ -205,7 +186,7 @@ function isMoveValid(x1,y1,x2,y2){
   return true;
 }
 
-function movePiece(x1,y1,x2,y2){
+function movePiece(x1,y1,x2,y2,isPlayerMove=true){
   if(gameOver) return;
   const piece=state[y1][x1];
   let captured=false;
@@ -218,7 +199,7 @@ function movePiece(x1,y1,x2,y2){
       if(state[cy][cx] && state[cy][cx].type!==piece.type){
         state[cy][cx]=null;
         captured=true;
-        showCaptureEffect(cx,cy,piece.type==="player"?"#9333ea":"#dc2626");
+        if(isPlayerMove) showCaptureEffect(cx,cy,piece.type==="player"?"#9333ea":"#dc2626");
         break;
       }
       cx+=stepX; cy+=stepY;
@@ -232,14 +213,14 @@ function movePiece(x1,y1,x2,y2){
 
   if(piece.type==="player" && y2===0 && !piece.king){
     piece.king=true;
-    setTimeout(()=>showCaptureText("Você sempre será minha rainha dentro e fora do jogo"),200);
+    showCaptureText("Você sempre será minha rainha dentro e fora do jogo");
   }
   if(piece.type==="ai" && y2===SIZE-1) piece.king=true;
 
   if(captured && pieceHasCapture(x2,y2)){
     selected={x:x2,y:y2};
     highlightMoves(x2,y2);
-    turn = piece.type; // mantém turno correto
+    turn = piece.type; 
     return;
   }
 
@@ -247,7 +228,7 @@ function movePiece(x1,y1,x2,y2){
   checkGameOver();
   if(!gameOver){
     turn = piece.type==="player" ? "ai" : "player";
-    if(turn==="ai") setTimeout(aiMove,600);
+    if(turn==="ai") setTimeout(()=>aiMove(false),600);
   }
 }
 
@@ -286,12 +267,13 @@ function onCellClick(x,y){
   clearHighlights();
   const piece=state[y][x];
   if(selected && isMoveValid(selected.x,selected.y,x,y)){
-    movePiece(selected.x,selected.y,x,y); return;
+    movePiece(selected.x,selected.y,x,y,true); 
+    return;
   }
   if(piece && piece.type==="player"){ selected={x,y}; highlightMoves(x,y); }
 }
 
-function aiMove(){
+function aiMove(showCapture=false){
   if(gameOver || turn !== "ai") return;
 
   let moves = [];
@@ -319,7 +301,7 @@ function aiMove(){
 
   if(moves.length){
     const m = moves[Math.floor(Math.random()*moves.length)];
-    movePiece(m.x1,m.y1,m.x2,m.y2);
+    movePiece(m.x1,m.y1,m.x2,m.y2,false);
   } else {
     gameOver = true;
     board.classList.add("game-over");
@@ -328,20 +310,10 @@ function aiMove(){
 }
 
 function showCaptureEffect(x,y,color="#9333ea"){
-  const effect=document.createElement("div");
-  effect.className="capture-effect";
-
-  const img=document.createElement("img");
-  img.src=`damas/captura${captureIndex%12+1}.jpg`;
-
-  const p=document.createElement("p");
-  p.textContent=captureTexts[captureIndex%12];
-  captureIndex++;
-
-  effect.appendChild(img);
-  effect.appendChild(p);
-  document.body.appendChild(effect);
-  setTimeout(()=>effect.remove(),3000);
+  // Agora só efeito visual sem foto/frase
+  const cell = cells[y*SIZE+x];
+  cell.style.outline=`3px solid ${color}`;
+  setTimeout(()=>cell.style.outline="",500);
 }
 
 function showCaptureText(text){
@@ -357,29 +329,49 @@ function showCaptureText(text){
 function checkGameOver(){
   const aiPieces = state.flat().filter(p=>p && p.type==="ai").length;
   const playerPieces = state.flat().filter(p=>p && p.type==="player").length;
-  if(aiPieces===0 || playerPieces===0){
+  const playerCanMove = hasAnyMove("player");
+  const aiCanMove = hasAnyMove("ai");
+
+  if(aiPieces===0 || playerPieces===0 || !playerCanMove || !aiCanMove){
     gameOver=true;
     board.classList.add("game-over");
-    let msg = aiPieces===0 ? 
+    let msg = aiPieces===0 || !aiCanMove ? 
       "Com toda a certeza, em todas as jogadas da vida, eu sempre escolherei você, por inteira e completa, eu te amo 💜!" 
       : "Que pena! A IA venceu!";
-    board.style.transform="scale(1.2)"; // zoom tabuleiro
+    board.style.transform="scale(1.2)";
     showFinalEffect(msg);
   }
+}
+
+function hasAnyMove(type){
+  for(let y=0;y<SIZE;y++){
+    for(let x=0;x<SIZE;x++){
+      const p=state[y][x];
+      if(p && p.type===type){
+        for(let dx=-2;dx<=2;dx++){
+          for(let dy=-2;dy<=2;dy++){
+            const nx=x+dx,ny=y+dy;
+            if(nx>=0 && nx<SIZE && ny>=0 && ny<SIZE && isMoveValid(x,y,nx,ny))
+              return true;
+          }
+        }
+      }
+    }
+  }
+  return false;
 }
 
 function showFinalEffect(text){
   const effect=document.createElement("div");
   effect.id="finalEffect";
 
-  const img=document.createElement("img");
-  img.src=`damas/captura${captureIndex%12+1}.jpg`;
-
   const p=document.createElement("p");
   p.textContent=text;
+  const img=document.createElement("img");
+  img.src=`damas/final.jpg`;
 
-  effect.appendChild(img);
   effect.appendChild(p);
+  effect.appendChild(img);
   document.body.appendChild(effect);
 }
 
@@ -387,4 +379,4 @@ function showFinalEffect(text){
 createBoard(); placePieces(); render();
 </script>
 </body>
-  </html>
+</html>
