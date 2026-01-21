@@ -208,57 +208,70 @@ function isMoveValid(x1,y1,x2,y2){
 }
 
 // === Movimento principal ===
-function movePiece(x1,y1,x2,y2,isPlayerMove=true){
-  if(gameOver) return;
-  const piece=state[y1][x1];
-  let captured=false;
+function movePiece(x1, y1, x2, y2, isPlayerMove = true) {
+  if (gameOver) return;
+  const piece = state[y1][x1];
+  let captured = false;
   let capturedPos = null;
 
-  const dx=x2-x1, dy=y2-y1;
-  if(Math.abs(dx)>1){
-    const stepX=dx>0?1:-1, stepY=dy>0?1:-1;
-    let cx=x1+stepX, cy=y1+stepY;
-    while(cx!==x2 && cy!==y2){
-      if(state[cy][cx] && state[cy][cx].type!==piece.type){
-        captured=true;
-        capturedPos={x:cx, y:cy};
-        state[cy][cx]=null;
+  const dx = x2 - x1, dy = y2 - y1;
+
+  // === captura ===
+  if (Math.abs(dx) > 1) {
+    const stepX = dx > 0 ? 1 : -1, stepY = dy > 0 ? 1 : -1;
+    let cx = x1 + stepX, cy = y1 + stepY;
+    while (cx !== x2 && cy !== y2) {
+      if (state[cy][cx] && state[cy][cx].type !== piece.type) {
+        captured = true;
+        capturedPos = { x: cx, y: cy };
+        state[cy][cx] = null;
         break;
       }
-      cx+=stepX; cy+=stepY;
+      cx += stepX; cy += stepY;
     }
   }
 
-  state[y2][x2]=piece;
-  state[y1][x1]=null;
+  state[y2][x2] = piece;
+  state[y1][x1] = null;
   render();
   clearHighlights();
 
-  if(piece.type==="player" && y2===0 && !piece.king) piece.king=true;
-  if(piece.type==="ai" && y2===SIZE-1 && !piece.king) piece.king=true;
+  function afterMove() {
+    // captura múltipla
+    if (captured && pieceHasCapture(x2, y2)) {
+      selected = { x: x2, y: y2 };
+      highlightMoves(x2, y2);
+      turn = piece.type; // continua turno
+      return;
+    }
 
-  // Efeito do jogador
-  if(isPlayerMove){
-    if(capturedPos){
-      showCaptureEffectWithPhoto(capturedPos.x, capturedPos.y, ()=>{
-        if(!gameOver) { turn="ai"; setTimeout(()=>aiMove(), 300); }
-      });
-    } else if(piece.king) showOnlyText("Você sempre será minha rainha dentro e fora do jogo");
+    selected = null;
+    checkGameOver();
+
+    if (!gameOver) {
+      turn = piece.type === "player" ? "ai" : "player";
+      if (turn === "ai") setTimeout(() => aiMove(), 300);
+    }
   }
 
-  // Captura extra
-  if(captured && pieceHasCapture(x2,y2)){
-    selected={x:x2,y:y2};
-    highlightMoves(x2,y2);
-    turn = piece.type;
+  // === virar dama ===
+  if ((piece.type === "player" && y2 === 0) || (piece.type === "ai" && y2 === SIZE - 1)) {
+    if (!piece.king) {
+      piece.king = true;
+      if (isPlayerMove) {
+        showOnlyText("Você sempre será minha rainha dentro e fora do jogo", afterMove);
+        return;
+      }
+    }
+  }
+
+  // efeito de captura
+  if (captured && isPlayerMove) {
+    showCaptureEffectWithPhoto(capturedPos.x, capturedPos.y, afterMove);
     return;
   }
 
-  selected=null;
-  checkGameOver();
-
-  if(!gameOver && !capturedPos) turn = piece.type==="player" ? "ai" : "player";
-  if(turn==="ai" && !gameOver) setTimeout(()=>aiMove(), 300);
+  afterMove();
 }
 
 function pieceHasCapture(x,y){
@@ -302,7 +315,7 @@ function onCellClick(x,y){
   if(piece && piece.type==="player"){ selected={x,y}; highlightMoves(x,y); }
 }
 
-// === Movimento IA ===
+// === IA ===
 function aiMove(){
   if(gameOver || turn!=="ai" || effectsRunning) return;
   let moves = [];
@@ -338,8 +351,8 @@ function aiMove(){
   }
 }
 
-// === Efeitos visuais ===
-function showOnlyText(text){
+// === efeitos ===
+function showOnlyText(text, callback=null){
   effectsRunning = true;
   const effect = document.createElement("div");
   effect.className = "capture-effect";
@@ -350,7 +363,8 @@ function showOnlyText(text){
   setTimeout(()=>{
     effect.remove();
     effectsRunning = false;
-  },3000);
+    if(callback) callback();
+  },2000);
 }
 
 function showCaptureEffectWithPhoto(x, y, callback=null){
@@ -381,7 +395,7 @@ function showCaptureEffectWithPhoto(x, y, callback=null){
   }, 3000);
 }
 
-// === Fim de jogo ===
+// === fim de jogo ===
 function checkGameOver(){
   const aiPieces = state.flat().filter(p=>p && p.type==="ai").length;
   const playerPieces = state.flat().filter(p=>p && p.type==="player").length;
