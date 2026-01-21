@@ -1,1 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Feliz Aniversário 💜</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at top, #3b82f6, #6d28d9, #050008);
+  font-family: 'Arial', sans-serif;
+  color: white;
+}
+
+/* CORAÇÃO INICIAL */
+#startHeart {
+  font-size: 20rem;
+  cursor: pointer;
+  animation: pulse 1.5s infinite;
+  user-select: none;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* CONTAINER DO TEXTO */
+#textContainer {
+  width: 90%;
+  max-width: 900px;
+  font-size: 1.3rem;
+  line-height: 1.8;
+  display: none;
+  z-index: 10;
+}
+
+/* CURSOR DE DIGITAÇÃO */
+.cursor {
+  display: inline-block;
+  width: 8px;
+  background: white;
+  margin-left: 4px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+}
+
+/* EMOJIS VOANDO */
+.emoji {
+  position: fixed;
+  font-size: 2rem;
+  animation: float 6s linear forwards;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+@keyframes float {
+  from {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-10vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="startHeart">💜</div>
+
+<div id="textContainer">
+  <span id="text"></span><span class="cursor"></span>
+</div>
+
+<script>
+const heart = document.getElementById("startHeart");
+const container = document.getElementById("textContainer");
+const textEl = document.getElementById("text");
+
+const textLines = [
+  "Hoje não é só o seu aniversário.",
+  "Hoje é o dia em que o mundo decidiu ficar mais bonito.",
+  "Porque foi exatamente no dia de hoje que você apareceu nele.",
+  "",
+  "Você tem esse jeito que mistura charme, caos e doçura.",
+  "Esse sorriso que provoca.",
+  "Esse olhar que desmonta.",
+  "E essa presença que domina qualquer lugar onde você pisa.",
+  "",
+  "Você não entra na vida das pessoas.",
+  "Você marca.",
+  "Você fica.",
+  "Você vira memória boa e vontade constante.",
+  "",
+  "Tem dias que você é calmaria.",
+  "Em outros, você é fogo.",
+  "E sinceramente?",
+  "Eu amo quando você é os dois ao mesmo tempo.",
+  "",
+  "Seu corpo chama atenção.",
+  "Mas é sua essência que vicia.",
+  "Seu jeito, sua risada, seu toque.",
+  "Tudo em você convida a ficar mais um pouco.",
+  "",
+  "Você é meu desejo favorito.",
+  "Minha tentação preferida.",
+  "E minha escolha consciente todos os dias.",
+  "",
+  "Com você, até o silêncio é gostoso.",
+  "E quando você fala, eu só penso:",
+  "‘Como alguém pode ser tão incrível assim?’",
+  "",
+  "Então hoje eu só quero te dizer uma coisa:",
+  "Feliz aniversário, minha obra de arte viva.",
+  "Que esse novo ano venha com tudo.",
+  "E que eu continue tendo o privilégio de te admirar bem de perto."
+];
+
+let charIndex = 0;
+let lineIndex = 0;
+
+function typeText() {
+  if (lineIndex >= textLines.length) return;
+
+  if (charIndex < textLines[lineIndex].length) {
+    textEl.innerHTML += textLines[lineIndex].charAt(charIndex);
+    charIndex++;
+    setTimeout(typeText, 35);
+  } else {
+    textEl.innerHTML += "<br>";
+    charIndex = 0;
+    lineIndex++;
+    setTimeout(typeText, 400);
+  }
+}
+
+heart.onclick = () => {
+  heart.style.display = "none";
+  container.style.display = "block";
+  typeText();
+  setInterval(spawnEmoji, 350);
+};
+
+const emojis = ["🍰","🎁","🎂","🎈","🎉","💜","🩵","❤️"];
+
+function spawnEmoji() {
+  const e = document.createElement("div");
+  e.className = "emoji";
+  e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+  e.style.left = Math.random()*100 + "vw";
+  e.style.fontSize = (1.5 + Math.random()*2) + "rem";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),6000);
+}
+</script>
+
+</body>
+  </html>
