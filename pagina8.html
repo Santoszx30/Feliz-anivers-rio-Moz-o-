@@ -8,14 +8,16 @@
 <style>
 body {
   margin: 0;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: 'Arial', sans-serif;
+  color: white;
+  background: radial-gradient(circle at top, #3b82f6, #6d28d9, #050008);
   display: flex;
   justify-content: center;
   align-items: center;
-  background: radial-gradient(circle at top, #3b82f6, #6d28d9, #050008);
-  font-family: 'Arial', sans-serif;
-  color: white;
+  flex-direction: column;
+  scroll-behavior: smooth;
 }
 
 /* CORAÇÃO INICIAL */
@@ -75,6 +77,14 @@ body {
     opacity: 0;
   }
 }
+
+/* FELIZ ANIVERSÁRIO */
+#happyTitle {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 20px;
+  display: none;
+}
 </style>
 </head>
 
@@ -83,6 +93,7 @@ body {
 <div id="startHeart">💜</div>
 
 <div id="textContainer">
+  <div id="happyTitle">FELIZ ANIVERSÁRIO NENÉM 💜</div>
   <span id="text"></span><span class="cursor"></span>
 </div>
 
@@ -90,6 +101,7 @@ body {
 const heart = document.getElementById("startHeart");
 const container = document.getElementById("textContainer");
 const textEl = document.getElementById("text");
+const happyTitle = document.getElementById("happyTitle");
 
 const textLines = [
   "Hoje não é só o seu aniversário.",
@@ -127,14 +139,34 @@ const textLines = [
   "Então hoje eu só quero te dizer uma coisa:",
   "Feliz aniversário, minha obra de arte viva.",
   "Que esse novo ano venha com tudo.",
-  "E que eu continue tendo o privilégio de te admirar bem de perto."
+  "E que eu continue tendo o privilégio de te admirar bem de perto.",
+  "",
+  "Feliz aniversário meu amorzinho, dentro dessa rima eu expresso meu carinho.",
+  "O carinho que eu tenho por você, e o amor, tenho muito deles a te oferecer e com calor.",
+  "Você sabe que eu te amo né? E que mesmo com nossos defeitos eu nunca vou largar seu pé.",
+  "E é por isso, que minha irmã é verdadeira, não quero você agora, quero pra vida inteira.",
+  "Você é especial pra mim, é minha escolha, chegou de finin, e vai pra vida toda.",
+  "Você é perfeita, é como ver o sol nascer, só de ver a lua brilhar, eu já lembro de você.",
+  "Você me conforta, é meu lugar seguro, minha rosa, e é meu lugar no mundo.",
+  "Eu te amo tanto que não consigo explicar, mas meu amor por você, eu vou sempre demonstrar.",
+  "Eu não ligo, pra fala desses otário, e hoje eu só te desejo, um feliz aniversário.",
+  "Eu amo você bb, amo muito, aproveita seu dia, você merece, espero que esteja sempre comigo. 💜💜"
+];
 ];
 
 let charIndex = 0;
 let lineIndex = 0;
 
 function typeText() {
-  if (lineIndex >= textLines.length) return;
+  if (lineIndex >= textLines.length) {
+    // Fim do texto: mostra mensagem final
+    textEl.innerHTML += "<br><br>EU TE AMO, APROVEITA SEU DIA, VOCÊ MERECE 💜";
+    return;
+  }
+
+  if (charIndex === 0 && textLines[lineIndex] === textLines[0]) {
+    happyTitle.style.display = "block";
+  }
 
   if (charIndex < textLines[lineIndex].length) {
     textEl.innerHTML += textLines[lineIndex].charAt(charIndex);
@@ -144,6 +176,7 @@ function typeText() {
     textEl.innerHTML += "<br>";
     charIndex = 0;
     lineIndex++;
+    window.scrollTo(0, document.body.scrollHeight); // rolagem automática
     setTimeout(typeText, 400);
   }
 }
@@ -152,7 +185,8 @@ heart.onclick = () => {
   heart.style.display = "none";
   container.style.display = "block";
   typeText();
-  setInterval(spawnEmoji, 350);
+  // emojis dobrados
+  setInterval(spawnEmoji, 175); // metade do intervalo = dobro de emojis
 };
 
 const emojis = ["🍰","🎁","🎂","🎈","🎉","💜","🩵","❤️"];
@@ -169,4 +203,4 @@ function spawnEmoji() {
 </script>
 
 </body>
-  </html>
+</html>
