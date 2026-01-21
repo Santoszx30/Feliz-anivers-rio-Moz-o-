@@ -111,6 +111,7 @@ body {
 #board.game-over { pointer-events: none; opacity: 0.8; }
 
 #nextPageBtn {
+  display: none; /* escondido inicialmente */
   margin-top: 20px;
   padding: 12px 24px;
   font-size: 1.2rem;
@@ -126,7 +127,7 @@ body {
 </style>
 </head>
 <body>
-<div id="title">as damas do nosso amor bb</div>
+<div id="title">Jogue, ganhe e espere o fim minha neném 💜</div>
 <div id="board"></div>
 <button id="nextPageBtn" onclick="goToPage8()">Ir para Página 8 ➜</button>
 
@@ -432,14 +433,23 @@ function hasAnyMove(type){
 }
 
 function showFinalEffect(text){
-  const effect=document.createElement("div");
-  effect.id="finalEffect";
-  const p=document.createElement("p"); p.textContent=text;
-  const img=document.createElement("img"); img.src=`damas/final.jpg`;
-  effect.appendChild(p); effect.appendChild(img);
-  document.body.appendChild(effect);
-}
+  const effect = document.createElement("div");
+  effect.id = "finalEffect";
 
+  const p = document.createElement("p");
+  p.textContent = text;
+
+  const img = document.createElement("img");
+  img.src = `damas/final.jpg`;
+
+  effect.appendChild(p);
+  effect.appendChild(img);
+  document.body.appendChild(effect);
+
+  // MOSTRA O BOTÃO SÓ AGORA
+  const btn = document.getElementById("nextPageBtn");
+  btn.style.display = "block";
+  }
 // === Botão página 8 ===
 function goToPage8(){ window.location.href = "pagina8.html"; }
 
