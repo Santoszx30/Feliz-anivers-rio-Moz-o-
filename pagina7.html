@@ -109,11 +109,26 @@ body {
 #finalEffect p { color: white; font-size: 4vmin; font-weight: bold; line-height: 1.3; margin-bottom: 10px; }
 
 #board.game-over { pointer-events: none; opacity: 0.8; }
+
+#nextPageBtn {
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  background-color: #9333ea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 0 15px #a855f7;
+  transition: transform 0.2s;
+}
+#nextPageBtn:hover { transform: scale(1.05); }
 </style>
 </head>
 <body>
-<div id="title">Jogue, ganhe e se prepare para o final minha neném 💜</div>
+<div id="title">Jogue, ganhe e espere o final minha neném 💜</div>
 <div id="board"></div>
+<button id="nextPageBtn" onclick="goToPage8()">Ir para Página 8 ➜</button>
 
 <script>
 const SIZE = 8;
@@ -220,29 +235,20 @@ function movePiece(x1,y1,x2,y2,isPlayerMove=true){
   clearHighlights();
 
   let turnedToKing = false;
-  if(piece.type==="player" && y2===0 && !piece.king){
-    piece.king=true;
-    turnedToKing = true;
-  }
-  if(piece.type==="ai" && y2===SIZE-1 && !piece.king){
-    piece.king=true;
-    turnedToKing = true;
-  }
+  if(piece.type==="player" && y2===0 && !piece.king) piece.king=true;
+  if(piece.type==="ai" && y2===SIZE-1 && !piece.king) piece.king=true;
 
-  // Efeitos
+  // Efeitos do jogador
   if(isPlayerMove){
-    if(capturedPos) showCaptureEffectWithPhoto(capturedPos.x, capturedPos.y);
-    if(turnedToKing) showOnlyText("Você sempre será minha rainha dentro e fora do jogo");
-  } else {
-    if(turnedToKing){
-      effectsRunning = true;
-      showOnlyText("Eu sempre escolherei você, por inteira e completa 💜");
-      setTimeout(()=>{
-        effectsRunning = false;
-        turn = "player";
-      },3000);
-      return;
+    if(capturedPos){
+      showCaptureEffectWithPhoto(capturedPos.x, capturedPos.y, ()=>{
+        if(!gameOver) {
+          turn = "ai";
+          setTimeout(()=>aiMove(false), 300);
+        }
+      });
     }
+    if(turnedToKing) showOnlyText("Você sempre será minha rainha dentro e fora do jogo");
   }
 
   // Captura extra
@@ -256,13 +262,12 @@ function movePiece(x1,y1,x2,y2,isPlayerMove=true){
   selected=null;
   checkGameOver();
 
-  if(!gameOver && !turnedToKing){
+  if(!gameOver && !turnedToKing && !capturedPos){
     turn = piece.type==="player" ? "ai" : "player";
-    if(turn==="ai") setTimeout(()=>aiMove(false), 600);
+    if(turn==="ai") setTimeout(()=>aiMove(false), 300);
   }
 }
 
-// Verifica se peça pode capturar
 function pieceHasCapture(x,y){
   const piece=state[y][x]; if(!piece) return false;
   const dirs=piece.king?[-2,2]:piece.type==="player"?[-2]:[2];
@@ -273,7 +278,6 @@ function pieceHasCapture(x,y){
   return false;
 }
 
-// Destaca movimentos possíveis
 function highlightMoves(x,y){
   const piece=state[y][x]; if(!piece) return;
   const directions=piece.king?[-1,1]:piece.type==="player"?[-1]:[1];
@@ -305,7 +309,6 @@ function onCellClick(x,y){
   if(piece && piece.type==="player"){ selected={x,y}; highlightMoves(x,y); }
 }
 
-// Movimentos da IA
 function aiMove(){
   if(gameOver || turn !== "ai" || effectsRunning) return;
   let moves = [];
@@ -341,29 +344,29 @@ function aiMove(){
   }
 }
 
-// Efeito apenas texto
 function showOnlyText(text){
   effectsRunning = true;
   const effect = document.createElement("div");
-  effect.className="capture-effect";
-  const p=document.createElement("p");
-  p.textContent=text;
+  effect.className = "capture-effect";
+  const p = document.createElement("p");
+  p.textContent = text;
   effect.appendChild(p);
   document.body.appendChild(effect);
   setTimeout(()=>{
     effect.remove();
-    effectsRunning=false;
+    effectsRunning = false;
   },3000);
 }
 
-// Efeito de captura com foto
-function showCaptureEffectWithPhoto(x,y){
+function showCaptureEffectWithPhoto(x, y, callback=null){
   effectsRunning = true;
-  const effect=document.createElement("div");
-  effect.className="capture-effect";
-  const img=document.createElement("img");
-  img.src=`damas/captura${captureIndex%12+1}.jpg`;
-  const p=document.createElement("p");
+  const effect = document.createElement("div");
+  effect.className = "capture-effect";
+
+  const img = document.createElement("img");
+  img.src = `damas/captura${captureIndex%12+1}.jpg`;
+
+  const p = document.createElement("p");
   const captureTexts = [
     "Seu olhar me derrete.","Quero sentir você perto.","Cada curva sua me provoca.","Não consigo tirar você da cabeça.",
     "Você é desejo puro.","Sinto sua falta mesmo perto.","Quero explorar cada detalhe seu.","Seu corpo me chama.",
@@ -371,16 +374,18 @@ function showCaptureEffectWithPhoto(x,y){
   ];
   p.textContent = captureTexts[captureIndex%12];
   captureIndex++;
+
   effect.appendChild(p);
   effect.appendChild(img);
   document.body.appendChild(effect);
+
   setTimeout(()=>{
     effect.remove();
-    effectsRunning=false;
-  },3000);
+    effectsRunning = false;
+    if(callback) callback();
+  }, 3000);
 }
 
-// Verifica fim de jogo
 function checkGameOver(){
   const aiPieces = state.flat().filter(p=>p && p.type==="ai").length;
   const playerPieces = state.flat().filter(p=>p && p.type==="player").length;
@@ -398,7 +403,6 @@ function checkGameOver(){
   }
 }
 
-// Verifica se há movimentos possíveis
 function hasAnyMove(type){
   for(let y=0;y<SIZE;y++){
     for(let x=0;x<SIZE;x++){
@@ -417,7 +421,6 @@ function hasAnyMove(type){
   return false;
 }
 
-// Efeito final
 function showFinalEffect(text){
   const effect=document.createElement("div");
   effect.id="finalEffect";
@@ -425,6 +428,11 @@ function showFinalEffect(text){
   const img=document.createElement("img"); img.src=`damas/final.jpg`;
   effect.appendChild(p); effect.appendChild(img);
   document.body.appendChild(effect);
+}
+
+// Botão página 8
+function goToPage8(){
+  window.location.href = "pagina8.html"; // ajuste o nome do arquivo da página 8
 }
 
 // Inicializa
